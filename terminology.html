@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Music Terminology Lab — Laura's Music App</title>
-  <meta name="description" content="Explore and master fundamental music terminology through hands-on interactive audio experiments. Learn pitch, harmony, rhythm, timbre, ADSR, dynamics, and scales.">
+  <meta name="description" content="Master music terminology, chords, intervals, harmony, scales, and rhythm through big interactive tools, visual animated canvases for every concept, a playable piano, and Web Audio experiments.">
   <meta name="theme-color" content="#0a0d14">
 
   <!-- Modern Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg-primary: #0a0d14;
       --bg-secondary: #121824;
-      --card-bg: rgba(22, 30, 46, 0.75);
-      --card-border: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(22, 30, 46, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
       --text-main: #f0f4fc;
       --text-muted: #94a3b8;
       --accent-cyan: #38bdf8;
@@ -26,10 +26,12 @@
       --accent-emerald: #10b981;
       --accent-purple: #a855f7;
       --accent-indigo: #6366f1;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      --transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      --accent-rose: #f43f5e;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --shadow-card: 0 14px 36px -8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -48,16 +50,16 @@
       flex-direction: column;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 90% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 45%),
-        radial-gradient(circle at 50% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 20%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 55%);
       background-attachment: fixed;
     }
 
-    /* Top Navigation */
+    /* Header */
     header {
       padding: 2rem 1.5rem 1.5rem;
-      max-width: 1280px;
+      max-width: 1360px;
       width: 100%;
       margin: 0 auto;
     }
@@ -74,91 +76,97 @@
     .back-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.75rem;
       text-decoration: none;
       color: var(--text-main);
       font-weight: 700;
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.15rem;
-      padding: 0.5rem 1rem;
+      font-size: 1.25rem;
+      padding: 0.7rem 1.4rem;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       transition: var(--transition);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
 
     .back-link:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.25);
-      transform: translateX(-2px);
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateX(-3px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.25);
     }
 
     .btn-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
+      gap: 0.6rem;
+      padding: 0.7rem 1.3rem;
       border-radius: 999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       color: var(--text-main);
       cursor: pointer;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       transition: var(--transition);
     }
 
     .btn-badge:hover {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--accent-emerald);
     }
 
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--accent-emerald);
-      box-shadow: 0 0 10px var(--accent-emerald);
+      box-shadow: 0 0 12px var(--accent-emerald);
+      animation: pulseGlow 1.8s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
     }
 
     /* Hero */
     .hero {
       text-align: center;
-      max-width: 840px;
+      max-width: 920px;
       margin: 0 auto 2.5rem;
     }
 
     .hero-tag {
       display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      padding: 0.35rem 0.9rem;
+      padding: 0.45rem 1.2rem;
       border-radius: 999px;
-      background: rgba(168, 85, 247, 0.15);
-      color: var(--accent-purple);
-      margin-bottom: 0.75rem;
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      background: rgba(168, 85, 247, 0.18);
+      color: #c084fc;
+      margin-bottom: 0.9rem;
+      border: 1px solid rgba(168, 85, 247, 0.35);
     }
 
     .hero h1 {
       font-family: 'Quicksand', sans-serif;
-      font-size: clamp(2.2rem, 5vw, 3.4rem);
-      font-weight: 700;
+      font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+      font-weight: 800;
       letter-spacing: -0.02em;
-      margin-bottom: 0.85rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-size: clamp(1.1rem, 2.2vw, 1.35rem);
       color: var(--text-muted);
       line-height: 1.6;
     }
@@ -166,97 +174,111 @@
     /* Section Navigator Pills */
     .nav-pills {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.65rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
     }
 
     .nav-pill {
-      padding: 0.5rem 1.15rem;
+      padding: 0.75rem 1.4rem;
       border-radius: 999px;
       border: 1px solid var(--card-border);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
       text-decoration: none;
       transition: var(--transition);
+      backdrop-filter: blur(8px);
     }
 
     .nav-pill:hover,
     .nav-pill.active {
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.16);
       color: #fff;
-      border-color: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
     }
 
     /* Main Container */
     main {
-      max-width: 1280px;
+      max-width: 1360px;
       width: 100%;
       margin: 0 auto;
-      padding: 0 1.5rem 4rem;
+      padding: 0 1.5rem 5rem;
       display: flex;
       flex-direction: column;
-      gap: 3.5rem;
+      gap: 4.5rem;
     }
 
     .category-section {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
+      gap: 1.8rem;
     }
 
     .category-header {
       display: flex;
       align-items: center;
-      gap: 0.85rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 0.75rem;
+      gap: 1.1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 1rem;
     }
 
     .category-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
       color: #fff;
+      box-shadow: 0 8px 20px -4px rgba(0,0,0,0.5);
     }
 
     .category-title {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 700;
+      font-size: 1.85rem;
+      font-weight: 800;
       letter-spacing: -0.01em;
+    }
+
+    .category-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     .term-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 2rem;
+    }
+
+    .full-width-card {
+      grid-column: 1 / -1;
     }
 
     /* Term Card */
     .term-card {
       background: var(--card-bg);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       border: 1px solid var(--card-border);
       box-shadow: var(--shadow-card);
-      padding: 1.5rem;
+      padding: 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      backdrop-filter: blur(16px);
+      gap: 1.3rem;
+      backdrop-filter: blur(18px);
       transition: var(--transition);
       position: relative;
     }
 
     .term-card:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 20px 42px -10px rgba(0, 0, 0, 0.65);
     }
 
     .term-title-row {
@@ -264,170 +286,626 @@
       align-items: baseline;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.6rem;
     }
 
     .term-name {
       font-family: 'Quicksand', sans-serif;
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: 1.55rem;
+      font-weight: 800;
       color: #fff;
     }
 
     .term-phonetic {
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       color: var(--accent-cyan);
-      font-weight: 500;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
     .term-def {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
 
     .term-def strong {
       color: #fff;
+      font-weight: 700;
     }
 
-    /* Interactive Experiment Box */
+    /* Experiment Box */
     .experiment-box {
       margin-top: auto;
-      background: rgba(10, 14, 23, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: var(--radius-md);
-      padding: 1.15rem;
+      background: rgba(10, 14, 23, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 1.2rem;
     }
 
     .experiment-label {
-      font-size: 0.775rem;
-      font-weight: 700;
+      font-size: 0.825rem;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       color: var(--accent-amber);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .exp-controls {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.9rem;
       flex-wrap: wrap;
     }
 
-    /* Buttons & Inputs */
+    /* ==========================================================
+       CANVAS & VISUAL ASPECTS STYLING (FOR ALL CARDS)
+       ========================================================== */
+    .term-canvas {
+      width: 100%;
+      height: 95px;
+      background: #070a12;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.6);
+      display: block;
+    }
+
+    .canvas-caption {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      margin-top: -0.4rem;
+      padding: 0 0.25rem;
+    }
+
+    /* ==========================================================
+       BIGGER, BETTER BUTTONS & INTERACTIVE TOOLS
+       ========================================================== */
     .exp-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.4rem;
-      padding: 0.45rem 1rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
+      gap: 0.65rem;
+      min-height: 52px;
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-md);
+      font-size: 1.05rem;
       font-weight: 700;
-      background: var(--exp-btn-bg, var(--accent-cyan));
-      color: #000;
-      border: none;
+      font-family: inherit;
+      background: var(--exp-btn-bg, linear-gradient(135deg, #38bdf8, #0284c7));
+      color: #031326;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       cursor: pointer;
       transition: var(--transition);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      user-select: none;
     }
 
     .exp-btn:hover {
       filter: brightness(1.15);
-      transform: scale(1.02);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(56, 189, 248, 0.4);
+    }
+
+    .exp-btn:active {
+      transform: translateY(1px) scale(0.98);
+      filter: brightness(0.95);
     }
 
     .exp-btn.secondary {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
     }
 
     .exp-btn.secondary:hover {
-      background: rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
+    .exp-btn.active,
+    .exp-btn.selected {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000 !important;
+      border-color: #fbbf24 !important;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.5) !important;
+    }
+
+    .exp-btn.playing {
+      animation: btnPulse 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes btnPulse {
+      0% { box-shadow: 0 0 12px var(--accent-cyan); }
+      100% { box-shadow: 0 0 28px var(--accent-cyan), 0 0 4px #fff; }
+    }
+
+    .exp-btn-lg {
+      min-height: 60px;
+      padding: 1rem 2rem;
+      font-size: 1.15rem;
+      border-radius: var(--radius-md);
+    }
+
+    .exp-btn-sm {
+      min-height: 44px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    /* Sliders */
     .exp-slider-wrap {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1.2rem;
       width: 100%;
     }
 
     .exp-slider {
       flex: 1;
-      height: 6px;
-      border-radius: 3px;
-      background: rgba(255, 255, 255, 0.15);
+      height: 10px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.18);
       outline: none;
       -webkit-appearance: none;
+      cursor: pointer;
     }
 
     .exp-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      background: var(--accent-cyan);
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
+      border: 2px solid #ffffff;
+      transition: transform 0.1s ease;
+    }
+
+    .exp-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
 
     .exp-val {
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
       color: var(--accent-cyan);
-      min-width: 55px;
+      min-width: 90px;
       text-align: right;
+      background: rgba(56, 189, 248, 0.12);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
-    /* Mini Oscilloscope / Canvas */
-    .mini-canvas {
+    /* ==========================================================
+       INTERACTIVE PIANO KEYBOARD COMPONENT
+       ========================================================== */
+    .piano-container {
       width: 100%;
-      height: 64px;
-      background: #080c14;
+      background: #070a10;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1rem 1rem;
+      box-shadow: inset 0 6px 18px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .piano-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      padding: 0 0.5rem;
+    }
+
+    .piano-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .piano-chord-display {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.12);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      min-width: 160px;
+      text-align: center;
+    }
+
+    .piano-keys {
+      position: relative;
+      height: 140px;
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      user-select: none;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+    }
+
+    .white-key {
+      flex: 1;
+      height: 100%;
+      background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 85%, #cbd5e1 100%);
+      border: 1px solid #94a3b8;
+      border-radius: 0 0 6px 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #334155;
+      transition: background 0.12s, transform 0.12s, box-shadow 0.12s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .white-key:active,
+    .white-key.active {
+      background: linear-gradient(to bottom, #38bdf8 0%, #0284c7 100%) !important;
+      color: #fff !important;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.8) !important;
+      transform: translateY(2px);
+    }
+
+    .black-key {
+      position: absolute;
+      width: 4.8%;
+      height: 62%;
+      background: linear-gradient(to bottom, #1e293b 0%, #0f172a 80%, #020617 100%);
+      border: 1px solid #000;
+      border-radius: 0 0 4px 4px;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 0.4rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #94a3b8;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+      transition: background 0.12s, transform 0.12s, box-shadow 0.12s;
+    }
+
+    .black-key:active,
+    .black-key.active {
+      background: linear-gradient(to bottom, #ec4899 0%, #be185d 100%) !important;
+      color: #fff !important;
+      box-shadow: 0 0 18px rgba(236, 72, 153, 0.9) !important;
+      transform: translateY(2px);
+    }
+
+    /* Key positions for 2-octave keyboard (C3 to C5, 15 white keys) */
+    .bk-cs3 { left: 4.5%; }
+    .bk-ds3 { left: 11.2%; }
+    .bk-fs3 { left: 24.5%; }
+    .bk-gs3 { left: 31.2%; }
+    .bk-as3 { left: 37.8%; }
+
+    .bk-cs4 { left: 51.2%; }
+    .bk-ds4 { left: 57.8%; }
+    .bk-fs4 { left: 71.2%; }
+    .bk-gs4 { left: 77.8%; }
+    .bk-as4 { left: 84.5%; }
+
+    /* ==========================================================
+       CHORD MATRIX & EXPANDED HARMONY
+       ========================================================== */
+    .chord-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.1rem;
+      width: 100%;
+    }
+
+    .chord-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .chord-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-amber);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px -4px rgba(245, 158, 11, 0.3);
+    }
+
+    .chord-card.active {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.4);
+    }
+
+    .chord-card-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .chord-card-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .chord-card-formula {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.15);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    .chord-card-mood {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .chord-card-notes {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .chord-card-actions {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Selector Pill Row */
+    .selector-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .selector-label {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      min-width: 90px;
+    }
+
+    .pill-btn {
+      min-height: 44px;
+      padding: 0.55rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .pill-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #031326;
+      border-color: #38bdf8;
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.4);
+    }
+
+    /* ==========================================================
+       FAMOUS PROGRESSIONS CARDS
+       ========================================================== */
+    .progression-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .prog-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .prog-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .prog-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .prog-formula {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--accent-pink);
+      background: rgba(236, 72, 153, 0.15);
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+    }
+
+    .prog-songs {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .prog-steps {
+      display: flex;
+      gap: 0.6rem;
+      margin: 0.3rem 0;
+    }
+
+    .prog-step {
+      flex: 1;
+      padding: 0.65rem 0.4rem;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #cbd5e1;
+      transition: all 0.2s ease;
+    }
+
+    .prog-step.active {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      color: #fff;
+      border-color: #f472b6;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+      transform: scale(1.08);
+    }
+
+    /* Interval Cards Grid */
+    .interval-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .interval-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: var(--transition);
+    }
+
+    .interval-item:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--accent-emerald);
+      transform: translateY(-2px);
+    }
+
+    .interval-item-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .interval-name {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .interval-semitones {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+    }
+
+    .interval-mnemonic {
+      font-size: 0.85rem;
+      color: var(--text-muted);
     }
 
     /* Footer */
     footer {
-      max-width: 1280px;
+      max-width: 1360px;
       width: 100%;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.875rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
       .term-grid {
         grid-template-columns: 1fr;
+      }
+      .piano-keys {
+        height: 110px;
+      }
+      .exp-btn {
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- Header -->
   <header>
     <div class="top-bar">
       <a href="index.html" class="back-link">
-        <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         <span>Laura's Music App</span>
       </a>
 
       <div class="top-actions">
         <button id="audioUnlockBtn" class="btn-badge">
           <div class="pulse-dot"></div>
-          <span id="audioStatusText">Audio Active</span>
+          <span id="audioStatusText">Audio Engine Ready</span>
         </button>
       </div>
     </div>
@@ -435,14 +913,16 @@
     <div class="hero">
       <span class="hero-tag">Interactive Music Academy</span>
       <h1>Music Terminology Lab</h1>
-      <p>Discover the science, acoustic physics, and artistry behind musical language. Play with each concept below to hear what the words mean in action.</p>
+      <p>Discover the acoustic physics, harmony secrets, and vocabulary of music through large hands-on tools, real-time visual animated canvases for every card, and a playable piano.</p>
     </div>
 
-    <!-- Quick Navigation Pills -->
+    <!-- Section Navigation Pills -->
     <div class="nav-pills">
+      <a href="#chords" class="nav-pill active">Chords & Harmony Studio</a>
+      <a href="#progressions" class="nav-pill">Famous Song Progressions</a>
       <a href="#pitch" class="nav-pill">Pitch & Frequency</a>
-      <a href="#intervals" class="nav-pill">Intervals & Scales</a>
-      <a href="#harmony" class="nav-pill">Harmony & Chords</a>
+      <a href="#intervals" class="nav-pill">Intervals & Mnemonics</a>
+      <a href="#scales" class="nav-pill">Scales & Modes</a>
       <a href="#rhythm" class="nav-pill">Rhythm & Tempo</a>
       <a href="#timbre" class="nav-pill">Timbre & Waveforms</a>
       <a href="#dynamics" class="nav-pill">Dynamics & Envelopes</a>
@@ -453,430 +933,1098 @@
   <!-- Main Content -->
   <main>
 
-    <!-- SECTION 1: PITCH & FREQUENCY -->
+    <!-- ============================================================
+         SECTION 1: EXPANDED CHORD STUDIO & HARMONY
+         ============================================================ -->
+    <section class="category-section" id="chords">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <h2 class="category-title">Interactive Chord & Harmony Studio</h2>
+          <p class="category-subtitle">Master triads, 7th chords, suspensions, and inversions with real-time visual piano & acoustic spectrum feedback.</p>
+        </div>
+      </div>
+
+      <!-- Full-Width Interactive Piano Card with Audio Activity Canvas -->
+      <div class="term-card full-width-card">
+        <div class="term-title-row">
+          <h3 class="term-name">Playable Visual Piano Keyboard & Harmonic Spectrum</h3>
+          <span class="term-phonetic">2-Octave Realtime Voice (C3 &ndash; C5)</span>
+        </div>
+        <p class="term-def">
+          Click any key below to play individual notes, or choose any chord from the library to see the exact keys illuminate and hear the voicing played with warm acoustic synthesis.
+        </p>
+
+        <!-- Piano Component -->
+        <div class="piano-container">
+          <div class="piano-header">
+            <span class="piano-title">
+              <svg style="width:18px;height:18px;fill:var(--accent-cyan)" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              Active Harmony & Note Readout:
+            </span>
+            <div id="pianoChordDisplay" class="piano-chord-display">Click Any Chord Below</div>
+          </div>
+
+          <!-- Dynamic Audio Spectrum for Piano -->
+          <canvas id="pianoAudioCanvas" class="term-canvas" style="height:64px;"></canvas>
+          <div class="canvas-caption">
+            <span>Harmonic Resonance Activity</span>
+            <span id="pianoFreqTag">0 Hz</span>
+          </div>
+
+          <div class="piano-keys" id="pianoKeysContainer">
+            <!-- White Keys (15 keys from C3 to C5) -->
+            <div class="white-key" data-note="C3" data-freq="130.81">C3</div>
+            <div class="white-key" data-note="D3" data-freq="146.83">D3</div>
+            <div class="white-key" data-note="E3" data-freq="164.81">E3</div>
+            <div class="white-key" data-note="F3" data-freq="174.61">F3</div>
+            <div class="white-key" data-note="G3" data-freq="196.00">G3</div>
+            <div class="white-key" data-note="A3" data-freq="220.00">A3</div>
+            <div class="white-key" data-note="B3" data-freq="246.94">B3</div>
+            <div class="white-key" data-note="C4" data-freq="261.63">C4</div>
+            <div class="white-key" data-note="D4" data-freq="293.66">D4</div>
+            <div class="white-key" data-note="E4" data-freq="329.63">E4</div>
+            <div class="white-key" data-note="F4" data-freq="349.23">F4</div>
+            <div class="white-key" data-note="G4" data-freq="392.00">G4</div>
+            <div class="white-key" data-note="A4" data-freq="440.00">A4</div>
+            <div class="white-key" data-note="B4" data-freq="493.88">B4</div>
+            <div class="white-key" data-note="C5" data-freq="523.25">C5</div>
+
+            <!-- Black Keys (10 sharps/flats across 2 octaves) -->
+            <div class="black-key bk-cs3" data-note="C#3" data-freq="138.59">C♯</div>
+            <div class="black-key bk-ds3" data-note="D#3" data-freq="155.56">D♯</div>
+            <div class="black-key bk-fs3" data-note="F#3" data-freq="185.00">F♯</div>
+            <div class="black-key bk-gs3" data-note="G#3" data-freq="207.65">G♯</div>
+            <div class="black-key bk-as3" data-note="A#3" data-freq="233.08">A♯</div>
+
+            <div class="black-key bk-cs4" data-note="C#4" data-freq="277.18">C♯</div>
+            <div class="black-key bk-ds4" data-note="D#4" data-freq="311.13">D♯</div>
+            <div class="black-key bk-fs4" data-note="F#4" data-freq="369.99">F♯</div>
+            <div class="black-key bk-gs4" data-note="G#4" data-freq="415.30">G♯</div>
+            <div class="black-key bk-as4" data-note="A#4" data-freq="466.16">A♯</div>
+          </div>
+        </div>
+
+        <!-- Chord Selector Controls: Root, Inversion, Voicing -->
+        <div class="experiment-box">
+          <span class="experiment-label">Step 1: Choose Root Note & Inversion</span>
+          
+          <div class="selector-row">
+            <span class="selector-label">Root Note:</span>
+            <button class="pill-btn active" onclick="setRootNote('C', this)">C</button>
+            <button class="pill-btn" onclick="setRootNote('D', this)">D</button>
+            <button class="pill-btn" onclick="setRootNote('E', this)">E</button>
+            <button class="pill-btn" onclick="setRootNote('F', this)">F</button>
+            <button class="pill-btn" onclick="setRootNote('G', this)">G</button>
+            <button class="pill-btn" onclick="setRootNote('A', this)">A</button>
+            <button class="pill-btn" onclick="setRootNote('B', this)">B</button>
+            <button class="pill-btn" onclick="setRootNote('Eb', this)">E♭</button>
+            <button class="pill-btn" onclick="setRootNote('Ab', this)">A♭</button>
+            <button class="pill-btn" onclick="setRootNote('Bb', this)">B♭</button>
+          </div>
+
+          <div class="selector-row">
+            <span class="selector-label">Inversion:</span>
+            <button class="pill-btn active" onclick="setInversion(0, this)">Root Position (1 - 3 - 5)</button>
+            <button class="pill-btn" onclick="setInversion(1, this)">1st Inversion (3 - 5 - 1)</button>
+            <button class="pill-btn" onclick="setInversion(2, this)">2nd Inversion (5 - 1 - 3)</button>
+          </div>
+
+          <div class="selector-row">
+            <span class="selector-label">Play Style:</span>
+            <button class="pill-btn active" onclick="setPlayStyle('block', this)">Block Chord (Simultaneous)</button>
+            <button class="pill-btn" onclick="setPlayStyle('strum', this)">Strum / Arpeggiated (Ascending)</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Chord Library with Harmonic Geometry Canvas -->
+        <div class="experiment-box">
+          <span class="experiment-label">Step 2: Chord Architecture & Visual Geometry Clock</span>
+          
+          <!-- Geometric Chord Polygon Clock -->
+          <canvas id="chordGeometryCanvas" class="term-canvas" style="height:150px;"></canvas>
+          <div class="canvas-caption">
+            <span>Chromatic Pitch Circle (12-Tone Clock)</span>
+            <span id="chordGeoTitle">Active Shape: C Major Triad</span>
+          </div>
+
+          <div class="chord-matrix-grid" id="chordMatrixGrid">
+            <!-- 1. Major Triad -->
+            <div class="chord-card" onclick="triggerChord('maj')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Major Triad</span>
+                <span class="chord-card-formula">1 - 3 - 5</span>
+              </div>
+              <p class="chord-card-mood">Bright, joyful, solid, triumphant. The bedrock of Western harmony.</p>
+              <span class="chord-card-notes" id="notes_maj">Notes: C - E - G</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 2. Minor Triad -->
+            <div class="chord-card" onclick="triggerChord('min')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Minor Triad</span>
+                <span class="chord-card-formula">1 - ♭3 - 5</span>
+              </div>
+              <p class="chord-card-mood">Melancholy, reflective, serious, emotional. Lowered 3rd changes everything.</p>
+              <span class="chord-card-notes" id="notes_min">Notes: C - E♭ - G</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 3. Diminished Triad -->
+            <div class="chord-card" onclick="triggerChord('dim')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Diminished (dim)</span>
+                <span class="chord-card-formula">1 - ♭3 - ♭5</span>
+              </div>
+              <p class="chord-card-mood">Tense, suspenseful, unresolved, spooky. Clashing tritone on the 5th.</p>
+              <span class="chord-card-notes" id="notes_dim">Notes: C - E♭ - G♭</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 4. Augmented Triad -->
+            <div class="chord-card" onclick="triggerChord('aug')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Augmented (aug)</span>
+                <span class="chord-card-formula">1 - 3 - ♯5</span>
+              </div>
+              <p class="chord-card-mood">Dreamy, floating, surreal, anticipation. Common in cinema dream sequences.</p>
+              <span class="chord-card-notes" id="notes_aug">Notes: C - E - G♯</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 5. Suspended 4th (sus4) -->
+            <div class="chord-card" onclick="triggerChord('sus4')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Suspended 4th (sus4)</span>
+                <span class="chord-card-formula">1 - 4 - 5</span>
+              </div>
+              <p class="chord-card-mood">Open, yearning, unresolved tension. Replaces the 3rd with the 4th.</p>
+              <span class="chord-card-notes" id="notes_sus4">Notes: C - F - G</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 6. Suspended 2nd (sus2) -->
+            <div class="chord-card" onclick="triggerChord('sus2')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Suspended 2nd (sus2)</span>
+                <span class="chord-card-formula">1 - 2 - 5</span>
+              </div>
+              <p class="chord-card-mood">Airy, modern, ethereal, ambient. Replaces 3rd with 2nd.</p>
+              <span class="chord-card-notes" id="notes_sus2">Notes: C - D - G</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 7. Major 7th (maj7) -->
+            <div class="chord-card" onclick="triggerChord('maj7')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Major 7th (Maj7)</span>
+                <span class="chord-card-formula">1 - 3 - 5 - 7</span>
+              </div>
+              <p class="chord-card-mood">Lush, romantic, lo-fi, nostalgic jazz warmth. Adds natural 7th.</p>
+              <span class="chord-card-notes" id="notes_maj7">Notes: C - E - G - B</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 8. Dominant 7th (7) -->
+            <div class="chord-card" onclick="triggerChord('dom7')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Dominant 7th (7)</span>
+                <span class="chord-card-formula">1 - 3 - 5 - ♭7</span>
+              </div>
+              <p class="chord-card-mood">Bluesy, driving, electric, demands resolution to the tonic.</p>
+              <span class="chord-card-notes" id="notes_dom7">Notes: C - E - G - B♭</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 9. Minor 7th (m7) -->
+            <div class="chord-card" onclick="triggerChord('m7')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Minor 7th (m7)</span>
+                <span class="chord-card-formula">1 - ♭3 - 5 - ♭7</span>
+              </div>
+              <p class="chord-card-mood">Smooth, mellow, soulful, velvet. Signature sound of R&B and Neo-Soul.</p>
+              <span class="chord-card-notes" id="notes_m7">Notes: C - E♭ - G - B♭</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 10. Half-Diminished (m7b5) -->
+            <div class="chord-card" onclick="triggerChord('m7b5')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Half-Diminished (ø7)</span>
+                <span class="chord-card-formula">1 - ♭3 - ♭5 - ♭7</span>
+              </div>
+              <p class="chord-card-mood">Noir, haunting, sophisticated. The classic minor jazz ii chord.</p>
+              <span class="chord-card-notes" id="notes_m7b5">Notes: C - E♭ - G♭ - B♭</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 11. Diminished 7th (dim7) -->
+            <div class="chord-card" onclick="triggerChord('dim7')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Diminished 7th (dim7)</span>
+                <span class="chord-card-formula">1 - ♭3 - ♭5 - 𝄫7</span>
+              </div>
+              <p class="chord-card-mood">Maximal drama, horror villain tension, perfectly symmetrical minor thirds.</p>
+              <span class="chord-card-notes" id="notes_dim7">Notes: C - E♭ - G♭ - A</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+
+            <!-- 12. Add9 -->
+            <div class="chord-card" onclick="triggerChord('add9')">
+              <div class="chord-card-header">
+                <span class="chord-card-title">Major Add9</span>
+                <span class="chord-card-formula">1 - 3 - 5 - 9</span>
+              </div>
+              <p class="chord-card-mood">Shimmering, sparkling pop/acoustic guitar favorite. (Major triad + 9th note).</p>
+              <span class="chord-card-notes" id="notes_add9">Notes: C - E - G - D</span>
+              <div class="chord-card-actions">
+                <button class="exp-btn exp-btn-sm" style="flex:1;">Play Chord</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 2: FAMOUS CHORD PROGRESSIONS & CADENCES
+         ============================================================ -->
+    <section class="category-section" id="progressions">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+        <div>
+          <h2 class="category-title">Famous Chord Progressions & Cadences</h2>
+          <p class="category-subtitle">Listen to the harmonic engines behind hundreds of history's greatest hit songs with dynamic harmonic journey paths.</p>
+        </div>
+      </div>
+
+      <!-- Progression Path Canvas -->
+      <div class="term-card full-width-card" style="padding:1.5rem 2rem;">
+        <div class="term-title-row">
+          <span class="term-name" style="font-size:1.25rem;">Circle of 5ths & Harmonic Route Visualizer</span>
+          <span class="term-phonetic" id="progRouteTag">Ready</span>
+        </div>
+        <canvas id="progressionCanvas" class="term-canvas" style="height:120px;"></canvas>
+        <div class="canvas-caption">
+          <span>Harmonic Motion Trajectory</span>
+          <span>Active Chord Position</span>
+        </div>
+      </div>
+
+      <div class="progression-grid">
+        <!-- 1. The Pop Four Chords -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">The "Pop 4-Chords"</h3>
+            <span class="prog-formula">I - V - vi - IV</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Don't Stop Believin'</em> (Journey), <em>Let It Be</em> (Beatles), <em>Someone Like You</em> (Adele), <em>With or Without You</em> (U2), <em>She Will Be Loved</em> (Maroon 5).
+          </p>
+          <div class="prog-steps" id="prog_pop">
+            <div class="prog-step">C (I)</div>
+            <div class="prog-step">G (V)</div>
+            <div class="prog-step">Am (vi)</div>
+            <div class="prog-step">F (IV)</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('pop', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play Pop 4-Chords
+          </button>
+        </div>
+
+        <!-- 2. 50s Doo-Wop -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">The 50s "Doo-Wop" Ballad</h3>
+            <span class="prog-formula">I - vi - IV - V</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Stand By Me</em> (Ben E. King), <em>Earth Angel</em> (Penguins), <em>Every Breath You Take</em> (Police), <em>Duke of Earl</em>.
+          </p>
+          <div class="prog-steps" id="prog_doowop">
+            <div class="prog-step">C (I)</div>
+            <div class="prog-step">Am (vi)</div>
+            <div class="prog-step">F (IV)</div>
+            <div class="prog-step">G (V)</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('doowop', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play 50s Ballad
+          </button>
+        </div>
+
+        <!-- 3. Jazz 2-5-1 -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">The Jazz 2-5-1</h3>
+            <span class="prog-formula">ii7 - V7 - Imaj7</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Autumn Leaves</em>, <em>Fly Me to the Moon</em>, <em>Tune Up</em>, <em>Satin Doll</em>. The harmonic cornerstone of jazz and soul.
+          </p>
+          <div class="prog-steps" id="prog_jazz">
+            <div class="prog-step">Dm7 (ii7)</div>
+            <div class="prog-step">G7 (V7)</div>
+            <div class="prog-step">Cmaj7 (Imaj7)</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('jazz', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play Jazz 2-5-1
+          </button>
+        </div>
+
+        <!-- 4. Andalusian Cadence -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">The Andalusian Flamenco</h3>
+            <span class="prog-formula">i - VII - VI - V</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Hit the Road Jack</em> (Ray Charles), <em>Sultans of Swing</em> (Dire Straits), Spanish Flamenco, classical tango drama.
+          </p>
+          <div class="prog-steps" id="prog_andalusian">
+            <div class="prog-step">Am (i)</div>
+            <div class="prog-step">G (VII)</div>
+            <div class="prog-step">F (VI)</div>
+            <div class="prog-step">E (V)</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('andalusian', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play Andalusian Cadence
+          </button>
+        </div>
+
+        <!-- 5. 12-Bar Blues Turnaround -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">12-Bar Blues Turnaround</h3>
+            <span class="prog-formula">I7 - IV7 - I7 - V7</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Johnny B. Goode</em> (Chuck Berry), <em>Hound Dog</em>, <em>Sweet Home Chicago</em>, Rock & Roll foundations.
+          </p>
+          <div class="prog-steps" id="prog_blues">
+            <div class="prog-step">C7 (I7)</div>
+            <div class="prog-step">F7 (IV7)</div>
+            <div class="prog-step">C7 (I7)</div>
+            <div class="prog-step">G7 (V7)</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('blues', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play Blues Turnaround
+          </button>
+        </div>
+
+        <!-- 6. Pachelbel's Canon -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">Pachelbel's Canon</h3>
+            <span class="prog-formula">I - V - vi - iii - IV - I</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Canon in D</em>, <em>Memories</em> (Maroon 5), <em>Basket Case</em> (Green Day), <em>Graduation</em> (Vitamin C).
+          </p>
+          <div class="prog-steps" id="prog_canon">
+            <div class="prog-step">C</div>
+            <div class="prog-step">G</div>
+            <div class="prog-step">Am</div>
+            <div class="prog-step">Em</div>
+            <div class="prog-step">F</div>
+            <div class="prog-step">C</div>
+          </div>
+          <button class="exp-btn exp-btn-lg" onclick="playProgression('canon', this)">
+            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            Play Canon Progression
+          </button>
+        </div>
+      </div>
+
+      <!-- Musical Cadences with Tension & Resolution Visualizer -->
+      <div class="term-card full-width-card">
+        <div class="term-title-row">
+          <h3 class="term-name">Musical Cadences & Harmonic Punctuation</h3>
+          <span class="term-phonetic">Tension & Resolution Physics</span>
+        </div>
+        <p class="term-def">
+          A <strong>Cadence</strong> is a sequence of two chords acting like punctuation in a sentence. Watch the tension curve build up on dominant chords and resolve into complete resting equilibrium.
+        </p>
+        
+        <!-- Cadence Tension Curve Canvas -->
+        <canvas id="cadenceCanvas" class="term-canvas" style="height:90px;"></canvas>
+        <div class="canvas-caption">
+          <span>Harmonic Energy Level</span>
+          <span id="cadenceStatusTag">Equilibrium</span>
+        </div>
+
+        <div class="experiment-box">
+          <span class="experiment-label">Interactive Cadence Player</span>
+          <div class="exp-controls">
+            <button class="exp-btn exp-btn-lg" onclick="playCadenceFull('authentic', this)">
+              Authentic Cadence (V7 &rarr; I) &bull; Final Period
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playCadenceFull('plagal', this)">
+              Plagal Cadence (IV &rarr; I) &bull; "Amen"
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playCadenceFull('half', this)">
+              Half Cadence (I &rarr; V) &bull; Question Mark
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playCadenceFull('deceptive', this)">
+              Deceptive Cadence (V &rarr; vi) &bull; Surprise Twist!
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SECTION 3: PITCH, FREQUENCY & ACOUSTICS
+         ============================================================ -->
     <section class="category-section" id="pitch">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #38bdf8, #0284c7);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </div>
-        <h2 class="category-title">Pitch, Frequency & Octaves</h2>
+        <div>
+          <h2 class="category-title">Pitch, Frequency & Octaves</h2>
+          <p class="category-subtitle">The physical science of sound vibration, cycles per second, and frequency doubling.</p>
+        </div>
       </div>
 
       <div class="term-grid">
-        <!-- 1. Pitch & Frequency -->
+        <!-- Pitch Sweeper -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Pitch & Frequency</h3>
             <span class="term-phonetic">Hertz (Hz)</span>
           </div>
           <p class="term-def">
-            <strong>Pitch</strong> is how high or low a musical sound seems to our ears. Acoustically, it is governed by <strong>Frequency</strong> &mdash; the number of complete sound wave vibrations per second, measured in <strong>Hertz (Hz)</strong>. Faster vibrations produce higher pitches; slower vibrations produce lower pitches.
+            <strong>Pitch</strong> is how high or low a note sounds. Acoustically, it corresponds directly to <strong>Frequency</strong> &mdash; the speed of wave cycles vibrating per second in <strong>Hertz (Hz)</strong>.
           </p>
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Frequency Sweeper</span>
+            <span class="experiment-label">Interactive Frequency Sweeper & Oscilloscope</span>
             <div class="exp-slider-wrap">
               <input type="range" id="pitchSlider" class="exp-slider" min="60" max="1200" value="440">
-              <span id="pitchVal" class="exp-val">440 Hz (A4)</span>
+              <span id="pitchVal" class="exp-val">440 Hz</span>
             </div>
             <div class="exp-controls">
-              <button class="exp-btn" id="playPitchBtn">Tone On / Off</button>
+              <button class="exp-btn exp-btn-lg" id="playPitchBtn" style="flex:1;">
+                <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Toggle Tone On / Off
+              </button>
             </div>
-            <canvas id="pitchCanvas" class="mini-canvas"></canvas>
+            <canvas id="pitchCanvas" class="term-canvas" style="height:90px;"></canvas>
+            <div class="canvas-caption">
+              <span>Traveling Acoustic Sine Wave</span>
+              <span>Wavelength &lambda; = v / f</span>
+            </div>
           </div>
         </div>
 
-        <!-- 2. Octave -->
+        <!-- Octave Ladder -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Octave</h3>
-            <span class="term-phonetic">[AHK-tiv] &bull; 2:1 Ratio</span>
+            <span class="term-phonetic">2:1 Mathematical Ratio</span>
           </div>
           <p class="term-def">
-            An <strong>Octave</strong> is the musical interval between one pitch and another with double or half its frequency. Because the wave peaks align precisely every second cycle, our brains perceive octaves as the "same" note at a different height.
+            An <strong>Octave</strong> is the acoustic interval between a frequency and its exact double (2f). Because wave peaks align precisely every second cycle, our ears hear it as the "same" note in a higher register.
           </p>
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Octave Ladder</span>
-            <p style="font-size:0.8rem; color:var(--text-muted);">Click to double the frequency and hear how the note ascends across 4 octaves:</p>
-            <div class="exp-controls">
-              <button class="exp-btn secondary" onclick="playOctave(110)">A2 (110Hz)</button>
-              <button class="exp-btn secondary" onclick="playOctave(220)">A3 (220Hz)</button>
-              <button class="exp-btn secondary" onclick="playOctave(440)">A4 (440Hz)</button>
-              <button class="exp-btn secondary" onclick="playOctave(880)">A5 (880Hz)</button>
+            <span class="experiment-label">4-Octave Peak Alignment Visualizer</span>
+            <canvas id="octaveCanvas" class="term-canvas" style="height:100px;"></canvas>
+            <div class="canvas-caption">
+              <span>Stacked Harmonics (110, 220, 440, 880 Hz)</span>
+              <span>Aligned Phase Crests</span>
+            </div>
+            <div class="exp-controls" style="display:grid; grid-template-columns:1fr 1fr; gap:0.9rem;">
+              <button class="exp-btn secondary exp-btn-lg" onclick="playOctaveNote(110, 'A2 (110 Hz)', this)">A2 &bull; 110 Hz</button>
+              <button class="exp-btn secondary exp-btn-lg" onclick="playOctaveNote(220, 'A3 (220 Hz)', this)">A3 &bull; 220 Hz (2×)</button>
+              <button class="exp-btn secondary exp-btn-lg" onclick="playOctaveNote(440, 'A4 (440 Hz)', this)">A4 &bull; 440 Hz (4×)</button>
+              <button class="exp-btn secondary exp-btn-lg" onclick="playOctaveNote(880, 'A5 (880 Hz)', this)">A5 &bull; 880 Hz (8×)</button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: INTERVALS & SCALES -->
+    <!-- ============================================================
+         SECTION 4: INTERVALS & SONG MNEMONICS
+         ============================================================ -->
     <section class="category-section" id="intervals">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
         </div>
-        <h2 class="category-title">Intervals, Scales & Arpeggios</h2>
+        <div>
+          <h2 class="category-title">Intervals & Famous Song Mnemonics</h2>
+          <p class="category-subtitle">The building blocks of melody. Train your ear with the 12 musical intervals.</p>
+        </div>
       </div>
 
-      <div class="term-grid">
-        <!-- 3. Interval -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Interval</h3>
-            <span class="term-phonetic">Pitch Distance</span>
-          </div>
-          <p class="term-def">
-            An <strong>Interval</strong> is the distance in pitch between two notes. When notes sound together, it's a <strong>harmonic interval</strong>; when sounded in sequence, it's a <strong>melodic interval</strong>. Smaller intervals like half-steps and whole-steps form scales.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Interval Explorer</span>
-            <div class="exp-controls">
-              <select id="intervalSelect" style="padding:0.4rem 0.8rem; border-radius:8px; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2);">
-                <option value="1">Minor 2nd (Half Step - Tense)</option>
-                <option value="4">Major 3rd (Bright / Happy)</option>
-                <option value="6">Tritone (Devil's Interval)</option>
-                <option value="7" selected>Perfect 5th (Open / Pure)</option>
-                <option value="12">Octave (Consonant)</option>
-              </select>
-              <button class="exp-btn" onclick="playCurrentInterval('harmonic')">Harmonic</button>
-              <button class="exp-btn secondary" onclick="playCurrentInterval('melodic')">Melodic</button>
-            </div>
-          </div>
+      <div class="term-card full-width-card">
+        <div class="term-title-row">
+          <h3 class="term-name">12 Musical Intervals & Pitch Leap Compass</h3>
+          <span class="term-phonetic">Melodic vs Harmonic Distance</span>
+        </div>
+        <p class="term-def">
+          An <strong>Interval</strong> is the pitch distance between two notes. Watch the pitch particle jump along the semitone ruler to visualize the exact spatial leap.
+        </p>
+
+        <!-- Interval Distance Ruler Canvas -->
+        <canvas id="intervalCanvas" class="term-canvas" style="height:90px;"></canvas>
+        <div class="canvas-caption">
+          <span>Root Note (0)</span>
+          <span id="intervalCanvasLabel">Select Any Interval Below</span>
+          <span>Target Interval (1 &ndash; 12)</span>
         </div>
 
-        <!-- 4. Scale -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Scale</h3>
-            <span class="term-phonetic">Latin: Scala (Ladder)</span>
+        <div class="experiment-box">
+          <div class="selector-row" style="margin-bottom:0.5rem;">
+            <span class="selector-label">Play Mode:</span>
+            <button class="pill-btn active" id="intModeMelodic" onclick="setIntervalMode('melodic', this)">Melodic (Ascending Notes)</button>
+            <button class="pill-btn" id="intModeHarmonic" onclick="setIntervalMode('harmonic', this)">Harmonic (Together)</button>
           </div>
-          <p class="term-def">
-            A <strong>Scale</strong> is an organized ladder of notes spanning an octave. The formula of whole-steps and half-steps dictates the scale's emotional quality &mdash; e.g. <strong>Major</strong> feels bright and uplifting, while <strong>Minor</strong> feels reflective or dramatic.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Scale Mode Explorer</span>
-            <div class="exp-controls">
-              <button class="exp-btn secondary" onclick="playScale('major')">Major (C-D-E-F-G-A-B-C)</button>
-              <button class="exp-btn secondary" onclick="playScale('minor')">Natural Minor (A-B-C-D-E-F-G-A)</button>
-              <button class="exp-btn secondary" onclick="playScale('pentatonic')">Pentatonic (5-Note Scale)</button>
-            </div>
-          </div>
-        </div>
 
-        <!-- 5. Arpeggio -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Arpeggio</h3>
-            <span class="term-phonetic">[ahr-PEJ-ee-oh] &bull; Broken Chord</span>
-          </div>
-          <p class="term-def">
-            An <strong>Arpeggio</strong> (from Italian <em>arpeggiare</em>, meaning "to play on a harp") is a broken chord where the individual notes of a triad or seventh chord are played rapidly one after another rather than struck at the same instant.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Broken Chord Harp</span>
-            <div class="exp-controls">
-              <button class="exp-btn" onclick="playArpeggio([261.63, 329.63, 392.00, 523.25])">C Major Arpeggio</button>
-              <button class="exp-btn secondary" onclick="playArpeggio([261.63, 311.13, 392.00, 523.25])">C Minor Arpeggio</button>
+          <div class="interval-grid">
+            <!-- 1. Minor 2nd -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Minor 2nd</span>
+                <span class="interval-semitones">1 Semitone</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Jaws</em> Shark Theme</span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(1, 'Minor 2nd (Jaws)', this)">Play Interval</button>
+            </div>
+
+            <!-- 2. Major 2nd -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Major 2nd</span>
+                <span class="interval-semitones">2 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Happy Birthday</em> ("Hap-py")</span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(2, 'Major 2nd (Happy Birthday)', this)">Play Interval</button>
+            </div>
+
+            <!-- 3. Minor 3rd -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Minor 3rd</span>
+                <span class="interval-semitones">3 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Greensleeves</em> / <em>Lullaby</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(3, 'Minor 3rd (Greensleeves)', this)">Play Interval</button>
+            </div>
+
+            <!-- 4. Major 3rd -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Major 3rd</span>
+                <span class="interval-semitones">4 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>When the Saints Go Marching In</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(4, 'Major 3rd (When the Saints)', this)">Play Interval</button>
+            </div>
+
+            <!-- 5. Perfect 4th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Perfect 4th</span>
+                <span class="interval-semitones">5 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Amazing Grace</em> / <em>Here Comes Bride</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(5, 'Perfect 4th (Amazing Grace)', this)">Play Interval</button>
+            </div>
+
+            <!-- 6. Tritone -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Tritone (♭5)</span>
+                <span class="interval-semitones">6 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>The Simpsons</em> Opening / <em>Maria</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(6, 'Tritone (The Simpsons)', this)">Play Interval</button>
+            </div>
+
+            <!-- 7. Perfect 5th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Perfect 5th</span>
+                <span class="interval-semitones">7 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Star Wars</em> Main Title / <em>Twinkle</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(7, 'Perfect 5th (Star Wars)', this)">Play Interval</button>
+            </div>
+
+            <!-- 8. Minor 6th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Minor 6th</span>
+                <span class="interval-semitones">8 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>The Entertainer</em> (Scott Joplin)</span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(8, 'Minor 6th (The Entertainer)', this)">Play Interval</button>
+            </div>
+
+            <!-- 9. Major 6th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Major 6th</span>
+                <span class="interval-semitones">9 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>NBC Chimes</em> / <em>My Bonnie</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(9, 'Major 6th (NBC Chimes)', this)">Play Interval</button>
+            </div>
+
+            <!-- 10. Minor 7th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Minor 7th</span>
+                <span class="interval-semitones">10 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Somewhere</em> (West Side Story)</span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(10, 'Minor 7th (Somewhere)', this)">Play Interval</button>
+            </div>
+
+            <!-- 11. Major 7th -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Major 7th</span>
+                <span class="interval-semitones">11 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Take On Me</em> / <em>Pure Imagination</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(11, 'Major 7th (Take On Me)', this)">Play Interval</button>
+            </div>
+
+            <!-- 12. Octave -->
+            <div class="interval-item">
+              <div class="interval-item-top">
+                <span class="interval-name">Octave</span>
+                <span class="interval-semitones">12 Semitones</span>
+              </div>
+              <span class="interval-mnemonic">Mnemonic: <em>Somewhere Over the Rainbow</em></span>
+              <button class="exp-btn exp-btn-sm" onclick="playIntervalSemitones(12, 'Octave (Rainbow)', this)">Play Interval</button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 3: HARMONY & CHORDS -->
-    <section class="category-section" id="harmony">
+    <!-- ============================================================
+         SECTION 5: SCALES & MODES
+         ============================================================ -->
+    <section class="category-section" id="scales">
       <div class="category-header">
-        <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div class="category-icon" style="background: linear-gradient(135deg, #6366f1, #4338ca);">
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
         </div>
-        <h2 class="category-title">Harmony, Chords & Consonance</h2>
+        <div>
+          <h2 class="category-title">Scales & Modal Ladders</h2>
+          <p class="category-subtitle">The melodic alphabets of global cultures and musical genres.</p>
+        </div>
       </div>
 
-      <div class="term-grid">
-        <!-- 6. Chords & Triads -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Chords & Triads</h3>
-            <span class="term-phonetic">Harmonic Foundation</span>
-          </div>
-          <p class="term-def">
-            A <strong>Chord</strong> is three or more notes sounded together. The fundamental building block is a <strong>Triad</strong>, consisting of a Root, a Third, and a Fifth. A single semitone change on the 3rd shifts a chord from cheerful Major to melancholic Minor.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Major vs. Minor Triad</span>
-            <div class="exp-controls">
-              <button class="exp-btn" onclick="playChord([261.63, 329.63, 392.00])">Play C Major (C - E - G)</button>
-              <button class="exp-btn secondary" onclick="playChord([261.63, 311.13, 392.00])">Play C Minor (C - E♭ - G)</button>
-            </div>
-          </div>
+      <div class="term-card full-width-card">
+        <div class="term-title-row">
+          <h3 class="term-name">Musical Scale Explorer & Staircase Visualizer</h3>
+          <span class="term-phonetic">Major, Minor, Pentatonic, Blues & Modes</span>
+        </div>
+        <p class="term-def">
+          A <strong>Scale</strong> (Latin: <em>scala</em> = ladder) is an ordered sequence of pitches within an octave. Watch the glowing pitch orb climb each step of whole-steps ($W$) and half-steps ($H$).
+        </p>
+
+        <!-- Musical Staircase Canvas -->
+        <canvas id="scaleCanvas" class="term-canvas" style="height:100px;"></canvas>
+        <div class="canvas-caption">
+          <span>Tonic (Root)</span>
+          <span id="scaleCanvasTag">Active Scale Ladder</span>
+          <span>Octave (Resolution)</span>
         </div>
 
-        <!-- 7. Consonance vs Dissonance -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Consonance vs. Dissonance</h3>
-            <span class="term-phonetic">Acoustic Stability & Tension</span>
-          </div>
-          <p class="term-def">
-            <strong>Consonance</strong> sounds stable, pleasant, and resolved because the frequencies share simple mathematical ratios. <strong>Dissonance</strong> produces tension and auditory "beating" because frequencies are too close and acoustically clash.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Tension & Beating Lab</span>
-            <div class="exp-controls">
-              <button class="exp-btn" onclick="playBeating(440, 660)">Consonant 5th (440 + 660Hz)</button>
-              <button class="exp-btn secondary" onclick="playBeating(440, 444)">Dissonant Beating (440 + 444Hz)</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 8. Cadence -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Cadence</h3>
-            <span class="term-phonetic">Musical Punctuation</span>
-          </div>
-          <p class="term-def">
-            A <strong>Cadence</strong> is a harmonic two-chord progression that ends a musical phrase, acting like a comma or period in a sentence. The most famous is the <strong>Authentic Cadence (V-I)</strong>, creating ultimate resolution and finality.
-          </p>
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Chord Cadence Player</span>
-            <div class="exp-controls">
-              <button class="exp-btn" onclick="playCadence('authentic')">Authentic (V &rarr; I Resolution)</button>
-              <button class="exp-btn secondary" onclick="playCadence('plagal')">Plagal (IV &rarr; I "Amen")</button>
-            </div>
+        <div class="experiment-box">
+          <span class="experiment-label">Tap to Ascend Each Scale</span>
+          <div class="exp-controls" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1rem;">
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('major', 'Major (Ionian)', this)">
+              Major Scale (C - D - E - F - G - A - B - C)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('minor', 'Natural Minor', this)">
+              Natural Minor (A - B - C - D - E - F - G - A)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('harmonic_minor', 'Harmonic Minor', this)">
+              Harmonic Minor (Exotic Classical Drama)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('pentatonic_major', 'Pentatonic Major', this)">
+              Major Pentatonic (Folk / Country / Eastern)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('pentatonic_minor', 'Minor Pentatonic', this)">
+              Minor Pentatonic (Rock Solo Foundation)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('blues', 'Blues Scale', this)">
+              Blues Scale (Includes the "Blue Note" ♭5)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('dorian', 'Dorian Mode', this)">
+              Dorian Mode (Funky / Medieval / Get Lucky)
+            </button>
+            <button class="exp-btn exp-btn-lg secondary" onclick="playScaleLadder('mixolydian', 'Mixolydian Mode', this)">
+              Mixolydian Mode (Classic Rock / Sweet Child)
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: RHYTHM, TEMPO & METER -->
+    <!-- ============================================================
+         SECTION 6: RHYTHM, METER & TEMPO
+         ============================================================ -->
     <section class="category-section" id="rhythm">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
         </div>
-        <h2 class="category-title">Rhythm, Meter & Tempo</h2>
+        <div>
+          <h2 class="category-title">Rhythm, Meter & Tempo</h2>
+          <p class="category-subtitle">The pulse, timing, and time signatures that give music life.</p>
+        </div>
       </div>
 
       <div class="term-grid">
-        <!-- 9. Tempo -->
+        <!-- Tempo Metronome with Animated Pendulum Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Tempo (BPM)</h3>
-            <span class="term-phonetic">Italian: Time / Speed</span>
+            <span class="term-phonetic">Beats Per Minute</span>
           </div>
           <p class="term-def">
-            <strong>Tempo</strong> is the pace of the music, measured in <strong>Beats Per Minute (BPM)</strong>. Classical Italian terms describe tempo moods: <em>Adagio</em> (slow, 66 BPM), <em>Andante</em> (walking pace, 90 BPM), <em>Allegro</em> (fast, 130 BPM), and <em>Presto</em> (very fast, 180 BPM).
+            <strong>Tempo</strong> is the speed of the underlying beat. Watch the mechanical pendulum arm swing in real time with acoustic pulse rings.
           </p>
+
+          <!-- Pendulum Metronome Canvas -->
+          <canvas id="metronomeCanvas" class="term-canvas" style="height:100px;"></canvas>
+          <div class="canvas-caption">
+            <span>Swinging Pendulum Motion</span>
+            <span>Acoustic Beat Ripple</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Tap Metronome</span>
+            <span class="experiment-label">Interactive Metronome & Tap Tempo</span>
             <div class="exp-slider-wrap">
-              <input type="range" id="tempoSlider" class="exp-slider" min="50" max="200" value="110">
-              <span id="tempoVal" class="exp-val">110 BPM</span>
+              <input type="range" id="tempoSlider" class="exp-slider" min="50" max="220" value="120">
+              <span id="tempoVal" class="exp-val">120 BPM</span>
             </div>
             <div class="exp-controls">
-              <button class="exp-btn" id="metronomeToggleBtn">Start Metronome</button>
-              <button class="exp-btn secondary" id="tapTempoBtn">Tap Tempo</button>
+              <button class="exp-btn exp-btn-lg" id="metronomeToggleBtn" style="flex:1;">Start Metronome</button>
+              <button class="exp-btn exp-btn-lg secondary" id="tapTempoBtn" style="flex:1;">Tap Tempo</button>
             </div>
           </div>
         </div>
 
-        <!-- 10. Time Signature & Meter -->
+        <!-- Meter Beat Machine with Radial Meter Dial Canvas -->
         <div class="term-card">
           <div class="term-title-row">
-            <h3 class="term-name">Meter & Time Signature</h3>
-            <span class="term-phonetic">4/4 &bull; 3/4 &bull; 6/8</span>
+            <h3 class="term-name">Meter & Time Signatures</h3>
+            <span class="term-phonetic">4/4 &bull; 3/4 &bull; 5/4 &bull; 6/8</span>
           </div>
           <p class="term-def">
-            <strong>Meter</strong> organizes pulses into recurring patterns of strong and weak beats. <strong>4/4</strong> (Common Time) has 4 beats per bar with an accent on 1. <strong>3/4</strong> (Waltz) has 3 beats (STRONG-weak-weak). <strong>6/8</strong> groups into two compound pulses of three.
+            <strong>Meter</strong> groups pulses into repeating patterns. Watch the metric clock needle sweep and illuminate accented downbeats.
           </p>
+
+          <!-- Metric Clock Dial Canvas -->
+          <canvas id="meterCanvas" class="term-canvas" style="height:100px;"></canvas>
+          <div class="canvas-caption">
+            <span>Metric Rotation Dial</span>
+            <span id="meterCanvasTag">Downbeat Flash</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Meter Beat Machine</span>
-            <div class="exp-controls">
-              <button class="exp-btn secondary" onclick="startMeter(4)">4/4 (March/Pop)</button>
-              <button class="exp-btn secondary" onclick="startMeter(3)">3/4 (Waltz)</button>
-              <button class="exp-btn secondary" onclick="startMeter(6)">6/8 (Compound)</button>
-              <button class="exp-btn secondary" onclick="stopMeter()">Stop</button>
+            <span class="experiment-label">Meter Beat Machine with Downbeat Accents</span>
+            <div class="exp-controls" style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(4, this)">4/4 Pop & Rock</button>
+              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(3, this)">3/4 Waltz</button>
+              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(5, this)">5/4 "Take Five"</button>
+              <button class="exp-btn exp-btn-sm secondary" onclick="stopMeter()">Stop Meter</button>
             </div>
-            <span id="meterStatus" style="font-size:0.8rem; color:var(--text-muted);">Select a meter to hear the accented downbeat.</span>
+            <div id="meterStatus" style="font-size:0.95rem; font-weight:700; color:var(--accent-amber); min-height:24px;">Select a time signature above.</div>
           </div>
         </div>
 
-        <!-- 11. Polyrhythm -->
-        <div class="term-card">
+        <!-- Polyrhythm with Dual Orbital Gear Rings Canvas -->
+        <div class="term-card full-width-card">
           <div class="term-title-row">
-            <h3 class="term-name">Polyrhythm</h3>
-            <span class="term-phonetic">Cross-Rhythms (3:2)</span>
+            <h3 class="term-name">Polyrhythm (3 against 2)</h3>
+            <span class="term-phonetic">Concentric Orbital Gears</span>
           </div>
           <p class="term-def">
-            A <strong>Polyrhythm</strong> is the simultaneous sounding of two different metric subdivisions that do not easily divide into each other &mdash; such as playing 3 equal beats on one drum in the exact same time as 2 equal beats on another.
+            A <strong>Polyrhythm</strong> is the simultaneous sounding of conflicting metric subdivisions. Watch the two rotating orbital rings align and flash as they strike!
           </p>
+
+          <!-- Concentric Orbital Canvas -->
+          <canvas id="polyCanvas" class="term-canvas" style="height:120px;"></canvas>
+          <div class="canvas-caption">
+            <span>Outer Orbit: 3 Pulse Division</span>
+            <span>Inner Orbit: 2 Pulse Division</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: 3 against 2 Polyrhythm</span>
+            <span class="experiment-label">3:2 Polyrhythm Pulse Engine</span>
             <div class="exp-controls">
-              <button class="exp-btn" id="polyrhythmBtn">Play 3:2 Polyrhythm</button>
+              <button class="exp-btn exp-btn-lg" id="polyrhythmBtn" style="flex:1;">
+                Play 3:2 Polyrhythm
+              </button>
             </div>
-            <span id="polyStatus" style="font-size:0.8rem; color:var(--text-muted);">High pitch clicks 3 times, Low pitch clicks 2 times.</span>
+            <div id="polyStatus" style="font-size:0.95rem; color:var(--text-muted);">High-pitch click divides bar into 3; Low-pitch drum divides into 2.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 5: TIMBRE & WAVEFORMS -->
+    <!-- ============================================================
+         SECTION 7: TIMBRE, WAVEFORMS & SYNTHESIS
+         ============================================================ -->
     <section class="category-section" id="timbre">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #a855f7, #7e22ce);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </div>
-        <h2 class="category-title">Timbre, Waveforms & Harmonics</h2>
+        <div>
+          <h2 class="category-title">Timbre, Waveforms & Harmonics</h2>
+          <p class="category-subtitle">The acoustic geometry and overtone recipes that create distinct tone color.</p>
+        </div>
       </div>
 
       <div class="term-grid">
-        <!-- 12. Timbre & Waveforms -->
+        <!-- Waveform Synthesizer with Dual Oscilloscope & Spectrum Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Timbre ("Tone Color")</h3>
-            <span class="term-phonetic">[TAM-ber]</span>
+            <span class="term-phonetic">[TAM-ber] &bull; Wave Geometry</span>
           </div>
           <p class="term-def">
-            <strong>Timbre</strong> is the unique texture that allows you to tell a flute, piano, and violin apart even when they play the exact same pitch and volume. In electronic synthesis, timbre starts with the geometric <strong>waveform shape</strong>.
+            <strong>Timbre</strong> is why instruments have unique sound characters. Observe the animated waveform and its Fourier overtone bars update live.
           </p>
+
+          <!-- Dual-Trace Oscilloscope & Spectrum Canvas -->
+          <canvas id="oscCanvas" class="term-canvas" style="height:90px;"></canvas>
+          <div class="canvas-caption">
+            <span>Waveform Geometry</span>
+            <span>Harmonic Energy Spectrum</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Waveform Synthesizer</span>
+            <span class="experiment-label">Interactive Waveform Synthesizer</span>
+            <div class="exp-controls" style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+              <button class="exp-btn secondary active-wave" onclick="setWaveform('sine', this)">Sine (Pure / Flute)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('triangle', this)">Triangle (Warm / Mellow)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('sawtooth', this)">Sawtooth (Brass / Bright)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('square', this)">Square (Chiptune / Hollow)</button>
+            </div>
             <div class="exp-controls">
-              <button class="exp-btn secondary active-wave" onclick="setWaveform('sine', this)">Sine (Flute/Pure)</button>
-              <button class="exp-btn secondary" onclick="setWaveform('triangle', this)">Triangle (Warm)</button>
-              <button class="exp-btn secondary" onclick="setWaveform('sawtooth', this)">Sawtooth (Brass/Bright)</button>
-              <button class="exp-btn secondary" onclick="setWaveform('square', this)">Square (Chiptune/Hollow)</button>
+              <button class="exp-btn exp-btn-lg" style="flex:1;" onmousedown="startWaveTone()" onmouseup="stopWaveTone()" ontouchstart="startWaveTone()" ontouchend="stopWaveTone()">
+                Hold to Play C4 (261.6 Hz)
+              </button>
             </div>
-            <div class="exp-controls" style="margin-top:0.4rem;">
-              <button class="exp-btn" onmousedown="startWaveTone()" onmouseup="stopWaveTone()" ontouchstart="startWaveTone()" ontouchend="stopWaveTone()">Hold to Play C4 (261Hz)</button>
-            </div>
-            <canvas id="oscCanvas" class="mini-canvas"></canvas>
           </div>
         </div>
 
-        <!-- 13. Harmonics & Overtones -->
+        <!-- Harmonics Standing Wave Canvas -->
         <div class="term-card">
           <div class="term-title-row">
-            <h3 class="term-name">Harmonics & Overtones</h3>
-            <span class="term-phonetic">The Harmonic Series</span>
+            <h3 class="term-name">The Harmonic Series</h3>
+            <span class="term-phonetic">Overtones (f, 2f, 3f, 4f)</span>
           </div>
           <p class="term-def">
-            Every acoustic note is actually a composite chord of a <strong>Fundamental frequency (f)</strong> and quieter mathematical multiples (2f, 3f, 4f...). This overtone recipe is what creates an instrument's rich acoustic character.
+            Every musical note is composed of a fundamental plus higher harmonics. Watch the physical vibrating string simulation show nodes and antinodes.
           </p>
+
+          <!-- Vibrating Standing Wave Simulation Canvas -->
+          <canvas id="harmonicCanvas" class="term-canvas" style="height:100px;"></canvas>
+          <div class="canvas-caption">
+            <span>Standing Wave String Modes</span>
+            <span>Nodes & Antinodes</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Additive Harmonic Blender</span>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">1st (Fund.):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="1"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">2nd (Octave):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.5"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">3rd (5th):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.3"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">4th (2nd Oct):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.15"></div>
+            <span class="experiment-label">Additive Harmonics Blender</span>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">1st (Fund.):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="1"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">2nd (Octave):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.5"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">3rd (5th):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.3"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">4th (2nd Oct):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.2"></div>
             </div>
             <div class="exp-controls">
-              <button class="exp-btn" id="harmonicBlendBtn">Play Harmonic Blend</button>
+              <button class="exp-btn exp-btn-lg" id="harmonicBlendBtn" style="flex:1;">Play Harmonic Blend</button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 6: DYNAMICS & ENVELOPES -->
+    <!-- ============================================================
+         SECTION 8: DYNAMICS, ENVELOPES & ARTICULATION
+         ============================================================ -->
     <section class="category-section" id="dynamics">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
         </div>
-        <h2 class="category-title">Dynamics & ADSR Envelopes</h2>
+        <div>
+          <h2 class="category-title">Dynamics & ADSR Envelopes</h2>
+          <p class="category-subtitle">Volume contours, acoustic attack profiles, and expressive shaping.</p>
+        </div>
       </div>
 
       <div class="term-grid">
-        <!-- 14. Dynamics -->
+        <!-- Dynamics with Sound Pressure Swell Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Dynamics</h3>
-            <span class="term-phonetic">Volume & Expression</span>
+            <span class="term-phonetic">Volume Contours</span>
           </div>
           <p class="term-def">
-            <strong>Dynamics</strong> denote variations in volume: <strong>pp</strong> (pianissimo, very soft), <strong>p</strong> (piano), <strong>mf</strong> (mezzo-forte, medium loud), <strong>f</strong> (forte, loud), and <strong>ff</strong> (fortissimo). <strong>Crescendo</strong> means gradually getting louder; <strong>Decrescendo</strong> means fading softer.
+            <strong>Dynamics</strong> define volume gradations: <strong>pp</strong> (pianissimo), <strong>p</strong> (piano), <strong>mf</strong> (mezzo-forte), <strong>f</strong> (forte), and <strong>ff</strong> (fortissimo). Watch the wave physically swell in height!
           </p>
+
+          <!-- Sound Pressure Swell Canvas -->
+          <canvas id="dynamicsCanvas" class="term-canvas" style="height:90px;"></canvas>
+          <div class="canvas-caption">
+            <span>Sound Pressure Level (dB)</span>
+            <span id="dynamicIndicator">Resting</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Crescendo / Decrescendo Swell</span>
+            <span class="experiment-label">Interactive Volume Swell</span>
             <div class="exp-controls">
-              <button class="exp-btn" onclick="playCrescendo()">Hear Crescendo (pp &rarr; ff)</button>
-              <button class="exp-btn secondary" onclick="playDecrescendo()">Hear Decrescendo (ff &rarr; pp)</button>
+              <button class="exp-btn exp-btn-lg" onclick="playCrescendo()" style="flex:1;">Crescendo (pp &rarr; ff)</button>
+              <button class="exp-btn exp-btn-lg secondary" onclick="playDecrescendo()" style="flex:1;">Decrescendo (ff &rarr; pp)</button>
             </div>
-            <div id="dynamicIndicator" style="font-size:0.9rem; font-weight:700; color:var(--accent-amber); text-align:center; height:20px;"></div>
           </div>
         </div>
 
-        <!-- 15. ADSR Envelope -->
+        <!-- ADSR Envelope with Interactive Curve & Tracer Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">ADSR Envelope</h3>
             <span class="term-phonetic">Attack &bull; Decay &bull; Sustain &bull; Release</span>
           </div>
           <p class="term-def">
-            An <strong>ADSR Envelope</strong> determines how sound volume evolves over time:
-            <strong>Attack</strong> (initial onset), <strong>Decay</strong> (drop to sustain level), <strong>Sustain</strong> (volume while held), and <strong>Release</strong> (tail fade after release). A piano has instantaneous attack; a cello has gentle attack.
+            An <strong>ADSR Envelope</strong> controls how volume morphs over time. Move the sliders to watch the mathematical envelope curve change and follow the tracer ball!
           </p>
+
+          <!-- Live ADSR Curve & Tracer Canvas -->
+          <canvas id="adsrCanvas" class="term-canvas" style="height:100px;"></canvas>
+          <div class="canvas-caption">
+            <span>Attack &bull; Decay &bull; Sustain</span>
+            <span>Release Tail</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: ADSR Sound Shaper</span>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-              <div><span style="font-size:0.75rem;">Attack:</span><input type="range" id="adsrA" class="exp-slider" min="0.01" max="1.5" step="0.05" value="0.05"></div>
-              <div><span style="font-size:0.75rem;">Decay:</span><input type="range" id="adsrD" class="exp-slider" min="0.05" max="1" step="0.05" value="0.2"></div>
-              <div><span style="font-size:0.75rem;">Sustain:</span><input type="range" id="adsrS" class="exp-slider" min="0" max="1" step="0.05" value="0.6"></div>
-              <div><span style="font-size:0.75rem;">Release:</span><input type="range" id="adsrR" class="exp-slider" min="0.05" max="2" step="0.1" value="0.5"></div>
+            <span class="experiment-label">Interactive Sound Shaper</span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <div><span style="font-size:0.85rem;font-weight:700;">Attack:</span><input type="range" id="adsrA" class="exp-slider" min="0.01" max="1.5" step="0.05" value="0.05"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Decay:</span><input type="range" id="adsrD" class="exp-slider" min="0.05" max="1" step="0.05" value="0.2"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Sustain:</span><input type="range" id="adsrS" class="exp-slider" min="0.05" max="1" step="0.05" value="0.6"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Release:</span><input type="range" id="adsrR" class="exp-slider" min="0.05" max="2" step="0.1" value="0.6"></div>
             </div>
-            <div class="exp-controls" style="margin-top:0.4rem;">
-              <button class="exp-btn" onmousedown="triggerADSR(true)" onmouseup="triggerADSR(false)" ontouchstart="triggerADSR(true)" ontouchend="triggerADSR(false)">Hold to Play Shaped Note</button>
+            <div class="exp-controls">
+              <button class="exp-btn exp-btn-lg" style="flex:1;" onmousedown="triggerADSR(true)" onmouseup="triggerADSR(false)" ontouchstart="triggerADSR(true)" ontouchend="triggerADSR(false)">
+                Hold to Play Shaped Note
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 7: ARTICULATION -->
+    <!-- ============================================================
+         SECTION 9: ARTICULATION & EXPRESSION
+         ============================================================ -->
     <section class="category-section" id="articulation">
       <div class="category-header">
         <div class="category-icon" style="background: linear-gradient(135deg, #f43f5e, #be123c);">
-          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         </div>
-        <h2 class="category-title">Articulation & Expression</h2>
+        <div>
+          <h2 class="category-title">Articulation & Expression</h2>
+          <p class="category-subtitle">How notes are connected, detached, bent, or animated with vibrato.</p>
+        </div>
       </div>
 
       <div class="term-grid">
-        <!-- 16. Staccato vs Legato -->
+        <!-- Staccato vs Legato with Articulation Wave Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Staccato vs. Legato</h3>
             <span class="term-phonetic">Detached vs. Connected</span>
           </div>
           <p class="term-def">
-            <strong>Staccato</strong> (Italian: "detached") instructs notes to be played short, crisp, and separate. <strong>Legato</strong> (Italian: "bound together") instructs notes to be smoothly connected and flowing without breaks.
+            <strong>Staccato</strong> means detached and crisp; <strong>Legato</strong> means smoothly bound together. Observe the physical contrast in note continuity below.
           </p>
+
+          <!-- Articulation Wave Canvas -->
+          <canvas id="articulationCanvas" class="term-canvas" style="height:90px;"></canvas>
+          <div class="canvas-caption">
+            <span>Note Separation Profile</span>
+            <span id="articulationTag">Crisp Pulses vs Flowing Ribbon</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Articulation Comparison</span>
+            <span class="experiment-label">Articulation Comparison</span>
             <div class="exp-controls">
-              <button class="exp-btn" onclick="playArticulation('staccato')">Hear Staccato (Crisp & Short)</button>
-              <button class="exp-btn secondary" onclick="playArticulation('legato')">Hear Legato (Smooth & Slurred)</button>
+              <button class="exp-btn exp-btn-lg" onclick="playArticulation('staccato')" style="flex:1;">Staccato (Crisp & Short)</button>
+              <button class="exp-btn exp-btn-lg secondary" onclick="playArticulation('legato')" style="flex:1;">Legato (Smooth & Slurred)</button>
             </div>
           </div>
         </div>
 
-        <!-- 17. Glissando & Vibrato -->
+        <!-- Glissando & Vibrato with Laser Glide & LFO Beam Canvas -->
         <div class="term-card">
           <div class="term-title-row">
             <h3 class="term-name">Glissando & Vibrato</h3>
-            <span class="term-phonetic">Glide & Pitch Wobble</span>
+            <span class="term-phonetic">Pitch Glide & Wobble</span>
           </div>
           <p class="term-def">
-            <strong>Glissando</strong> is a continuous slide upwards or downwards between two pitches (like a trombone slide). <strong>Vibrato</strong> is a slight, pulsing fluctuation in pitch used by singers, violinists, and cellists to add warmth and richness.
+            <strong>Glissando</strong> is a continuous slide between pitches; <strong>Vibrato</strong> is a slight pulsing pitch fluctuation. Watch the laser beam bend and undulate!
           </p>
+
+          <!-- Glissando & Vibrato Beam Canvas -->
+          <canvas id="glissVibratoCanvas" class="term-canvas" style="height:90px;"></canvas>
+          <div class="canvas-caption">
+            <span>Pitch Trajectory Beam</span>
+            <span id="glissTag">Slide or Modulation Wave</span>
+          </div>
+
           <div class="experiment-box">
-            <span class="experiment-label">Interactive Experiment: Glide & Vibrato Player</span>
+            <span class="experiment-label">Expressive Technique Player</span>
             <div class="exp-controls">
-              <button class="exp-btn" onclick="playGlissando()">Hear Glissando Slide (C4 &rarr; C5)</button>
-              <button class="exp-btn secondary" onclick="playVibrato()">Hear Singing Vibrato</button>
+              <button class="exp-btn exp-btn-lg" onclick="playGlissando()" style="flex:1;">Glissando Slide (C4 &rarr; C5)</button>
+              <button class="exp-btn exp-btn-lg secondary" onclick="playVibrato()" style="flex:1;">Singing Vibrato (440 Hz)</button>
             </div>
           </div>
         </div>
@@ -888,18 +2036,32 @@
   <!-- Footer -->
   <footer>
     <p>
-      Music Terminology Lab &bull; Part of <strong>Laura's Music App</strong>.<br>
-      Learn music theory through real interactive audio synthesis.
+      <strong>Music Terminology Lab</strong> &bull; Part of <strong>Laura's Music App</strong>.<br>
+      Engineered with the Web Audio API and real-time visual canvases for high-fidelity music education and sound synthesis.
     </p>
   </footer>
 
-  <!-- Web Audio Synthesis Scripts -->
+  <!-- ============================================================
+       WEB AUDIO SYNTHESIS & REALTIME ANIMATED CANVASES ENGINE
+       ============================================================ -->
   <script>
+    // Master Audio Context & Dynamics Compressor (prevents clipping)
     let audioCtx = null;
+    let masterCompressor = null;
+
     function getCtx() {
       if (!audioCtx) {
         const AC = window.AudioContext || window.webkitAudioContext;
-        if (AC) audioCtx = new AC();
+        if (AC) {
+          audioCtx = new AC();
+          masterCompressor = audioCtx.createDynamicsCompressor();
+          masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
+          masterCompressor.knee.setValueAtTime(12, audioCtx.currentTime);
+          masterCompressor.ratio.setValueAtTime(8, audioCtx.currentTime);
+          masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+          masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+          masterCompressor.connect(audioCtx.destination);
+        }
       }
       if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume();
@@ -909,10 +2071,511 @@
 
     document.getElementById('audioUnlockBtn').addEventListener('click', () => {
       getCtx();
-      document.getElementById('audioStatusText').textContent = 'Audio Ready';
+      document.getElementById('audioStatusText').textContent = 'Audio Engine Active';
     });
 
-    // 1. Pitch & Frequency Sweeper
+    // Helper: Warm Rhodes / Acoustic Piano Synth Voice
+    function playPianoTone(freq, startTime, duration = 1.6, gainLevel = 0.28) {
+      const ctx = getCtx();
+      if (!ctx) return;
+
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const noteGain = ctx.createGain();
+
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, startTime);
+
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, startTime);
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(Math.min(freq * 4.5, 4500), startTime);
+      filter.frequency.exponentialRampToValueAtTime(Math.max(freq * 1.5, 300), startTime + duration);
+
+      noteGain.gain.setValueAtTime(0.0001, startTime);
+      noteGain.gain.linearRampToValueAtTime(gainLevel, startTime + 0.015);
+      noteGain.gain.exponentialRampToValueAtTime(gainLevel * 0.45, startTime + 0.35);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc1.connect(filter);
+      osc2.connect(filter);
+      filter.connect(noteGain);
+      noteGain.connect(masterCompressor || ctx.destination);
+
+      osc1.start(startTime);
+      osc2.start(startTime);
+      osc1.stop(startTime + duration);
+      osc2.stop(startTime + duration);
+
+      // Trigger audio activity visualizer
+      triggerAudioActivity(freq);
+    }
+
+    // ============================================================
+    // CANVAS VISUAL ASPECTS INITIALIZATION & RENDERING
+    // ============================================================
+    const pAudioCanvas = document.getElementById('pianoAudioCanvas');
+    const paCtx = pAudioCanvas.getContext('2d');
+    pAudioCanvas.width = 800;
+    pAudioCanvas.height = 64;
+    let audioActivityLevel = 0;
+    let audioActivityFreq = 261.63;
+
+    function triggerAudioActivity(freq) {
+      audioActivityLevel = 1.0;
+      audioActivityFreq = freq;
+      document.getElementById('pianoFreqTag').textContent = `${Math.round(freq)} Hz`;
+    }
+
+    // Piano Keyboard Keys
+    const pianoDisplay = document.getElementById('pianoChordDisplay');
+    const allKeys = document.querySelectorAll('.white-key, .black-key');
+
+    allKeys.forEach(key => {
+      key.addEventListener('mousedown', () => {
+        const freq = parseFloat(key.dataset.freq);
+        const note = key.dataset.note;
+        playPianoTone(freq, getCtx().currentTime, 1.2, 0.35);
+        highlightKey(note, 600);
+        pianoDisplay.textContent = `${note} (${Math.round(freq)} Hz)`;
+      });
+    });
+
+    function highlightKey(noteName, durationMs = 1200) {
+      const keyEl = Array.from(allKeys).find(k => k.dataset.note === noteName);
+      if (keyEl) {
+        keyEl.classList.add('active');
+        setTimeout(() => keyEl.classList.remove('active'), durationMs);
+      }
+    }
+
+    function clearKeyHighlights() {
+      allKeys.forEach(k => k.classList.remove('active'));
+    }
+
+    // ============================================================
+    // CHORD & HARMONY ENGINE (ROOTS, INVERSIONS, 12 CHORD TYPES)
+    // ============================================================
+    let currentRoot = 'C';
+    let currentInversion = 0;
+    let currentPlayStyle = 'block';
+    let currentChordType = 'maj';
+
+    const rootPitchTable = {
+      'C': 130.81, 'D': 146.83, 'Eb': 155.56, 'E': 164.81,
+      'F': 174.61, 'G': 196.00, 'Ab': 207.65, 'A': 220.00,
+      'Bb': 233.08, 'B': 246.94
+    };
+
+    const rootClockIndex = {
+      'C': 0, 'C#': 1, 'Db': 1, 'D': 2, 'D#': 3, 'Eb': 3,
+      'E': 4, 'F': 5, 'F#': 6, 'Gb': 6, 'G': 7, 'G#': 8,
+      'Ab': 8, 'A': 9, 'A#': 10, 'Bb': 10, 'B': 11
+    };
+
+    const chordFormulas = {
+      'maj': { name: 'Major', semitones: [0, 4, 7], label: '1 - 3 - 5' },
+      'min': { name: 'Minor', semitones: [0, 3, 7], label: '1 - ♭3 - 5' },
+      'dim': { name: 'Diminished', semitones: [0, 3, 6], label: '1 - ♭3 - ♭5' },
+      'aug': { name: 'Augmented', semitones: [0, 4, 8], label: '1 - 3 - ♯5' },
+      'sus4': { name: 'Sus4', semitones: [0, 5, 7], label: '1 - 4 - 5' },
+      'sus2': { name: 'Sus2', semitones: [0, 2, 7], label: '1 - 2 - 5' },
+      'maj7': { name: 'Major 7th', semitones: [0, 4, 7, 11], label: '1 - 3 - 5 - 7' },
+      'dom7': { name: 'Dominant 7th', semitones: [0, 4, 7, 10], label: '1 - 3 - 5 - ♭7' },
+      'm7': { name: 'Minor 7th', semitones: [0, 3, 7, 10], label: '1 - ♭3 - 5 - ♭7' },
+      'm7b5': { name: 'Half-Diminished', semitones: [0, 3, 6, 10], label: '1 - ♭3 - ♭5 - ♭7' },
+      'dim7': { name: 'Diminished 7th', semitones: [0, 3, 6, 9], label: '1 - ♭3 - ♭5 - 𝄫7' },
+      'add9': { name: 'Major Add9', semitones: [0, 4, 7, 14], label: '1 - 3 - 5 - 9' }
+    };
+
+    function getNoteFromFreq(freq) {
+      let bestKey = null;
+      let minDiff = 999999;
+      allKeys.forEach(k => {
+        const kFreq = parseFloat(k.dataset.freq);
+        const diff = Math.abs(kFreq - freq);
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestKey = k.dataset.note;
+        }
+      });
+      return bestKey || 'Note';
+    }
+
+    function calculateChordFrequencies(rootName, chordType, inversion) {
+      const rootBaseFreq = rootPitchTable[rootName] || 130.81;
+      const formula = chordFormulas[chordType].semitones;
+      let freqs = formula.map(st => rootBaseFreq * Math.pow(2, st / 12));
+
+      if (inversion === 1 && freqs.length >= 3) {
+        freqs[0] *= 2;
+        freqs.sort((a, b) => a - b);
+      } else if (inversion === 2 && freqs.length >= 3) {
+        freqs[0] *= 2;
+        freqs[1] *= 2;
+        freqs.sort((a, b) => a - b);
+      }
+      return freqs;
+    }
+
+    function updateChordLabels() {
+      Object.keys(chordFormulas).forEach(type => {
+        const freqs = calculateChordFrequencies(currentRoot, type, currentInversion);
+        const notes = freqs.map(f => getNoteFromFreq(f)).join(' - ');
+        const el = document.getElementById(`notes_${type}`);
+        if (el) el.textContent = `Notes: ${notes}`;
+      });
+      renderChordGeometry();
+    }
+
+    window.setRootNote = function(root, btn) {
+      currentRoot = root;
+      document.querySelectorAll('.selector-row:nth-child(2) .pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateChordLabels();
+    };
+
+    window.setInversion = function(inv, btn) {
+      currentInversion = inv;
+      document.querySelectorAll('.selector-row:nth-child(3) .pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateChordLabels();
+    };
+
+    window.setPlayStyle = function(style, btn) {
+      currentPlayStyle = style;
+      document.querySelectorAll('.selector-row:nth-child(4) .pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+
+    window.triggerChord = function(type) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      currentChordType = type;
+
+      const freqs = calculateChordFrequencies(currentRoot, type, currentInversion);
+      const chordInfo = chordFormulas[type];
+      const invLabel = currentInversion === 0 ? '' : ` (${currentInversion === 1 ? '1st Inv' : '2nd Inv'})`;
+      const chordName = `${currentRoot} ${chordInfo.name}${invLabel}`;
+      
+      clearKeyHighlights();
+      pianoDisplay.textContent = chordName;
+      document.getElementById('chordGeoTitle').textContent = `Active Polygon: ${chordName}`;
+
+      document.querySelectorAll('.chord-card').forEach(c => c.classList.remove('active'));
+      const card = event.currentTarget || event.target.closest('.chord-card');
+      if (card) card.classList.add('active');
+
+      const now = ctx.currentTime;
+      freqs.forEach((freq, idx) => {
+        const noteName = getNoteFromFreq(freq);
+        if (currentPlayStyle === 'strum') {
+          const delay = idx * 0.08;
+          playPianoTone(freq, now + delay, 2.2, 0.28);
+          setTimeout(() => highlightKey(noteName, 1800), delay * 1000);
+        } else {
+          playPianoTone(freq, now, 2.4, 0.24);
+          highlightKey(noteName, 2000);
+        }
+      });
+      renderChordGeometry();
+    };
+
+    // ============================================================
+    // VISUAL ASPECT: CHORD GEOMETRY CLOCK CANVAS
+    // ============================================================
+    const geoCanvas = document.getElementById('chordGeometryCanvas');
+    const gCtx = geoCanvas.getContext('2d');
+    geoCanvas.width = 600;
+    geoCanvas.height = 150;
+
+    const pitchClassNames = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+
+    function renderChordGeometry() {
+      gCtx.clearRect(0, 0, geoCanvas.width, geoCanvas.height);
+      const cx = geoCanvas.width / 2;
+      const cy = geoCanvas.height / 2;
+      const radius = 56;
+
+      // Draw background circle
+      gCtx.beginPath();
+      gCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      gCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      gCtx.lineWidth = 2;
+      gCtx.stroke();
+
+      // Find active pitch classes for current chord
+      const rootIdx = rootClockIndex[currentRoot] || 0;
+      const formula = chordFormulas[currentChordType].semitones;
+      const activeIndices = formula.map(st => (rootIdx + st) % 12);
+
+      // Draw polygon connecting active notes
+      if (activeIndices.length > 1) {
+        gCtx.beginPath();
+        activeIndices.forEach((idx, i) => {
+          const angle = (idx / 12) * Math.PI * 2 - Math.PI / 2;
+          const x = cx + Math.cos(angle) * radius;
+          const y = cy + Math.sin(angle) * radius;
+          if (i === 0) gCtx.moveTo(x, y);
+          else gCtx.lineTo(x, y);
+        });
+        gCtx.closePath();
+        gCtx.fillStyle = 'rgba(245, 158, 11, 0.18)';
+        gCtx.fill();
+        gCtx.strokeStyle = '#f59e0b';
+        gCtx.lineWidth = 3;
+        gCtx.stroke();
+      }
+
+      // Draw 12 chromatic clock nodes
+      for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        const isActive = activeIndices.includes(i);
+        const isRoot = (i === rootIdx);
+
+        gCtx.beginPath();
+        gCtx.arc(x, y, isActive ? 9 : 4, 0, Math.PI * 2);
+        gCtx.fillStyle = isRoot ? '#f59e0b' : (isActive ? '#38bdf8' : 'rgba(255,255,255,0.3)');
+        gCtx.fill();
+        if (isActive) {
+          gCtx.strokeStyle = '#fff';
+          gCtx.lineWidth = 2;
+          gCtx.stroke();
+        }
+
+        // Text label
+        const tx = cx + Math.cos(angle) * (radius + 16);
+        const ty = cy + Math.sin(angle) * (radius + 16) + 3;
+        gCtx.fillStyle = isActive ? '#fff' : '#64748b';
+        gCtx.font = isActive ? 'bold 11px Outfit' : '9px Outfit';
+        gCtx.textAlign = 'center';
+        gCtx.fillText(pitchClassNames[i], tx, ty);
+      }
+    }
+
+    // ============================================================
+    // VISUAL ASPECT: PROGRESSIONS CIRCLE OF 5THS ROUTE CANVAS
+    // ============================================================
+    const progCanvas = document.getElementById('progressionCanvas');
+    const prCtx = progCanvas.getContext('2d');
+    progCanvas.width = 800;
+    progCanvas.height = 120;
+    let activeProgChord = null;
+
+    const circleOf5ths = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
+
+    function renderProgressionRoute(currentChordName = '') {
+      prCtx.clearRect(0, 0, progCanvas.width, progCanvas.height);
+      const w = progCanvas.width;
+      const h = progCanvas.height;
+      const nodeCount = circleOf5ths.length;
+      const spacing = (w - 60) / (nodeCount - 1);
+
+      // Connecting baseline
+      prCtx.beginPath();
+      prCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      prCtx.lineWidth = 3;
+      prCtx.moveTo(30, h / 2);
+      prCtx.lineTo(w - 30, h / 2);
+      prCtx.stroke();
+
+      circleOf5ths.forEach((chord, i) => {
+        const x = 30 + i * spacing;
+        const y = h / 2;
+        const isCurrent = currentChordName.startsWith(chord);
+
+        prCtx.beginPath();
+        prCtx.arc(x, y, isCurrent ? 14 : 7, 0, Math.PI * 2);
+        prCtx.fillStyle = isCurrent ? '#ec4899' : 'rgba(255, 255, 255, 0.2)';
+        prCtx.fill();
+
+        if (isCurrent) {
+          prCtx.strokeStyle = '#fff';
+          prCtx.lineWidth = 3;
+          prCtx.stroke();
+          // Halo
+          prCtx.beginPath();
+          prCtx.arc(x, y, 22, 0, Math.PI * 2);
+          prCtx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+          prCtx.lineWidth = 2;
+          prCtx.stroke();
+        }
+
+        prCtx.fillStyle = isCurrent ? '#fff' : '#94a3b8';
+        prCtx.font = isCurrent ? 'bold 13px Outfit' : '11px Outfit';
+        prCtx.textAlign = 'center';
+        prCtx.fillText(chord, x, y + 26);
+      });
+    }
+    renderProgressionRoute();
+
+    const progressionLibrary = {
+      'pop': [
+        { name: 'C Major (I)', freqs: [130.81, 164.81, 196.00] },
+        { name: 'G Major (V)', freqs: [196.00, 246.94, 293.66] },
+        { name: 'A Minor (vi)', freqs: [220.00, 261.63, 329.63] },
+        { name: 'F Major (IV)', freqs: [174.61, 220.00, 261.63] }
+      ],
+      'doowop': [
+        { name: 'C Major (I)', freqs: [130.81, 164.81, 196.00] },
+        { name: 'A Minor (vi)', freqs: [220.00, 261.63, 329.63] },
+        { name: 'F Major (IV)', freqs: [174.61, 220.00, 261.63] },
+        { name: 'G Major (V)', freqs: [196.00, 246.94, 293.66] }
+      ],
+      'jazz': [
+        { name: 'D Minor 7 (ii7)', freqs: [146.83, 174.61, 220.00, 261.63] },
+        { name: 'G Dominant 7 (V7)', freqs: [196.00, 246.94, 293.66, 349.23] },
+        { name: 'C Major 7 (Imaj7)', freqs: [261.63, 329.63, 392.00, 493.88] }
+      ],
+      'andalusian': [
+        { name: 'A Minor (i)', freqs: [220.00, 261.63, 329.63] },
+        { name: 'G Major (VII)', freqs: [196.00, 246.94, 293.66] },
+        { name: 'F Major (VI)', freqs: [174.61, 220.00, 261.63] },
+        { name: 'E Major (V)', freqs: [164.81, 207.65, 246.94] }
+      ],
+      'blues': [
+        { name: 'C7 (I7)', freqs: [130.81, 164.81, 196.00, 233.08] },
+        { name: 'F7 (IV7)', freqs: [174.61, 220.00, 261.63, 311.13] },
+        { name: 'C7 (I7)', freqs: [130.81, 164.81, 196.00, 233.08] },
+        { name: 'G7 (V7)', freqs: [196.00, 246.94, 293.66, 349.23] }
+      ],
+      'canon': [
+        { name: 'C Major', freqs: [130.81, 164.81, 196.00] },
+        { name: 'G Major', freqs: [196.00, 246.94, 293.66] },
+        { name: 'A Minor', freqs: [220.00, 261.63, 329.63] },
+        { name: 'E Minor', freqs: [164.81, 196.00, 246.94] },
+        { name: 'F Major', freqs: [174.61, 220.00, 261.63] },
+        { name: 'C Major', freqs: [130.81, 164.81, 196.00] }
+      ]
+    };
+
+    window.playProgression = function(progKey, btn) {
+      const ctx = getCtx();
+      if (!ctx) return;
+
+      const prog = progressionLibrary[progKey];
+      const stepEls = document.querySelectorAll(`#prog_${progKey} .prog-step`);
+      btn.classList.add('playing');
+
+      prog.forEach((chord, i) => {
+        const chordDelay = i * 1.4;
+        setTimeout(() => {
+          clearKeyHighlights();
+          stepEls.forEach((s, sIdx) => s.classList.toggle('active', sIdx === i));
+          pianoDisplay.textContent = `Progression: ${chord.name}`;
+          document.getElementById('progRouteTag').textContent = chord.name;
+          renderProgressionRoute(chord.name);
+          
+          chord.freqs.forEach(f => {
+            playPianoTone(f, ctx.currentTime, 1.8, 0.24);
+            highlightKey(getNoteFromFreq(f), 1300);
+          });
+        }, chordDelay * 1000);
+      });
+
+      setTimeout(() => {
+        btn.classList.remove('playing');
+        stepEls.forEach(s => s.classList.remove('active'));
+        document.getElementById('progRouteTag').textContent = 'Completed';
+        renderProgressionRoute();
+      }, prog.length * 1.4 * 1000);
+    };
+
+    // ============================================================
+    // VISUAL ASPECT: CADENCE TENSION & RESOLUTION CANVAS
+    // ============================================================
+    const cadenceCanvas = document.getElementById('cadenceCanvas');
+    const cdCtx = cadenceCanvas.getContext('2d');
+    cadenceCanvas.width = 800;
+    cadenceCanvas.height = 90;
+    let cadenceTensionLevel = 0.2;
+
+    function renderCadenceCurve(tension = 0.2) {
+      cdCtx.clearRect(0, 0, cadenceCanvas.width, cadenceCanvas.height);
+      const w = cadenceCanvas.width;
+      const h = cadenceCanvas.height;
+
+      // Tension Curve
+      cdCtx.beginPath();
+      cdCtx.moveTo(0, h * 0.7);
+      cdCtx.bezierCurveTo(w * 0.35, h * (0.8 - tension * 0.7), w * 0.65, h * (0.8 - tension * 0.7), w, h * 0.75);
+      cdCtx.strokeStyle = tension > 0.5 ? '#f59e0b' : '#38bdf8';
+      cdCtx.lineWidth = 4;
+      cdCtx.stroke();
+
+      // Tension orb
+      const orbX = w * (0.3 + tension * 0.4);
+      const orbY = h * (0.8 - tension * 0.7);
+      cdCtx.beginPath();
+      cdCtx.arc(orbX, orbY, 12, 0, Math.PI * 2);
+      cdCtx.fillStyle = tension > 0.5 ? '#f59e0b' : '#10b981';
+      cdCtx.fill();
+      cdCtx.strokeStyle = '#fff';
+      cdCtx.lineWidth = 2;
+      cdCtx.stroke();
+
+      cdCtx.fillStyle = '#94a3b8';
+      cdCtx.font = 'bold 11px Outfit';
+      cdCtx.fillText('Phrase Start', 30, h - 10);
+      cdCtx.fillText(tension > 0.5 ? 'Tension Peak (V)' : 'Resolved Equilibrium (I)', w / 2, 20);
+      cdCtx.fillText('Resolution', w - 50, h - 10);
+    }
+    renderCadenceCurve(0.2);
+
+    window.playCadenceFull = function(type, btn) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      btn.classList.add('playing');
+
+      let chord1, chord2, name1, name2;
+      if (type === 'authentic') {
+        name1 = 'G7 (V7)'; chord1 = [196.00, 246.94, 293.66, 349.23];
+        name2 = 'C (I) — Finality'; chord2 = [261.63, 329.63, 392.00, 523.25];
+      } else if (type === 'plagal') {
+        name1 = 'F (IV)'; chord1 = [174.61, 220.00, 261.63];
+        name2 = 'C (I) — "Amen"'; chord2 = [261.63, 329.63, 392.00];
+      } else if (type === 'half') {
+        name1 = 'C (I)'; chord1 = [130.81, 164.81, 196.00];
+        name2 = 'G (V) — Question?'; chord2 = [196.00, 246.94, 293.66];
+      } else {
+        name1 = 'G (V)'; chord1 = [196.00, 246.94, 293.66];
+        name2 = 'Am (vi) — Surprise Twist!'; chord2 = [220.00, 261.63, 329.63];
+      }
+
+      clearKeyHighlights();
+      pianoDisplay.textContent = name1;
+      document.getElementById('cadenceStatusTag').textContent = 'High Tension (Dominant)';
+      renderCadenceCurve(0.85);
+
+      chord1.forEach(f => {
+        playPianoTone(f, ctx.currentTime, 1.3, 0.25);
+        highlightKey(getNoteFromFreq(f), 1100);
+      });
+
+      setTimeout(() => {
+        clearKeyHighlights();
+        pianoDisplay.textContent = name2;
+        document.getElementById('cadenceStatusTag').textContent = 'Resolved Equilibrium (Tonic)';
+        renderCadenceCurve(0.15);
+
+        chord2.forEach(f => {
+          playPianoTone(f, ctx.currentTime, 2.6, 0.28);
+          highlightKey(getNoteFromFreq(f), 2400);
+        });
+        setTimeout(() => {
+          btn.classList.remove('playing');
+          renderCadenceCurve(0.2);
+        }, 2600);
+      }, 1200);
+    };
+
+    // ============================================================
+    // VISUAL ASPECT: PITCH & FREQUENCY CANVAS
+    // ============================================================
     let pitchOsc = null;
     let pitchGain = null;
     const pitchSlider = document.getElementById('pitchSlider');
@@ -920,30 +2583,40 @@
     const playPitchBtn = document.getElementById('playPitchBtn');
     const pitchCanvas = document.getElementById('pitchCanvas');
     const pCtx = pitchCanvas.getContext('2d');
+    pitchCanvas.width = 600;
+    pitchCanvas.height = 90;
+    let wavePhase = 0;
 
-    function drawWave(freq) {
+    function drawPitchScope(freq) {
       pCtx.clearRect(0, 0, pitchCanvas.width, pitchCanvas.height);
-      pCtx.beginPath();
-      pCtx.strokeStyle = '#38bdf8';
-      pCtx.lineWidth = 2;
       const w = pitchCanvas.width;
       const h = pitchCanvas.height;
-      const cycles = (freq / 80);
+
+      // Grid lines
+      pCtx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      pCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 40) {
+        pCtx.beginPath(); pCtx.moveTo(x, 0); pCtx.lineTo(x, h); pCtx.stroke();
+      }
+      pCtx.beginPath(); pCtx.moveTo(0, h / 2); pCtx.lineTo(w, h / 2); pCtx.stroke();
+
+      pCtx.beginPath();
+      pCtx.strokeStyle = '#38bdf8';
+      pCtx.lineWidth = 3;
+      const cycles = (freq / 90);
       for (let x = 0; x < w; x++) {
-        const y = h / 2 + Math.sin((x / w) * cycles * 2 * Math.PI) * (h / 2.5);
+        const y = h / 2 + Math.sin((x / w) * cycles * 2 * Math.PI + wavePhase) * (h / 2.6);
         if (x === 0) pCtx.moveTo(x, y);
         else pCtx.lineTo(x, y);
       }
       pCtx.stroke();
     }
-    pitchCanvas.width = 320;
-    pitchCanvas.height = 64;
-    drawWave(440);
+    drawPitchScope(440);
 
     pitchSlider.addEventListener('input', (e) => {
       const f = parseFloat(e.target.value);
       pitchVal.textContent = `${Math.round(f)} Hz`;
-      drawWave(f);
+      drawPitchScope(f);
       if (pitchOsc) {
         pitchOsc.frequency.setValueAtTime(f, getCtx().currentTime);
       }
@@ -957,7 +2630,8 @@
         setTimeout(() => {
           if (pitchOsc) { pitchOsc.stop(); pitchOsc.disconnect(); pitchOsc = null; }
         }, 120);
-        playPitchBtn.textContent = 'Tone On';
+        playPitchBtn.textContent = 'Toggle Tone On';
+        playPitchBtn.classList.remove('active');
       } else {
         pitchOsc = ctx.createOscillator();
         pitchGain = ctx.createGain();
@@ -965,231 +2639,342 @@
         pitchOsc.frequency.setValueAtTime(parseFloat(pitchSlider.value), ctx.currentTime);
         pitchGain.gain.setValueAtTime(0.25, ctx.currentTime);
         pitchOsc.connect(pitchGain);
-        pitchGain.connect(ctx.destination);
+        pitchGain.connect(masterCompressor || ctx.destination);
         pitchOsc.start();
-        playPitchBtn.textContent = 'Tone Off';
+        playPitchBtn.textContent = 'Toggle Tone Off';
+        playPitchBtn.classList.add('active');
       }
     });
 
-    // 2. Octave Ladder
-    window.playOctave = function(freq) {
+    // ============================================================
+    // VISUAL ASPECT: OCTAVE LADDER CANVAS (STACKED ALIGNED WAVES)
+    // ============================================================
+    const octaveCanvas = document.getElementById('octaveCanvas');
+    const octCtx = octaveCanvas.getContext('2d');
+    octaveCanvas.width = 600;
+    octaveCanvas.height = 100;
+
+    function renderOctaveLadder(activeFreq = 440) {
+      octCtx.clearRect(0, 0, octaveCanvas.width, octaveCanvas.height);
+      const w = octaveCanvas.width;
+      const h = octaveCanvas.height;
+      const freqs = [110, 220, 440, 880];
+      const trackH = h / 4;
+
+      freqs.forEach((f, i) => {
+        const yCenter = trackH * (i + 0.5);
+        const isActive = (f === activeFreq);
+        const cycles = Math.pow(2, i + 1);
+
+        octCtx.beginPath();
+        octCtx.strokeStyle = isActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.2)';
+        octCtx.lineWidth = isActive ? 2.5 : 1.2;
+
+        for (let x = 0; x < w; x++) {
+          const y = yCenter + Math.sin((x / w) * cycles * Math.PI * 2) * (trackH * 0.4);
+          if (x === 0) octCtx.moveTo(x, y);
+          else octCtx.lineTo(x, y);
+        }
+        octCtx.stroke();
+
+        octCtx.fillStyle = isActive ? '#fff' : '#64748b';
+        octCtx.font = 'bold 10px Outfit';
+        octCtx.fillText(`${f} Hz`, 10, yCenter + 4);
+      });
+
+      // Peak alignment markers
+      octCtx.setLineDash([3, 3]);
+      octCtx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+      octCtx.beginPath();
+      octCtx.moveTo(w / 4, 0); octCtx.lineTo(w / 4, h);
+      octCtx.moveTo(w / 2, 0); octCtx.lineTo(w / 2, h);
+      octCtx.moveTo(w * 0.75, 0); octCtx.lineTo(w * 0.75, h);
+      octCtx.stroke();
+      octCtx.setLineDash([]);
+    }
+    renderOctaveLadder(440);
+
+    window.playOctaveNote = function(freq, label, btn) {
       const ctx = getCtx();
       if (!ctx) return;
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, now);
-      gain.gain.setValueAtTime(0.3, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 1.2);
+      pianoDisplay.textContent = label;
+      clearKeyHighlights();
+      playPianoTone(freq, ctx.currentTime, 1.6, 0.35);
+      highlightKey(getNoteFromFreq(freq), 1500);
+      renderOctaveLadder(freq);
+      btn.classList.add('playing');
+      setTimeout(() => btn.classList.remove('playing'), 1500);
     };
 
-    // 3. Interval Player
-    window.playCurrentInterval = function(mode) {
+    // ============================================================
+    // VISUAL ASPECT: INTERVAL LEAP RULER CANVAS
+    // ============================================================
+    const intCanvas = document.getElementById('intervalCanvas');
+    const itCtx = intCanvas.getContext('2d');
+    intCanvas.width = 800;
+    intCanvas.height = 90;
+    let intervalMode = 'melodic';
+    let currentIntervalSemitones = 7;
+
+    function renderIntervalRuler(semitones = 7) {
+      itCtx.clearRect(0, 0, intCanvas.width, intCanvas.height);
+      const w = intCanvas.width;
+      const h = intCanvas.height;
+      const margin = 40;
+      const stepW = (w - margin * 2) / 12;
+      const yLine = h * 0.72;
+
+      // Base ruler
+      itCtx.beginPath();
+      itCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      itCtx.lineWidth = 2;
+      itCtx.moveTo(margin, yLine);
+      itCtx.lineTo(w - margin, yLine);
+      itCtx.stroke();
+
+      // 13 tick marks (0 to 12)
+      for (let i = 0; i <= 12; i++) {
+        const x = margin + i * stepW;
+        itCtx.beginPath();
+        itCtx.moveTo(x, yLine - 6);
+        itCtx.lineTo(x, yLine + 6);
+        itCtx.strokeStyle = (i === 0 || i === semitones) ? '#10b981' : 'rgba(255,255,255,0.3)';
+        itCtx.lineWidth = (i === 0 || i === semitones) ? 3 : 1;
+        itCtx.stroke();
+
+        itCtx.fillStyle = (i === 0 || i === semitones) ? '#fff' : '#64748b';
+        itCtx.font = (i === 0 || i === semitones) ? 'bold 11px Outfit' : '9px Outfit';
+        itCtx.textAlign = 'center';
+        itCtx.fillText(i.toString(), x, yLine + 20);
+      }
+
+      // Parabolic leaping arch
+      const x0 = margin;
+      const x1 = margin + semitones * stepW;
+      itCtx.beginPath();
+      itCtx.moveTo(x0, yLine - 4);
+      itCtx.quadraticCurveTo((x0 + x1) / 2, yLine - (20 + semitones * 3.5), x1, yLine - 4);
+      itCtx.strokeStyle = '#10b981';
+      itCtx.lineWidth = 3;
+      itCtx.stroke();
+
+      // Start orb
+      itCtx.beginPath();
+      itCtx.arc(x0, yLine - 4, 6, 0, Math.PI * 2);
+      itCtx.fillStyle = '#38bdf8';
+      itCtx.fill();
+
+      // Target leap orb
+      itCtx.beginPath();
+      itCtx.arc(x1, yLine - 4, 8, 0, Math.PI * 2);
+      itCtx.fillStyle = '#10b981';
+      itCtx.fill();
+      itCtx.strokeStyle = '#fff';
+      itCtx.lineWidth = 2;
+      itCtx.stroke();
+    }
+    renderIntervalRuler(7);
+
+    window.setIntervalMode = function(mode, btn) {
+      intervalMode = mode;
+      document.querySelectorAll('#intModeMelodic, #intModeHarmonic').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+
+    window.playIntervalSemitones = function(semitones, mnemonic, btn) {
       const ctx = getCtx();
       if (!ctx) return;
-      const semitones = parseInt(document.getElementById('intervalSelect').value);
+      currentIntervalSemitones = semitones;
+
       const rootFreq = 261.63; // C4
-      const intervalFreq = rootFreq * Math.pow(2, semitones / 12);
+      const intFreq = rootFreq * Math.pow(2, semitones / 12);
       const now = ctx.currentTime;
+      pianoDisplay.textContent = mnemonic;
+      document.getElementById('intervalCanvasLabel').textContent = `${mnemonic} (+${semitones} Semitones)`;
+      renderIntervalRuler(semitones);
+      clearKeyHighlights();
+      btn.classList.add('playing');
 
-      if (mode === 'harmonic') {
-        [rootFreq, intervalFreq].forEach(f => {
-          const o = ctx.createOscillator();
-          const g = ctx.createGain();
-          o.type = 'triangle';
-          o.frequency.setValueAtTime(f, now);
-          g.gain.setValueAtTime(0.25, now);
-          g.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
-          o.connect(g);
-          g.connect(ctx.destination);
-          o.start(now);
-          o.stop(now + 1.4);
-        });
+      if (intervalMode === 'harmonic') {
+        playPianoTone(rootFreq, now, 2.0, 0.25);
+        playPianoTone(intFreq, now, 2.0, 0.25);
+        highlightKey(getNoteFromFreq(rootFreq), 1800);
+        highlightKey(getNoteFromFreq(intFreq), 1800);
+        setTimeout(() => btn.classList.remove('playing'), 2000);
       } else {
-        // Melodic (sequence)
-        const o1 = ctx.createOscillator();
-        const g1 = ctx.createGain();
-        o1.type = 'triangle';
-        o1.frequency.setValueAtTime(rootFreq, now);
-        g1.gain.setValueAtTime(0.3, now);
-        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
-        o1.connect(g1);
-        g1.connect(ctx.destination);
-        o1.start(now);
-        o1.stop(now + 0.6);
+        playPianoTone(rootFreq, now, 0.8, 0.3);
+        highlightKey(getNoteFromFreq(rootFreq), 750);
 
-        const o2 = ctx.createOscillator();
-        const g2 = ctx.createGain();
-        o2.type = 'triangle';
-        o2.frequency.setValueAtTime(intervalFreq, now + 0.55);
-        g2.gain.setValueAtTime(0.3, now + 0.55);
-        g2.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
-        o2.connect(g2);
-        g2.connect(ctx.destination);
-        o2.start(now + 0.55);
-        o2.stop(now + 1.6);
+        setTimeout(() => {
+          playPianoTone(intFreq, ctx.currentTime, 1.8, 0.3);
+          highlightKey(getNoteFromFreq(intFreq), 1600);
+        }, 750);
+        setTimeout(() => btn.classList.remove('playing'), 2400);
       }
     };
 
-    // 4. Scale Player
-    window.playScale = function(type) {
-      const ctx = getCtx();
-      if (!ctx) return;
-      let semitones = [];
-      if (type === 'major') semitones = [0, 2, 4, 5, 7, 9, 11, 12];
-      else if (type === 'minor') semitones = [0, 2, 3, 5, 7, 8, 10, 12];
-      else semitones = [0, 2, 4, 7, 9, 12]; // pentatonic
+    // ============================================================
+    // VISUAL ASPECT: SCALE STAIRCASE CANVAS
+    // ============================================================
+    const scaleCanvas = document.getElementById('scaleCanvas');
+    const scCtx = scaleCanvas.getContext('2d');
+    scaleCanvas.width = 800;
+    scaleCanvas.height = 100;
+    let activeScaleStep = -1;
 
-      const root = 261.63;
-      const now = ctx.currentTime;
-      semitones.forEach((st, idx) => {
-        const time = now + idx * 0.28;
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(root * Math.pow(2, st / 12), time);
-        g.gain.setValueAtTime(0.28, time);
-        g.gain.exponentialRampToValueAtTime(0.0001, time + 0.35);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(time);
-        o.stop(time + 0.35);
-      });
+    const scaleFormulas = {
+      'major': [0, 2, 4, 5, 7, 9, 11, 12],
+      'minor': [0, 2, 3, 5, 7, 8, 10, 12],
+      'harmonic_minor': [0, 2, 3, 5, 7, 8, 11, 12],
+      'pentatonic_major': [0, 2, 4, 7, 9, 12],
+      'pentatonic_minor': [0, 3, 5, 7, 10, 12],
+      'blues': [0, 3, 5, 6, 7, 10, 12],
+      'dorian': [0, 2, 3, 5, 7, 9, 10, 12],
+      'mixolydian': [0, 2, 4, 5, 7, 9, 10, 12]
     };
 
-    // 5. Arpeggio Player
-    window.playArpeggio = function(notes) {
+    function renderScaleStaircase(stList = [0, 2, 4, 5, 7, 9, 11, 12], activeIdx = -1) {
+      scCtx.clearRect(0, 0, scaleCanvas.width, scaleCanvas.height);
+      const w = scaleCanvas.width;
+      const h = scaleCanvas.height;
+      const steps = stList.length;
+      const stepW = (w - 60) / steps;
+
+      stList.forEach((st, i) => {
+        const x = 30 + i * stepW;
+        const stepH = (st / 12) * (h * 0.65);
+        const y = h - 20 - stepH;
+        const isActive = (i === activeIdx);
+
+        // Step pillar
+        scCtx.fillStyle = isActive ? 'linear-gradient(to top, #6366f1, #a855f7)' : 'rgba(255, 255, 255, 0.08)';
+        scCtx.fillRect(x + 2, y, stepW - 4, stepH + 10);
+
+        // Orb on top
+        scCtx.beginPath();
+        scCtx.arc(x + stepW / 2, y, isActive ? 8 : 4, 0, Math.PI * 2);
+        scCtx.fillStyle = isActive ? '#ec4899' : '#6366f1';
+        scCtx.fill();
+
+        if (isActive) {
+          scCtx.strokeStyle = '#fff';
+          scCtx.lineWidth = 2;
+          scCtx.stroke();
+        }
+      });
+    }
+    renderScaleStaircase();
+
+    window.playScaleLadder = function(scaleKey, label, btn) {
       const ctx = getCtx();
       if (!ctx) return;
-      const now = ctx.currentTime;
-      notes.forEach((freq, i) => {
-        const time = now + i * 0.18;
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(freq, time);
-        g.gain.setValueAtTime(0.3, time);
-        g.gain.exponentialRampToValueAtTime(0.0001, time + 0.8);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(time);
-        o.stop(time + 0.8);
+
+      const stList = scaleFormulas[scaleKey];
+      const root = 261.63; // C4
+      btn.classList.add('playing');
+      pianoDisplay.textContent = `Scale: ${label}`;
+      document.getElementById('scaleCanvasTag').textContent = `Ascending: ${label}`;
+
+      stList.forEach((st, i) => {
+        const delay = i * 0.32;
+        const f = root * Math.pow(2, st / 12);
+        setTimeout(() => {
+          clearKeyHighlights();
+          playPianoTone(f, ctx.currentTime, 0.5, 0.3);
+          highlightKey(getNoteFromFreq(f), 300);
+          renderScaleStaircase(stList, i);
+        }, delay * 1000);
       });
+
+      setTimeout(() => {
+        btn.classList.remove('playing');
+        renderScaleStaircase(stList, -1);
+      }, stList.length * 0.32 * 1000);
     };
 
-    // 6. Chords Player
-    window.playChord = function(frequencies) {
-      const ctx = getCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      frequencies.forEach(f => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(f, now);
-        g.gain.setValueAtTime(0.2, now);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(now);
-        o.stop(now + 1.6);
-      });
-    };
-
-    // 7. Beating & Tension Lab
-    window.playBeating = function(f1, f2) {
-      const ctx = getCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      [f1, f2].forEach(f => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(f, now);
-        g.gain.setValueAtTime(0.25, now);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(now);
-        o.stop(now + 2.2);
-      });
-    };
-
-    // 8. Cadence Player
-    window.playCadence = function(cadenceType) {
-      const ctx = getCtx();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-      let chord1, chord2;
-      if (cadenceType === 'authentic') {
-        // G7 -> C
-        chord1 = [196.00, 246.94, 293.66, 349.23];
-        chord2 = [261.63, 329.63, 392.00, 523.25];
-      } else {
-        // F -> C
-        chord1 = [174.61, 220.00, 261.63];
-        chord2 = [261.63, 329.63, 392.00];
-      }
-      // Play Chord 1
-      chord1.forEach(f => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(f, now);
-        g.gain.setValueAtTime(0.22, now);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(now);
-        o.stop(now + 1.2);
-      });
-      // Play Chord 2
-      chord2.forEach(f => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.setValueAtTime(f, now + 1.1);
-        g.gain.setValueAtTime(0.25, now + 1.1);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
-        o.connect(g);
-        g.connect(ctx.destination);
-        o.start(now + 1.1);
-        o.stop(now + 3.0);
-      });
-    };
-
-    // 9. Metronome
+    // ============================================================
+    // VISUAL ASPECT: METRONOME PENDULUM CANVAS
+    // ============================================================
+    const metCanvas = document.getElementById('metronomeCanvas');
+    const mtCtx = metCanvas.getContext('2d');
+    metCanvas.width = 600;
+    metCanvas.height = 100;
     let metronomeInterval = null;
+    let metronomeActive = false;
+    let metAngle = 0;
+    let metPulseRadius = 0;
+
     const tempoSlider = document.getElementById('tempoSlider');
     const tempoVal = document.getElementById('tempoVal');
     const metronomeToggleBtn = document.getElementById('metronomeToggleBtn');
 
-    function tick(isStrong = false) {
+    function metronomeTick(isDownbeat = false) {
       const ctx = getCtx();
       if (!ctx) return;
       const now = ctx.currentTime;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(isStrong ? 1200 : 800, now);
-      gain.gain.setValueAtTime(isStrong ? 0.4 : 0.25, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      osc.frequency.setValueAtTime(isDownbeat ? 1400 : 900, now);
+      gain.gain.setValueAtTime(isDownbeat ? 0.45 : 0.28, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(masterCompressor || ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.06);
+      osc.stop(now + 0.05);
+
+      metPulseRadius = 28;
+    }
+
+    function renderMetronome() {
+      mtCtx.clearRect(0, 0, metCanvas.width, metCanvas.height);
+      const cx = metCanvas.width / 2;
+      const cy = 85;
+      const armLength = 70;
+
+      // Pulse ring
+      if (metPulseRadius > 0) {
+        mtCtx.beginPath();
+        mtCtx.arc(cx, cy - armLength, metPulseRadius, 0, Math.PI * 2);
+        mtCtx.strokeStyle = `rgba(56, 189, 248, ${metPulseRadius / 28})`;
+        mtCtx.lineWidth = 2;
+        mtCtx.stroke();
+        metPulseRadius -= 1.5;
+      }
+
+      // Metronome body arch
+      mtCtx.beginPath();
+      mtCtx.arc(cx, cy, armLength + 10, -Math.PI * 0.75, -Math.PI * 0.25);
+      mtCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      mtCtx.lineWidth = 2;
+      mtCtx.stroke();
+
+      // Pendulum arm
+      const armX = cx + Math.sin(metAngle) * armLength;
+      const armY = cy - Math.cos(metAngle) * armLength;
+
+      mtCtx.beginPath();
+      mtCtx.moveTo(cx, cy);
+      mtCtx.lineTo(armX, armY);
+      mtCtx.strokeStyle = '#fff';
+      mtCtx.lineWidth = 3;
+      mtCtx.stroke();
+
+      // Weight
+      mtCtx.beginPath();
+      mtCtx.arc(armX, armY, 8, 0, Math.PI * 2);
+      mtCtx.fillStyle = '#ec4899';
+      mtCtx.fill();
+      mtCtx.strokeStyle = '#fff';
+      mtCtx.lineWidth = 2;
+      mtCtx.stroke();
     }
 
     tempoSlider.addEventListener('input', (e) => {
       tempoVal.textContent = `${e.target.value} BPM`;
       if (metronomeInterval) {
         clearInterval(metronomeInterval);
-        metronomeInterval = setInterval(tick, (60 / parseInt(e.target.value)) * 1000);
+        metronomeInterval = setInterval(metronomeTick, (60 / parseInt(e.target.value)) * 1000);
       }
     });
 
@@ -1197,16 +2982,20 @@
       if (metronomeInterval) {
         clearInterval(metronomeInterval);
         metronomeInterval = null;
+        metronomeActive = false;
         metronomeToggleBtn.textContent = 'Start Metronome';
+        metronomeToggleBtn.classList.remove('active');
       } else {
         getCtx();
-        tick(true);
-        metronomeInterval = setInterval(tick, (60 / parseInt(tempoSlider.value)) * 1000);
+        metronomeTick(true);
+        metronomeActive = true;
+        metronomeInterval = setInterval(metronomeTick, (60 / parseInt(tempoSlider.value)) * 1000);
         metronomeToggleBtn.textContent = 'Stop Metronome';
+        metronomeToggleBtn.classList.add('active');
       }
     });
 
-    // Tap tempo
+    // Tap Tempo
     let tapTimes = [];
     document.getElementById('tapTempoBtn').addEventListener('click', () => {
       const now = Date.now();
@@ -1216,30 +3005,80 @@
         const diffs = [];
         for (let i = 1; i < tapTimes.length; i++) diffs.push(tapTimes[i] - tapTimes[i - 1]);
         const avg = diffs.reduce((a, b) => a + b) / diffs.length;
-        const bpm = Math.min(200, Math.max(50, Math.round(60000 / avg)));
+        const bpm = Math.min(220, Math.max(50, Math.round(60000 / avg)));
         tempoSlider.value = bpm;
         tempoVal.textContent = `${bpm} BPM`;
         if (metronomeInterval) {
           clearInterval(metronomeInterval);
-          metronomeInterval = setInterval(tick, (60 / bpm) * 1000);
+          metronomeInterval = setInterval(metronomeTick, (60 / bpm) * 1000);
         }
       }
-      tick(true);
+      metronomeTick(true);
     });
 
-    // 10. Meter Beat Machine
+    // ============================================================
+    // VISUAL ASPECT: METER DIAL CLOCK CANVAS
+    // ============================================================
+    const meterCanvas = document.getElementById('meterCanvas');
+    const mrCtx = meterCanvas.getContext('2d');
+    meterCanvas.width = 600;
+    meterCanvas.height = 100;
     let meterInterval = null;
+    let currentMeterBeats = 4;
     let currentBeat = 0;
-    window.startMeter = function(beats) {
+    let meterAngle = 0;
+
+    function renderMeterDial() {
+      mrCtx.clearRect(0, 0, meterCanvas.width, meterCanvas.height);
+      const cx = meterCanvas.width / 2;
+      const cy = meterCanvas.height / 2;
+      const radius = 38;
+
+      // Draw beat dots
+      for (let i = 0; i < currentMeterBeats; i++) {
+        const angle = (i / currentMeterBeats) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        const isCurrent = (currentBeat % currentMeterBeats === i);
+        const isDownbeat = (i === 0);
+
+        mrCtx.beginPath();
+        mrCtx.arc(x, y, isCurrent ? (isDownbeat ? 12 : 9) : 5, 0, Math.PI * 2);
+        mrCtx.fillStyle = isCurrent ? (isDownbeat ? '#f59e0b' : '#38bdf8') : 'rgba(255,255,255,0.2)';
+        mrCtx.fill();
+        if (isCurrent) {
+          mrCtx.strokeStyle = '#fff';
+          mrCtx.lineWidth = 2;
+          mrCtx.stroke();
+        }
+      }
+
+      // Dial pointer
+      const pointerAngle = ((currentBeat % currentMeterBeats) / currentMeterBeats) * Math.PI * 2 - Math.PI / 2;
+      mrCtx.beginPath();
+      mrCtx.moveTo(cx, cy);
+      mrCtx.lineTo(cx + Math.cos(pointerAngle) * (radius - 8), cy + Math.sin(pointerAngle) * (radius - 8));
+      mrCtx.strokeStyle = '#fff';
+      mrCtx.lineWidth = 3;
+      mrCtx.stroke();
+    }
+    renderMeterDial();
+
+    window.startMeter = function(beats, btn) {
       stopMeter();
       getCtx();
+      currentMeterBeats = beats;
       currentBeat = 0;
       const statusEl = document.getElementById('meterStatus');
-      const bpm = 110;
+      const bpm = 120;
+
       meterInterval = setInterval(() => {
         const isDownbeat = (currentBeat % beats === 0);
-        tick(isDownbeat);
-        statusEl.textContent = `Beat: ${(currentBeat % beats) + 1} / ${beats} ${isDownbeat ? '(STRONG ACCENT)' : '(weak)'}`;
+        metronomeTick(isDownbeat);
+        const beatNum = (currentBeat % beats) + 1;
+        statusEl.textContent = `Beat ${beatNum} of ${beats} ${isDownbeat ? '— [STRONG ACCENT]' : '— (weak pulse)'}`;
+        document.getElementById('meterCanvasTag').textContent = isDownbeat ? 'DOWNBEAT 1 ACCENT' : `Beat ${beatNum}`;
+        renderMeterDial();
         currentBeat++;
       }, (60 / bpm) * 1000);
     };
@@ -1250,73 +3089,144 @@
         meterInterval = null;
       }
       document.getElementById('meterStatus').textContent = 'Meter stopped.';
+      document.getElementById('meterCanvasTag').textContent = 'Stopped';
+      renderMeterDial();
     };
 
-    // 11. Polyrhythm (3 against 2)
+    // ============================================================
+    // VISUAL ASPECT: CONCENTRIC POLYRHYTHM GEAR CANVAS
+    // ============================================================
+    const polyCanvas = document.getElementById('polyCanvas');
+    const plCtx = polyCanvas.getContext('2d');
+    polyCanvas.width = 800;
+    polyCanvas.height = 120;
     let polyInterval = null;
+    let polyPulseRing = 0;
+    let polyStep = 0;
+
+    function renderPolyrhythmGears() {
+      plCtx.clearRect(0, 0, polyCanvas.width, polyCanvas.height);
+      const cx = polyCanvas.width / 2;
+      const cy = polyCanvas.height / 2;
+
+      // Outer ring (3 pulse)
+      plCtx.beginPath();
+      plCtx.arc(cx, cy, 46, 0, Math.PI * 2);
+      plCtx.strokeStyle = 'rgba(168, 85, 247, 0.3)';
+      plCtx.lineWidth = 3;
+      plCtx.stroke();
+
+      // Inner ring (2 pulse)
+      plCtx.beginPath();
+      plCtx.arc(cx, cy, 28, 0, Math.PI * 2);
+      plCtx.strokeStyle = 'rgba(56, 189, 248, 0.3)';
+      plCtx.lineWidth = 3;
+      plCtx.stroke();
+
+      // Strike indicator top
+      plCtx.beginPath();
+      plCtx.moveTo(cx, cy - 58); plCtx.lineTo(cx, cy - 18);
+      plCtx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      plCtx.lineWidth = 2;
+      plCtx.stroke();
+
+      // Dots on Outer Ring (3 dots)
+      for (let i = 0; i < 3; i++) {
+        const angle = (i / 3) * Math.PI * 2 + (polyStep / 6) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * 46;
+        const y = cy + Math.sin(angle) * 46;
+        plCtx.beginPath();
+        plCtx.arc(x, y, 7, 0, Math.PI * 2);
+        plCtx.fillStyle = '#a855f7';
+        plCtx.fill();
+        plCtx.strokeStyle = '#fff';
+        plCtx.lineWidth = 2;
+        plCtx.stroke();
+      }
+
+      // Dots on Inner Ring (2 dots)
+      for (let i = 0; i < 2; i++) {
+        const angle = (i / 2) * Math.PI * 2 + (polyStep / 6) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * 28;
+        const y = cy + Math.sin(angle) * 28;
+        plCtx.beginPath();
+        plCtx.arc(x, y, 7, 0, Math.PI * 2);
+        plCtx.fillStyle = '#38bdf8';
+        plCtx.fill();
+        plCtx.strokeStyle = '#fff';
+        plCtx.lineWidth = 2;
+        plCtx.stroke();
+      }
+    }
+    renderPolyrhythmGears();
+
     document.getElementById('polyrhythmBtn').addEventListener('click', () => {
       const btn = document.getElementById('polyrhythmBtn');
       if (polyInterval) {
         clearInterval(polyInterval);
         polyInterval = null;
         btn.textContent = 'Play 3:2 Polyrhythm';
+        btn.classList.remove('active');
         return;
       }
       getCtx();
       btn.textContent = 'Stop 3:2 Polyrhythm';
-      let step = 0;
-      // LCM of 3 and 2 is 6 pulses per measure
+      btn.classList.add('active');
+
       polyInterval = setInterval(() => {
         const ctx = getCtx();
         const now = ctx.currentTime;
-        // Pulse 3 plays on 0, 2, 4
-        if (step % 2 === 0) {
+        if (polyStep % 2 === 0) {
           const o = ctx.createOscillator();
           const g = ctx.createGain();
-          o.frequency.setValueAtTime(1000, now);
-          g.gain.setValueAtTime(0.3, now);
+          o.frequency.setValueAtTime(1100, now);
+          g.gain.setValueAtTime(0.35, now);
           g.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
           o.connect(g);
-          g.connect(ctx.destination);
+          g.connect(masterCompressor || ctx.destination);
           o.start();
           o.stop(now + 0.05);
         }
-        // Pulse 2 plays on 0, 3
-        if (step % 3 === 0) {
+        if (polyStep % 3 === 0) {
           const o = ctx.createOscillator();
           const g = ctx.createGain();
           o.type = 'square';
-          o.frequency.setValueAtTime(320, now);
-          g.gain.setValueAtTime(0.3, now);
+          o.frequency.setValueAtTime(280, now);
+          g.gain.setValueAtTime(0.35, now);
           g.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
           o.connect(g);
-          g.connect(ctx.destination);
+          g.connect(masterCompressor || ctx.destination);
           o.start();
           o.stop(now + 0.08);
         }
-        step = (step + 1) % 6;
+        renderPolyrhythmGears();
+        polyStep = (polyStep + 1) % 6;
       }, 160);
     });
 
-    // 12. Waveform Synth & Oscilloscope
+    // ============================================================
+    // VISUAL ASPECT: TIMBRE OSCILLOSCOPE & SPECTRUM CANVAS
+    // ============================================================
     let currentWaveform = 'sine';
     let waveOsc = null;
     let waveGain = null;
     const oscCanvas = document.getElementById('oscCanvas');
     const oCtx = oscCanvas.getContext('2d');
-    oscCanvas.width = 320;
-    oscCanvas.height = 64;
+    oscCanvas.width = 600;
+    oscCanvas.height = 90;
 
     function renderOscScope(type) {
       oCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
-      oCtx.beginPath();
-      oCtx.strokeStyle = '#a855f7';
-      oCtx.lineWidth = 2;
       const w = oscCanvas.width;
       const h = oscCanvas.height;
-      for (let x = 0; x < w; x++) {
+
+      // Draw waveform
+      oCtx.beginPath();
+      oCtx.strokeStyle = '#a855f7';
+      oCtx.lineWidth = 3;
+      for (let x = 0; x < w * 0.65; x++) {
         let y = h / 2;
-        const progress = (x / w) * 4 * Math.PI;
+        const progress = (x / (w * 0.65)) * 4 * Math.PI;
         if (type === 'sine') y += Math.sin(progress) * (h / 2.6);
         else if (type === 'triangle') y += (Math.asin(Math.sin(progress)) / (Math.PI / 2)) * (h / 2.6);
         else if (type === 'sawtooth') y += (((progress % (2 * Math.PI)) / Math.PI) - 1) * (h / 2.6);
@@ -1325,6 +3235,21 @@
         else oCtx.lineTo(x, y);
       }
       oCtx.stroke();
+
+      // Draw Harmonic Spectrum Bars (right side)
+      const specX = w * 0.72;
+      const barW = 12;
+      const harmonics = type === 'sine' ? [1, 0, 0, 0, 0] :
+                        type === 'triangle' ? [1, 0, 0.33, 0, 0.11] :
+                        type === 'square' ? [1, 0, 0.6, 0, 0.35] :
+                        [1, 0.75, 0.55, 0.4, 0.3]; // sawtooth
+
+      harmonics.forEach((amp, idx) => {
+        const x = specX + idx * (barW + 8);
+        const barH = amp * 55;
+        oCtx.fillStyle = '#38bdf8';
+        oCtx.fillRect(x, h - 15 - barH, barW, barH);
+      });
     }
     renderOscScope('sine');
 
@@ -1343,10 +3268,12 @@
       waveGain = ctx.createGain();
       waveOsc.type = currentWaveform;
       waveOsc.frequency.setValueAtTime(261.63, ctx.currentTime);
-      waveGain.gain.setValueAtTime(0.3, ctx.currentTime);
+      waveGain.gain.setValueAtTime(0.35, ctx.currentTime);
       waveOsc.connect(waveGain);
-      waveGain.connect(ctx.destination);
+      waveGain.connect(masterCompressor || ctx.destination);
       waveOsc.start();
+      highlightKey('C4', 9999);
+      triggerAudioActivity(261.63);
     };
 
     window.stopWaveTone = function() {
@@ -1356,10 +3283,45 @@
         setTimeout(() => {
           if (waveOsc) { waveOsc.stop(); waveOsc.disconnect(); waveOsc = null; }
         }, 100);
+        clearKeyHighlights();
       }
     };
 
-    // 13. Additive Harmonics Blender
+    // ============================================================
+    // VISUAL ASPECT: STANDING WAVE STRING CANVAS
+    // ============================================================
+    const harmCanvas = document.getElementById('harmonicCanvas');
+    const hmCtx = harmCanvas.getContext('2d');
+    harmCanvas.width = 600;
+    harmCanvas.height = 100;
+    let harmAnimPhase = 0;
+
+    function renderHarmonicStrings() {
+      hmCtx.clearRect(0, 0, harmCanvas.width, harmCanvas.height);
+      const w = harmCanvas.width;
+      const h = harmCanvas.height;
+      const sliders = document.querySelectorAll('.h-slider');
+
+      for (let i = 0; i < 4; i++) {
+        const amp = sliders[i] ? parseFloat(sliders[i].value) : 0.5;
+        const yCenter = (i + 0.5) * (h / 4);
+        const nodes = i + 1;
+
+        hmCtx.beginPath();
+        hmCtx.strokeStyle = amp > 0.05 ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)';
+        hmCtx.lineWidth = amp > 0.05 ? 2.5 : 1;
+
+        for (let x = 0; x < w; x++) {
+          const envelope = Math.sin((x / w) * Math.PI * nodes);
+          const y = yCenter + envelope * Math.sin(harmAnimPhase * (i + 1)) * (amp * 9);
+          if (x === 0) hmCtx.moveTo(x, y);
+          else hmCtx.lineTo(x, y);
+        }
+        hmCtx.stroke();
+      }
+    }
+    renderHarmonicStrings();
+
     let blendOscs = [];
     document.getElementById('harmonicBlendBtn').addEventListener('click', () => {
       const ctx = getCtx();
@@ -1372,9 +3334,11 @@
         });
         blendOscs = [];
         btn.textContent = 'Play Harmonic Blend';
+        btn.classList.remove('active');
         return;
       }
       btn.textContent = 'Stop Blend';
+      btn.classList.add('active');
       const sliders = document.querySelectorAll('.h-slider');
       const fund = 220; // A3
       sliders.forEach((slider, idx) => {
@@ -1387,14 +3351,43 @@
           osc.frequency.setValueAtTime(fund * harmonicNum, ctx.currentTime);
           gain.gain.setValueAtTime(amp, ctx.currentTime);
           osc.connect(gain);
-          gain.connect(ctx.destination);
+          gain.connect(masterCompressor || ctx.destination);
           osc.start();
           blendOscs.push({ osc, gain });
         }
       });
+      triggerAudioActivity(220);
     });
 
-    // 14. Dynamics
+    document.querySelectorAll('.h-slider').forEach(s => s.addEventListener('input', renderHarmonicStrings));
+
+    // ============================================================
+    // VISUAL ASPECT: DYNAMICS SWELL CANVAS
+    // ============================================================
+    const dynCanvas = document.getElementById('dynamicsCanvas');
+    const dnCtx = dynCanvas.getContext('2d');
+    dynCanvas.width = 600;
+    dynCanvas.height = 90;
+    let dynamicWaveAmp = 0.15;
+
+    function renderDynamicsWave(amp = 0.15) {
+      dnCtx.clearRect(0, 0, dynCanvas.width, dynCanvas.height);
+      const w = dynCanvas.width;
+      const h = dynCanvas.height;
+
+      dnCtx.beginPath();
+      dnCtx.moveTo(0, h / 2);
+      for (let x = 0; x < w; x++) {
+        const envelope = (x / w);
+        const y = h / 2 + Math.sin((x / w) * 14 * Math.PI) * (amp * (h / 2.2));
+        dnCtx.lineTo(x, y);
+      }
+      dnCtx.strokeStyle = '#14b8a6';
+      dnCtx.lineWidth = 3;
+      dnCtx.stroke();
+    }
+    renderDynamicsWave(0.2);
+
     window.playCrescendo = function() {
       const ctx = getCtx();
       if (!ctx) return;
@@ -1404,16 +3397,26 @@
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(329.63, now); // E4
       gain.gain.setValueAtTime(0.02, now); // pp
-      gain.gain.linearRampToValueAtTime(0.45, now + 2.0); // ff
+      gain.gain.linearRampToValueAtTime(0.48, now + 2.0); // ff
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(masterCompressor || ctx.destination);
       osc.start(now);
       osc.stop(now + 2.6);
 
       const ind = document.getElementById('dynamicIndicator');
-      ind.textContent = 'pp (soft) ────────► ff (loud!)';
-      setTimeout(() => ind.textContent = '', 2700);
+      ind.textContent = 'Crescendo (pp ────────► ff)';
+      let progress = 0.1;
+      const swellInt = setInterval(() => {
+        progress += 0.05;
+        renderDynamicsWave(progress);
+        if (progress >= 0.85) clearInterval(swellInt);
+      }, 100);
+
+      setTimeout(() => {
+        ind.textContent = 'Resting';
+        renderDynamicsWave(0.2);
+      }, 2800);
     };
 
     window.playDecrescendo = function() {
@@ -1424,20 +3427,107 @@
       const gain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(329.63, now);
-      gain.gain.setValueAtTime(0.45, now); // ff
+      gain.gain.setValueAtTime(0.48, now); // ff
       gain.gain.linearRampToValueAtTime(0.02, now + 2.0); // pp
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(masterCompressor || ctx.destination);
       osc.start(now);
       osc.stop(now + 2.6);
 
       const ind = document.getElementById('dynamicIndicator');
-      ind.textContent = 'ff (loud) ────────► pp (whisper soft)';
-      setTimeout(() => ind.textContent = '', 2700);
+      ind.textContent = 'Decrescendo (ff ────────► pp)';
+      let progress = 0.85;
+      const fadeInt = setInterval(() => {
+        progress -= 0.05;
+        renderDynamicsWave(Math.max(progress, 0.08));
+        if (progress <= 0.1) clearInterval(fadeInt);
+      }, 100);
+
+      setTimeout(() => {
+        ind.textContent = 'Resting';
+        renderDynamicsWave(0.2);
+      }, 2800);
     };
 
-    // 15. ADSR Envelope Shaper
+    // ============================================================
+    // VISUAL ASPECT: LIVE ADSR CURVE & TRACER CANVAS
+    // ============================================================
+    const adsrCanvas = document.getElementById('adsrCanvas');
+    const adCtx = adsrCanvas.getContext('2d');
+    adsrCanvas.width = 600;
+    adsrCanvas.height = 100;
+    let adsrBallX = -10;
+    let adsrBallY = -10;
+
+    function renderADSRCurve() {
+      adCtx.clearRect(0, 0, adsrCanvas.width, adsrCanvas.height);
+      const w = adsrCanvas.width;
+      const h = adsrCanvas.height;
+
+      const a = parseFloat(document.getElementById('adsrA').value);
+      const d = parseFloat(document.getElementById('adsrD').value);
+      const s = parseFloat(document.getElementById('adsrS').value);
+      const r = parseFloat(document.getElementById('adsrR').value);
+
+      const totalTime = a + d + 1.2 + r;
+      const xA = (a / totalTime) * (w - 40) + 20;
+      const xD = ((a + d) / totalTime) * (w - 40) + 20;
+      const xS = ((a + d + 1.2) / totalTime) * (w - 40) + 20;
+      const xR = w - 20;
+
+      const yPeak = h * 0.18;
+      const ySustain = h * 0.85 - s * (h * 0.65);
+      const yBase = h * 0.85;
+
+      // Draw filled curve area
+      adCtx.beginPath();
+      adCtx.moveTo(20, yBase);
+      adCtx.lineTo(xA, yPeak);
+      adCtx.lineTo(xD, ySustain);
+      adCtx.lineTo(xS, ySustain);
+      adCtx.lineTo(xR, yBase);
+      adCtx.closePath();
+      adCtx.fillStyle = 'rgba(20, 184, 166, 0.18)';
+      adCtx.fill();
+
+      // Stroke
+      adCtx.beginPath();
+      adCtx.moveTo(20, yBase);
+      adCtx.lineTo(xA, yPeak);
+      adCtx.lineTo(xD, ySustain);
+      adCtx.lineTo(xS, ySustain);
+      adCtx.lineTo(xR, yBase);
+      adCtx.strokeStyle = '#14b8a6';
+      adCtx.lineWidth = 3;
+      adCtx.stroke();
+
+      // Points
+      [ [xA, yPeak, 'A'], [xD, ySustain, 'D'], [xS, ySustain, 'S'], [xR, yBase, 'R'] ].forEach(([x, y, label]) => {
+        adCtx.beginPath();
+        adCtx.arc(x, y, 5, 0, Math.PI * 2);
+        adCtx.fillStyle = '#fff';
+        adCtx.fill();
+        adCtx.font = 'bold 10px Outfit';
+        adCtx.fillText(label, x - 4, y - 8);
+      });
+
+      // Tracer ball
+      if (adsrBallX > 0) {
+        adCtx.beginPath();
+        adCtx.arc(adsrBallX, adsrBallY, 8, 0, Math.PI * 2);
+        adCtx.fillStyle = '#f59e0b';
+        adCtx.fill();
+        adCtx.strokeStyle = '#fff';
+        adCtx.lineWidth = 2;
+        adCtx.stroke();
+      }
+    }
+    renderADSRCurve();
+    ['adsrA', 'adsrD', 'adsrS', 'adsrR'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderADSRCurve);
+    });
+
     let adsrOsc = null;
     let adsrGain = null;
     window.triggerADSR = function(isPress) {
@@ -1455,14 +3545,13 @@
         adsrGain = ctx.createGain();
         adsrOsc.type = 'sawtooth';
         adsrOsc.frequency.setValueAtTime(392.00, now); // G4
-        // ADSR Attack -> Decay -> Sustain
         adsrGain.gain.setValueAtTime(0.0001, now);
-        adsrGain.gain.linearRampToValueAtTime(0.35, now + a);
-        adsrGain.gain.linearRampToValueAtTime(0.35 * s, now + a + d);
-
+        adsrGain.gain.linearRampToValueAtTime(0.4, now + a);
+        adsrGain.gain.linearRampToValueAtTime(0.4 * s, now + a + d);
         adsrOsc.connect(adsrGain);
-        adsrGain.connect(ctx.destination);
+        adsrGain.connect(masterCompressor || ctx.destination);
         adsrOsc.start(now);
+        adsrBallX = 30; adsrBallY = 70;
       } else {
         if (adsrGain) {
           adsrGain.gain.cancelScheduledValues(now);
@@ -1470,19 +3559,62 @@
           adsrGain.gain.linearRampToValueAtTime(0.0001, now + r);
           setTimeout(() => {
             if (adsrOsc) { adsrOsc.stop(); adsrOsc.disconnect(); adsrOsc = null; }
+            adsrBallX = -10;
           }, r * 1000 + 50);
         }
       }
+      renderADSRCurve();
     };
 
-    // 16. Staccato vs Legato
+    // ============================================================
+    // VISUAL ASPECT: ARTICULATION (STACCATO VS LEGATO) CANVAS
+    // ============================================================
+    const artCanvas = document.getElementById('articulationCanvas');
+    const arCtx = artCanvas.getContext('2d');
+    artCanvas.width = 600;
+    artCanvas.height = 90;
+
+    function renderArticulationWave(style = 'legato') {
+      arCtx.clearRect(0, 0, artCanvas.width, artCanvas.height);
+      const w = artCanvas.width;
+      const h = artCanvas.height;
+
+      arCtx.beginPath();
+      arCtx.strokeStyle = style === 'staccato' ? '#f43f5e' : '#10b981';
+      arCtx.lineWidth = 3;
+
+      if (style === 'staccato') {
+        // Crisp detached bursts
+        for (let i = 0; i < 5; i++) {
+          const xStart = 40 + i * 105;
+          arCtx.moveTo(xStart, h / 2);
+          arCtx.lineTo(xStart + 15, h * 0.2);
+          arCtx.lineTo(xStart + 30, h * 0.8);
+          arCtx.lineTo(xStart + 45, h / 2);
+          arCtx.lineTo(xStart + 90, h / 2);
+        }
+      } else {
+        // Legato continuous smooth ribbon
+        for (let x = 30; x < w - 30; x++) {
+          const y = h / 2 + Math.sin((x / 50) * Math.PI) * (h * 0.32);
+          if (x === 30) arCtx.moveTo(x, y);
+          else arCtx.lineTo(x, y);
+        }
+      }
+      arCtx.stroke();
+    }
+    renderArticulationWave('legato');
+
     window.playArticulation = function(style) {
       const ctx = getCtx();
       if (!ctx) return;
+      renderArticulationWave(style);
+      document.getElementById('articulationTag').textContent = style === 'staccato' ? 'Short Detached Pulses' : 'Smooth Flowing Legato';
+
       const notes = [261.63, 293.66, 329.63, 349.23, 392.00];
       const now = ctx.currentTime;
-      const noteDuration = style === 'staccato' ? 0.12 : 0.38;
-      const stepTime = 0.38;
+      const noteDuration = style === 'staccato' ? 0.12 : 0.45;
+      const stepTime = 0.42;
 
       notes.forEach((f, idx) => {
         const time = now + idx * stepTime;
@@ -1490,29 +3622,73 @@
         const g = ctx.createGain();
         o.type = 'triangle';
         o.frequency.setValueAtTime(f, time);
-        g.gain.setValueAtTime(0.3, time);
+        g.gain.setValueAtTime(0.35, time);
         g.gain.exponentialRampToValueAtTime(0.0001, time + noteDuration);
         o.connect(g);
-        g.connect(ctx.destination);
+        g.connect(masterCompressor || ctx.destination);
         o.start(time);
         o.stop(time + noteDuration);
       });
     };
 
-    // 17. Glissando & Vibrato
+    // ============================================================
+    // VISUAL ASPECT: GLISSANDO & VIBRATO BEAM CANVAS
+    // ============================================================
+    const glissCanvas = document.getElementById('glissVibratoCanvas');
+    const gvCtx = glissCanvas.getContext('2d');
+    glissCanvas.width = 600;
+    glissCanvas.height = 90;
+
+    function renderGlissVibrato(mode = 'gliss') {
+      gvCtx.clearRect(0, 0, glissCanvas.width, glissCanvas.height);
+      const w = glissCanvas.width;
+      const h = glissCanvas.height;
+
+      gvCtx.beginPath();
+      gvCtx.strokeStyle = mode === 'gliss' ? '#38bdf8' : '#ec4899';
+      gvCtx.lineWidth = 3;
+
+      if (mode === 'gliss') {
+        // Continuous upward slide
+        gvCtx.moveTo(40, h * 0.8);
+        gvCtx.lineTo(w - 40, h * 0.2);
+        gvCtx.stroke();
+
+        gvCtx.beginPath();
+        gvCtx.arc(w - 40, h * 0.2, 7, 0, Math.PI * 2);
+        gvCtx.fillStyle = '#38bdf8';
+        gvCtx.fill();
+        gvCtx.strokeStyle = '#fff';
+        gvCtx.lineWidth = 2;
+        gvCtx.stroke();
+      } else {
+        // Vibrato frequency wobble
+        for (let x = 40; x < w - 40; x++) {
+          const y = h / 2 + Math.sin((x / 25) * Math.PI) * (h * 0.28);
+          if (x === 40) gvCtx.moveTo(x, y);
+          else gvCtx.lineTo(x, y);
+        }
+        gvCtx.stroke();
+      }
+    }
+    renderGlissVibrato('gliss');
+
     window.playGlissando = function() {
       const ctx = getCtx();
       if (!ctx) return;
+      renderGlissVibrato('gliss');
+      document.getElementById('glissTag').textContent = 'Continuous Pitch Slide (C4 &rarr; C5)';
+
       const now = ctx.currentTime;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'triangle';
-      osc.frequency.setValueAtTime(261.63, now); // C4
-      osc.frequency.exponentialRampToValueAtTime(523.25, now + 1.2); // slide to C5
-      gain.gain.setValueAtTime(0.3, now);
+      osc.frequency.setValueAtTime(261.63, now);
+      osc.frequency.exponentialRampToValueAtTime(523.25, now + 1.2);
+      gain.gain.setValueAtTime(0.35, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
       osc.connect(gain);
-      gain.connect(ctx.destination);
+      gain.connect(masterCompressor || ctx.destination);
       osc.start(now);
       osc.stop(now + 1.6);
     };
@@ -1520,6 +3696,9 @@
     window.playVibrato = function() {
       const ctx = getCtx();
       if (!ctx) return;
+      renderGlissVibrato('vibrato');
+      document.getElementById('glissTag').textContent = 'Singing Vibrato (5.8 Hz LFO Wobble)';
+
       const now = ctx.currentTime;
       const carrier = ctx.createOscillator();
       const lfo = ctx.createOscillator();
@@ -1527,23 +3706,71 @@
       const masterGain = ctx.createGain();
 
       carrier.frequency.setValueAtTime(440, now);
-      lfo.frequency.setValueAtTime(5.5, now); // 5.5 Hz vibrato rate
-      lfoGain.gain.setValueAtTime(14, now); // 14 Hz pitch wobble depth
+      lfo.frequency.setValueAtTime(5.8, now);
+      lfoGain.gain.setValueAtTime(16, now);
 
       lfo.connect(lfoGain);
       lfoGain.connect(carrier.frequency);
 
-      masterGain.gain.setValueAtTime(0.3, now);
-      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+      masterGain.gain.setValueAtTime(0.35, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
 
       carrier.connect(masterGain);
-      masterGain.connect(ctx.destination);
+      masterGain.connect(masterCompressor || ctx.destination);
 
       lfo.start(now);
       carrier.start(now);
-      lfo.stop(now + 2.0);
-      carrier.stop(now + 2.0);
+      lfo.stop(now + 2.2);
+      carrier.stop(now + 2.2);
     };
+
+    // ============================================================
+    // GLOBAL REQUEST ANIMATION FRAME LOOP
+    // ============================================================
+    function animateAllCanvases(time) {
+      wavePhase += 0.08;
+      harmAnimPhase += 0.08;
+
+      // Oscilloscope traveling wave
+      if (pitchOsc) {
+        drawPitchScope(parseFloat(pitchSlider.value));
+      }
+
+      // Standing string animation
+      renderHarmonicStrings();
+
+      // Metronome swing animation
+      if (metronomeActive) {
+        const bpm = parseInt(tempoSlider.value);
+        const period = (60 / bpm) * 1000;
+        metAngle = Math.sin((time / period) * Math.PI * 2) * 0.45;
+      } else {
+        metAngle = 0;
+      }
+      renderMetronome();
+
+      // Piano Audio Spectrum Activity Bars
+      if (audioActivityLevel > 0.02) {
+        paCtx.clearRect(0, 0, pAudioCanvas.width, pAudioCanvas.height);
+        const barCount = 32;
+        const bWidth = pAudioCanvas.width / barCount;
+        for (let i = 0; i < barCount; i++) {
+          const noise = Math.sin(time * 0.01 + i) * 0.5 + 0.5;
+          const barH = noise * audioActivityLevel * 48;
+          paCtx.fillStyle = `hsl(${200 + i * 4}, 85%, 60%)`;
+          paCtx.fillRect(i * bWidth + 2, pAudioCanvas.height - barH, bWidth - 4, barH);
+        }
+        audioActivityLevel *= 0.94; // Decay
+      } else {
+        paCtx.clearRect(0, 0, pAudioCanvas.width, pAudioCanvas.height);
+      }
+
+      requestAnimationFrame(animateAllCanvases);
+    }
+    requestAnimationFrame(animateAllCanvases);
+
+    // Initial label refresh
+    updateChordLabels();
   </script>
 </body>
 </html>
