@@ -790,18 +790,20 @@
 
     .prog-steps {
       display: flex;
-      gap: 0.6rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
       margin: 0.3rem 0;
     }
 
     .prog-step {
-      flex: 1;
+      flex: 1 1 calc(25% - 0.5rem);
+      min-width: 70px;
       padding: 0.65rem 0.4rem;
       border-radius: var(--radius-md);
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.12);
       text-align: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: #cbd5e1;
       transition: all 0.2s ease;
@@ -814,6 +816,272 @@
       box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
       transform: scale(1.08);
     }
+
+    .prog-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 540px) {
+      .prog-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .prog-btn-short {
+      --exp-btn-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+      color: #fff;
+      font-size: 0.92rem;
+      min-height: 48px;
+      padding: 0.65rem 1rem;
+    }
+
+    .prog-btn-long {
+      --exp-btn-bg: linear-gradient(135deg, #ec4899, #be185d);
+      color: #fff;
+      font-size: 0.92rem;
+      min-height: 48px;
+      padding: 0.65rem 1rem;
+    }
+
+    /* ==========================================================
+       CHORD PROGRESSION LOG CONSOLE & HUD
+       ========================================================== */
+    .chord-log-console {
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(14px);
+    }
+
+    .chord-log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .log-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .log-status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      transition: all 0.3s;
+    }
+
+    .log-status-dot.playing {
+      background: #ec4899;
+      box-shadow: 0 0 16px #ec4899;
+      animation: dotPulse 0.8s infinite alternate;
+    }
+
+    @keyframes dotPulse {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      100% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .log-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .log-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .log-counter {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .log-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      font-family: inherit;
+    }
+
+    .log-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .log-btn.stop-btn {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fca5a5;
+    }
+
+    .log-btn.stop-btn:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .active-chord-hud {
+      display: grid;
+      grid-template-columns: 1.4fr 2fr;
+      gap: 1.25rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    @media (max-width: 768px) {
+      .active-chord-hud {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hud-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hud-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-cyan);
+      margin-bottom: 0.25rem;
+    }
+
+    .hud-chord-name {
+      font-size: 1.65rem;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.2;
+      transition: all 0.2s;
+    }
+
+    .hud-chord-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .hud-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .hud-meta-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+    }
+
+    .hud-meta-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hud-meta-val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin-top: 0.2rem;
+    }
+
+    .chord-log-table-wrap {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .chord-log-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .chord-log-table th {
+      position: sticky;
+      top: 0;
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      white-space: nowrap;
+      z-index: 1;
+    }
+
+    .chord-log-table td {
+      padding: 0.6rem 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+
+    .chord-log-table tr:hover td {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .chord-log-table tr.log-row-active td {
+      background: rgba(236, 72, 153, 0.18);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .log-badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .log-badge.tonic { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .log-badge.dominant { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .log-badge.subdominant { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .log-badge.mediant { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+    .log-badge.secondary { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
 
     /* Interval Cards Grid */
     .interval-grid {
@@ -927,6 +1195,7 @@
       <a href="#timbre" class="nav-pill">Timbre & Waveforms</a>
       <a href="#dynamics" class="nav-pill">Dynamics & Envelopes</a>
       <a href="#articulation" class="nav-pill">Articulation</a>
+      <a href="name-that-tune/" class="nav-pill" style="border-color: rgba(168, 85, 247, 0.5); color: #c084fc; background: rgba(168, 85, 247, 0.12);">★ Name That Tune Game</a>
     </div>
   </header>
 
@@ -1238,11 +1507,86 @@
         </div>
       </div>
 
+      <!-- Real-Time Chord Progression Log & Inspector Console -->
+      <div class="chord-log-console" id="chordLogConsole">
+        <div class="chord-log-header">
+          <div class="log-header-left">
+            <div class="log-status-dot" id="logStatusDot"></div>
+            <div>
+              <span class="log-title">Harmonic Event Log & Real-Time Timeline</span>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">Tracks each chord voicing, harmonic function, Roman numeral, and measure in real time.</p>
+            </div>
+          </div>
+          <div class="log-controls">
+            <span class="log-counter" id="chordLogCount">0 Chords Logged</span>
+            <button class="log-btn" id="clearLogBtn" onclick="clearChordLog()">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              <span>Clear Log</span>
+            </button>
+            <button class="log-btn stop-btn" id="stopProgressionBtn" onclick="stopActiveProgression()" style="display:none;">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+              <span>Stop Playback</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Chord Radar / HUD -->
+        <div class="active-chord-hud" id="activeChordHUD">
+          <div class="hud-main">
+            <div class="hud-label">Currently Voicing</div>
+            <div class="hud-chord-name" id="hudChordName">Select Any Progression Below</div>
+            <div class="hud-chord-sub" id="hudChordSub">Click "Short Hook" or "Long Groove" on any card to begin interactive listening & analysis.</div>
+          </div>
+          <div class="hud-meta-grid">
+            <div class="hud-meta-card">
+              <div class="hud-meta-title">Roman Numeral</div>
+              <div class="hud-meta-val" id="hudNumeral">--</div>
+            </div>
+            <div class="hud-meta-card">
+              <div class="hud-meta-title">Harmonic Role</div>
+              <div class="hud-meta-val" id="hudRole">--</div>
+            </div>
+            <div class="hud-meta-card">
+              <div class="hud-meta-title">Voicing Notes</div>
+              <div class="hud-meta-val" id="hudNotes">--</div>
+            </div>
+            <div class="hud-meta-card">
+              <div class="hud-meta-title">Active Genre / Song Style</div>
+              <div class="hud-meta-val" id="hudGenre">--</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrolling Timeline Table -->
+        <div class="chord-log-table-wrap">
+          <table class="chord-log-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Progression</th>
+                <th>Mode</th>
+                <th>Chord Name</th>
+                <th>Numeral</th>
+                <th>Harmonic Function</th>
+                <th>Voicing Notes</th>
+              </tr>
+            </thead>
+            <tbody id="chordLogBody">
+              <tr class="log-empty-row">
+                <td colspan="7" style="text-align:center; padding: 2rem 1rem; color: var(--text-muted);">
+                  No chords logged yet. Press <strong>"Short Hook"</strong> (fast turnaround) or <strong>"Long Groove"</strong> (multi-measure performance) on any progression card below to start real-time harmonic tracking!
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="progression-grid">
         <!-- 1. The Pop Four Chords -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">The "Pop 4-Chords"</h3>
+            <h3 class="prog-title">1. The "Pop 4-Chords"</h3>
             <span class="prog-formula">I - V - vi - IV</span>
           </div>
           <p class="prog-songs">
@@ -1254,16 +1598,22 @@
             <div class="prog-step">Am (vi)</div>
             <div class="prog-step">F (IV)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('pop', this)">
-            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play Pop 4-Chords
-          </button>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('pop', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('pop', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
         </div>
 
         <!-- 2. 50s Doo-Wop -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">The 50s "Doo-Wop" Ballad</h3>
+            <h3 class="prog-title">2. 50s "Doo-Wop" Ballad</h3>
             <span class="prog-formula">I - vi - IV - V</span>
           </div>
           <p class="prog-songs">
@@ -1275,40 +1625,52 @@
             <div class="prog-step">F (IV)</div>
             <div class="prog-step">G (V)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('doowop', this)">
-            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play 50s Ballad
-          </button>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('doowop', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('doowop', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
         </div>
 
         <!-- 3. Jazz 2-5-1 -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">The Jazz 2-5-1</h3>
+            <h3 class="prog-title">3. The Jazz 2-5-1</h3>
             <span class="prog-formula">ii7 - V7 - Imaj7</span>
           </div>
           <p class="prog-songs">
-            <strong>Famous In:</strong> <em>Autumn Leaves</em>, <em>Fly Me to the Moon</em>, <em>Tune Up</em>, <em>Satin Doll</em>. The harmonic cornerstone of jazz and soul.
+            <strong>Famous In:</strong> <em>Autumn Leaves</em>, <em>Fly Me to the Moon</em>, <em>Tune Up</em>, <em>Satin Doll</em>. The cornerstone of jazz harmony.
           </p>
           <div class="prog-steps" id="prog_jazz">
             <div class="prog-step">Dm7 (ii7)</div>
             <div class="prog-step">G7 (V7)</div>
             <div class="prog-step">Cmaj7 (Imaj7)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('jazz', this)">
-            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play Jazz 2-5-1
-          </button>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('jazz', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('jazz', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
         </div>
 
         <!-- 4. Andalusian Cadence -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">The Andalusian Flamenco</h3>
+            <h3 class="prog-title">4. The Andalusian Flamenco</h3>
             <span class="prog-formula">i - VII - VI - V</span>
           </div>
           <p class="prog-songs">
-            <strong>Famous In:</strong> <em>Hit the Road Jack</em> (Ray Charles), <em>Sultans of Swing</em> (Dire Straits), Spanish Flamenco, classical tango drama.
+            <strong>Famous In:</strong> <em>Hit the Road Jack</em> (Ray Charles), <em>Sultans of Swing</em> (Dire Straits), Spanish flamenco passion, dramatic tangos.
           </p>
           <div class="prog-steps" id="prog_andalusian">
             <div class="prog-step">Am (i)</div>
@@ -1316,20 +1678,26 @@
             <div class="prog-step">F (VI)</div>
             <div class="prog-step">E (V)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('andalusian', this)">
-            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play Andalusian Cadence
-          </button>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('andalusian', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('andalusian', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
         </div>
 
         <!-- 5. 12-Bar Blues Turnaround -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">12-Bar Blues Turnaround</h3>
+            <h3 class="prog-title">5. 12-Bar Blues Turnaround</h3>
             <span class="prog-formula">I7 - IV7 - I7 - V7</span>
           </div>
           <p class="prog-songs">
-            <strong>Famous In:</strong> <em>Johnny B. Goode</em> (Chuck Berry), <em>Hound Dog</em>, <em>Sweet Home Chicago</em>, Rock & Roll foundations.
+            <strong>Famous In:</strong> <em>Johnny B. Goode</em> (Chuck Berry), <em>Hound Dog</em>, <em>Sweet Home Chicago</em>, rock & roll roots.
           </p>
           <div class="prog-steps" id="prog_blues">
             <div class="prog-step">C7 (I7)</div>
@@ -1337,33 +1705,175 @@
             <div class="prog-step">C7 (I7)</div>
             <div class="prog-step">G7 (V7)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('blues', this)">
-            <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play Blues Turnaround
-          </button>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('blues', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('blues', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
         </div>
 
         <!-- 6. Pachelbel's Canon -->
         <div class="prog-card">
           <div class="prog-header">
-            <h3 class="prog-title">Pachelbel's Canon</h3>
-            <span class="prog-formula">I - V - vi - iii - IV - I</span>
+            <h3 class="prog-title">6. Pachelbel's Canon</h3>
+            <span class="prog-formula">I - V - vi - iii - IV - I - IV - V</span>
           </div>
           <p class="prog-songs">
             <strong>Famous In:</strong> <em>Canon in D</em>, <em>Memories</em> (Maroon 5), <em>Basket Case</em> (Green Day), <em>Graduation</em> (Vitamin C).
           </p>
           <div class="prog-steps" id="prog_canon">
-            <div class="prog-step">C</div>
-            <div class="prog-step">G</div>
-            <div class="prog-step">Am</div>
-            <div class="prog-step">Em</div>
-            <div class="prog-step">F</div>
-            <div class="prog-step">C</div>
+            <div class="prog-step">C (I)</div>
+            <div class="prog-step">G (V)</div>
+            <div class="prog-step">Am (vi)</div>
+            <div class="prog-step">Em (iii)</div>
+            <div class="prog-step">F (IV)</div>
+            <div class="prog-step">C (I)</div>
+            <div class="prog-step">F (IV)</div>
+            <div class="prog-step">G (V)</div>
           </div>
-          <button class="exp-btn exp-btn-lg" onclick="playProgression('canon', this)">
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('canon', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('canon', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 7. The Axis / Minor Pop Chorus -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">7. The Minor Pop Chorus</h3>
+            <span class="prog-formula">vi - IV - I - V</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> <em>Zombie</em> (The Cranberries), <em>Poker Face</em> (Lady Gaga), <em>Despacito</em> (Luis Fonsi), <em>In the End</em> (Linkin Park), <em>Counting Stars</em> (OneRepublic).
+          </p>
+          <div class="prog-steps" id="prog_axis">
+            <div class="prog-step">Am (vi)</div>
+            <div class="prog-step">F (IV)</div>
+            <div class="prog-step">C (I)</div>
+            <div class="prog-step">G (V)</div>
+          </div>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('axis', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('axis', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 8. Royal Road / Anime Cadence -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">8. Royal Road (Anime Cadence)</h3>
+            <span class="prog-formula">IVmaj7 - V7 - iii7 - vi</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> Studio Ghibli films (Joe Hisaishi), Yoasobi, Japanese City Pop, modern anime theme songs, Zelda & Mario Kart soundtracks.
+          </p>
+          <div class="prog-steps" id="prog_royal">
+            <div class="prog-step">Fmaj7 (IV)</div>
+            <div class="prog-step">G7 (V7)</div>
+            <div class="prog-step">Em7 (iii7)</div>
+            <div class="prog-step">Am (vi)</div>
+          </div>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('royal', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('royal', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 9. Epic Hero's Journey -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">9. Epic Hero's Journey</h3>
+            <span class="prog-formula">i - VI - III - VII</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> Hans Zimmer (<em>Pirates of the Caribbean</em>), <em>Requiem for a Dream</em>, <em>Radioactive</em> (Imagine Dragons), <em>Boulevard of Broken Dreams</em>.
+          </p>
+          <div class="prog-steps" id="prog_epic">
+            <div class="prog-step">Am (i)</div>
+            <div class="prog-step">F (VI)</div>
+            <div class="prog-step">C (III)</div>
+            <div class="prog-step">G (VII)</div>
+          </div>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('epic', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('epic', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 10. Neo-Soul & R&B Groove -->
+        <div class="prog-card">
+          <div class="prog-header">
+            <h3 class="prog-title">10. Neo-Soul & R&B Groove</h3>
+            <span class="prog-formula">IVmaj7 - III7 - vi7 - v7 - I7</span>
+          </div>
+          <p class="prog-songs">
+            <strong>Famous In:</strong> Stevie Wonder (<em>Sir Duke</em>), D'Angelo, Erykah Badu, Silk Sonic (<em>Leave The Door Open</em>), Bruno Mars.
+          </p>
+          <div class="prog-steps" id="prog_neosoul">
+            <div class="prog-step">Fmaj7 (IV)</div>
+            <div class="prog-step">E7 (III7)</div>
+            <div class="prog-step">Am7 (vi7)</div>
+            <div class="prog-step">Gm7 (v7)</div>
+            <div class="prog-step">C7 (I7)</div>
+          </div>
+          <div class="prog-actions">
+            <button class="exp-btn prog-btn-short" onclick="playProgression('neosoul', 'short', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Short Hook</span>
+            </button>
+            <button class="exp-btn prog-btn-long" onclick="playProgression('neosoul', 'long', this)">
+              <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              <span>Long Groove</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Name That Tune Interactive Game Banner -->
+      <div class="term-card full-width-card" style="margin-top: 2rem; background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(236, 72, 153, 0.12)); border-color: rgba(168, 85, 247, 0.35);">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.25rem;">
+          <div style="display:flex; align-items:center; gap:1.25rem;">
+            <div style="width:54px; height:54px; border-radius:var(--radius-md); background: linear-gradient(135deg, #8b5cf6, #ec4899); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 8px 24px rgba(139, 92, 246, 0.4);">
+              <svg style="width:28px;height:28px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            </div>
+            <div>
+              <h3 style="font-size:1.35rem; font-weight:800; color:#fff; margin:0 0 0.3rem 0;">Ready to Test Your Musical Ear? Play "Name That Tune"!</h3>
+              <p style="font-size:0.92rem; color:#cbd5e1; margin:0; line-height:1.4;">Identify 20 synthesized iconic melodies from Star Wars, Super Mario, Pink Panther, Für Elise, Queen, and more!</p>
+            </div>
+          </div>
+          <a href="name-that-tune/" class="exp-btn exp-btn-lg" style="--exp-btn-bg: linear-gradient(135deg, #8b5cf6, #d946ef); color:#fff; text-decoration:none;">
             <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            Play Canon Progression
-          </button>
+            <span>Play Name That Tune</span>
+          </a>
         </div>
       </div>
 
@@ -2413,76 +2923,353 @@
     }
     renderProgressionRoute();
 
+    // ============================================================
+    // EXPANDED 10 ICONIC CHORD PROGRESSIONS & REAL-TIME LOG ENGINE
+    // ============================================================
+    let activeProgressionTimeouts = [];
+    let activeProgBtn = null;
+    let activeProgBtnHTML = '';
+    let chordLogCounter = 0;
+    const sessionStartTime = Date.now();
+
     const progressionLibrary = {
-      'pop': [
-        { name: 'C Major (I)', freqs: [130.81, 164.81, 196.00] },
-        { name: 'G Major (V)', freqs: [196.00, 246.94, 293.66] },
-        { name: 'A Minor (vi)', freqs: [220.00, 261.63, 329.63] },
-        { name: 'F Major (IV)', freqs: [174.61, 220.00, 261.63] }
-      ],
-      'doowop': [
-        { name: 'C Major (I)', freqs: [130.81, 164.81, 196.00] },
-        { name: 'A Minor (vi)', freqs: [220.00, 261.63, 329.63] },
-        { name: 'F Major (IV)', freqs: [174.61, 220.00, 261.63] },
-        { name: 'G Major (V)', freqs: [196.00, 246.94, 293.66] }
-      ],
-      'jazz': [
-        { name: 'D Minor 7 (ii7)', freqs: [146.83, 174.61, 220.00, 261.63] },
-        { name: 'G Dominant 7 (V7)', freqs: [196.00, 246.94, 293.66, 349.23] },
-        { name: 'C Major 7 (Imaj7)', freqs: [261.63, 329.63, 392.00, 493.88] }
-      ],
-      'andalusian': [
-        { name: 'A Minor (i)', freqs: [220.00, 261.63, 329.63] },
-        { name: 'G Major (VII)', freqs: [196.00, 246.94, 293.66] },
-        { name: 'F Major (VI)', freqs: [174.61, 220.00, 261.63] },
-        { name: 'E Major (V)', freqs: [164.81, 207.65, 246.94] }
-      ],
-      'blues': [
-        { name: 'C7 (I7)', freqs: [130.81, 164.81, 196.00, 233.08] },
-        { name: 'F7 (IV7)', freqs: [174.61, 220.00, 261.63, 311.13] },
-        { name: 'C7 (I7)', freqs: [130.81, 164.81, 196.00, 233.08] },
-        { name: 'G7 (V7)', freqs: [196.00, 246.94, 293.66, 349.23] }
-      ],
-      'canon': [
-        { name: 'C Major', freqs: [130.81, 164.81, 196.00] },
-        { name: 'G Major', freqs: [196.00, 246.94, 293.66] },
-        { name: 'A Minor', freqs: [220.00, 261.63, 329.63] },
-        { name: 'E Minor', freqs: [164.81, 196.00, 246.94] },
-        { name: 'F Major', freqs: [174.61, 220.00, 261.63] },
-        { name: 'C Major', freqs: [130.81, 164.81, 196.00] }
-      ]
+      'pop': {
+        title: 'The Pop 4-Chords',
+        formula: 'I - V - vi - IV',
+        genre: 'Anthem Pop / Classic Rock',
+        chords: [
+          { name: 'C Major', numeral: 'I', role: 'Tonic Home', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 261.63], arpeggio: [130.81, 164.81, 196.00, 261.63, 329.63] },
+          { name: 'G Major', numeral: 'V', role: 'Dominant Lift', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [196.00, 246.94, 293.66, 392.00], arpeggio: [196.00, 246.94, 293.66, 392.00] },
+          { name: 'A Minor', numeral: 'vi', role: 'Relative Minor', badgeClass: 'mediant', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [220.00, 261.63, 329.63, 440.00], arpeggio: [220.00, 261.63, 329.63, 440.00] },
+          { name: 'F Major', numeral: 'IV', role: 'Subdominant Cadence', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 349.23], arpeggio: [174.61, 220.00, 261.63, 349.23] }
+        ]
+      },
+      'doowop': {
+        title: '50s Doo-Wop Ballad',
+        formula: 'I - vi - IV - V',
+        genre: '50s / 60s Romantic Ballad',
+        chords: [
+          { name: 'C Major', numeral: 'I', role: 'Tonic Home', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 261.63], arpeggio: [130.81, 196.00, 261.63, 329.63] },
+          { name: 'A Minor', numeral: 'vi', role: 'Submediant Minor', badgeClass: 'mediant', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [164.81, 220.00, 261.63, 329.63] },
+          { name: 'F Major', numeral: 'IV', role: 'Subdominant Warmth', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 349.23], arpeggio: [174.61, 220.00, 261.63, 349.23] },
+          { name: 'G Major', numeral: 'V', role: 'Dominant Turnaround', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [196.00, 246.94, 293.66, 392.00], arpeggio: [196.00, 246.94, 293.66, 392.00] }
+        ]
+      },
+      'jazz': {
+        title: 'The Jazz 2-5-1',
+        formula: 'ii7 - V7 - Imaj7',
+        genre: 'Jazz / Bossa Nova / Soul',
+        chords: [
+          { name: 'D Minor 7', numeral: 'ii7', role: 'Supertonic Preparation', badgeClass: 'subdominant', notes: 'D - F - A - C', routeKey: 'D', bass: 73.42, triad: [146.83, 174.61, 220.00], voicing: [146.83, 174.61, 220.00, 261.63], arpeggio: [146.83, 174.61, 220.00, 261.63] },
+          { name: 'G Dominant 7', numeral: 'V7', role: 'Dominant Tritone Tension', badgeClass: 'dominant', notes: 'G - B - D - F', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [174.61, 246.94, 293.66, 349.23], arpeggio: [196.00, 246.94, 293.66, 349.23] },
+          { name: 'C Major 7', numeral: 'Imaj7', role: 'Tonic Seventh Resolution', badgeClass: 'tonic', notes: 'C - E - G - B', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 246.94], arpeggio: [130.81, 164.81, 196.00, 246.94, 261.63] }
+        ]
+      },
+      'andalusian': {
+        title: 'The Andalusian Flamenco',
+        formula: 'i - VII - VI - V',
+        genre: 'Flamenco / Latin / Tango',
+        chords: [
+          { name: 'A Minor', numeral: 'i', role: 'Minor Tonic Equilibrium', badgeClass: 'tonic', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [110.00, 164.81, 220.00, 261.63] },
+          { name: 'G Major', numeral: 'VII', role: 'Subtonic Step-Down', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [146.83, 196.00, 246.94, 293.66], arpeggio: [98.00, 146.83, 196.00, 246.94] },
+          { name: 'F Major', numeral: 'VI', role: 'Submediant Step-Down', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [130.81, 174.61, 220.00, 261.63], arpeggio: [87.31, 130.81, 174.61, 220.00] },
+          { name: 'E Major', numeral: 'V', role: 'Phrygian Dominant Peak', badgeClass: 'dominant', notes: 'E - G♯ - B', routeKey: 'E', bass: 82.41, triad: [164.81, 207.65, 246.94], voicing: [123.47, 164.81, 207.65, 246.94], arpeggio: [82.41, 123.47, 164.81, 207.65] }
+        ]
+      },
+      'blues': {
+        title: '12-Bar Blues Turnaround',
+        formula: 'I7 - IV7 - I7 - V7',
+        genre: 'Delta Blues / Rock & Roll',
+        chords: [
+          { name: 'C Dominant 7', numeral: 'I7', role: 'Blues Tonic 7th', badgeClass: 'tonic', notes: 'C - E - G - B♭', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 233.08], arpeggio: [65.41, 130.81, 164.81, 233.08] },
+          { name: 'F Dominant 7', numeral: 'IV7', role: 'Blues Subdominant 7th', badgeClass: 'subdominant', notes: 'F - A - C - E♭', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 311.13], arpeggio: [87.31, 174.61, 220.00, 311.13] },
+          { name: 'C Dominant 7', numeral: 'I7', role: 'Blues Tonic Restatement', badgeClass: 'tonic', notes: 'C - E - G - B♭', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 233.08], arpeggio: [65.41, 130.81, 164.81, 233.08] },
+          { name: 'G Dominant 7', numeral: 'V7', role: 'Dominant Turnaround Drive', badgeClass: 'dominant', notes: 'G - B - D - F', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [174.61, 246.94, 293.66, 349.23], arpeggio: [98.00, 196.00, 246.94, 349.23] }
+        ]
+      },
+      'canon': {
+        title: "Pachelbel's Canon",
+        formula: 'I - V - vi - iii - IV - I - IV - V',
+        genre: 'Baroque / Orchestral Pop',
+        chords: [
+          { name: 'C Major', numeral: 'I', role: 'Tonic Baseline', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 196.00, 261.63, 329.63], arpeggio: [65.41, 130.81, 196.00, 261.63] },
+          { name: 'G Major', numeral: 'V', role: 'Dominant Step-Down', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [146.83, 196.00, 246.94, 293.66], arpeggio: [98.00, 146.83, 196.00, 246.94] },
+          { name: 'A Minor', numeral: 'vi', role: 'Submediant Minor', badgeClass: 'mediant', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [110.00, 164.81, 220.00, 261.63] },
+          { name: 'E Minor', numeral: 'iii', role: 'Mediant Minor', badgeClass: 'mediant', notes: 'E - G - B', routeKey: 'E', bass: 82.41, triad: [164.81, 196.00, 246.94], voicing: [123.47, 164.81, 196.00, 246.94], arpeggio: [82.41, 123.47, 164.81, 196.00] },
+          { name: 'F Major', numeral: 'IV', role: 'Subdominant Warmth', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [130.81, 174.61, 220.00, 261.63], arpeggio: [87.31, 130.81, 174.61, 220.00] },
+          { name: 'C Major', numeral: 'I', role: 'Tonic Return', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 196.00, 261.63, 329.63], arpeggio: [65.41, 130.81, 196.00, 261.63] },
+          { name: 'F Major', numeral: 'IV', role: 'Cadence Preparation', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 349.23], arpeggio: [87.31, 174.61, 220.00, 261.63] },
+          { name: 'G Major', numeral: 'V', role: 'Authentic Cadence Arrival', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [196.00, 246.94, 293.66, 392.00], arpeggio: [98.00, 196.00, 246.94, 293.66] }
+        ]
+      },
+      'axis': {
+        title: 'The Minor Pop Chorus',
+        formula: 'vi - IV - I - V',
+        genre: 'Modern Pop / Alt-Rock / EDM',
+        chords: [
+          { name: 'A Minor', numeral: 'vi', role: 'Minor Tonic Center', badgeClass: 'tonic', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [110.00, 164.81, 220.00, 261.63] },
+          { name: 'F Major', numeral: 'IV', role: 'Emotional Subdominant Lift', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 349.23], arpeggio: [87.31, 174.61, 220.00, 261.63] },
+          { name: 'C Major', numeral: 'I', role: 'Relative Major Peak', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 261.63], arpeggio: [65.41, 130.81, 196.00, 261.63] },
+          { name: 'G Major', numeral: 'V', role: 'Dominant Momentum Loop', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [196.00, 246.94, 293.66, 392.00], arpeggio: [98.00, 196.00, 246.94, 293.66] }
+        ]
+      },
+      'royal': {
+        title: 'Royal Road (Anime Cadence)',
+        formula: 'IVmaj7 - V7 - iii7 - vi',
+        genre: 'Anime / J-Pop / City Pop',
+        chords: [
+          { name: 'F Major 7', numeral: 'IVmaj7', role: 'Lush Floating Subdominant', badgeClass: 'subdominant', notes: 'F - A - C - E', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 329.63], arpeggio: [87.31, 174.61, 220.00, 329.63] },
+          { name: 'G Dominant 7', numeral: 'V7', role: 'Soaring Dominant Push', badgeClass: 'dominant', notes: 'G - B - D - F', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [174.61, 246.94, 293.66, 349.23], arpeggio: [98.00, 196.00, 246.94, 349.23] },
+          { name: 'E Minor 7', numeral: 'iii7', role: 'Deceptive Soft Mediant', badgeClass: 'mediant', notes: 'E - G - B - D', routeKey: 'E', bass: 82.41, triad: [164.81, 196.00, 246.94], voicing: [146.83, 196.00, 246.94, 293.66], arpeggio: [82.41, 146.83, 196.00, 246.94] },
+          { name: 'A Minor', numeral: 'vi', role: 'Soulful Minor Resolution', badgeClass: 'tonic', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [110.00, 164.81, 220.00, 261.63] }
+        ]
+      },
+      'epic': {
+        title: "Epic Hero's Journey",
+        formula: 'i - VI - III - VII',
+        genre: 'Cinematic / Film Score / Trailer',
+        chords: [
+          { name: 'A Minor', numeral: 'i', role: 'Heroic Minor Tonic', badgeClass: 'tonic', notes: 'A - C - E', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [164.81, 220.00, 261.63, 329.63], arpeggio: [55.00, 110.00, 164.81, 220.00] },
+          { name: 'F Major', numeral: 'VI', role: 'Dramatic Adventure Surge', badgeClass: 'subdominant', notes: 'F - A - C', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 349.23], arpeggio: [43.65, 87.31, 174.61, 220.00] },
+          { name: 'C Major', numeral: 'III', role: 'Triumphant Glimmer of Hope', badgeClass: 'tonic', notes: 'C - E - G', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 196.00, 261.63], arpeggio: [65.41, 130.81, 164.81, 196.00] },
+          { name: 'G Major', numeral: 'VII', role: 'Subtonic Forward Charge', badgeClass: 'dominant', notes: 'G - B - D', routeKey: 'G', bass: 98.00, triad: [196.00, 246.94, 293.66], voicing: [196.00, 246.94, 293.66, 392.00], arpeggio: [49.00, 98.00, 196.00, 246.94] }
+        ]
+      },
+      'neosoul': {
+        title: 'Neo-Soul & R&B Groove',
+        formula: 'IVmaj7 - III7 - vi7 - v7 - I7',
+        genre: 'Neo-Soul / Contemporary R&B',
+        chords: [
+          { name: 'F Major 7', numeral: 'IVmaj7', role: 'Velvet Subdominant 7th', badgeClass: 'subdominant', notes: 'F - A - C - E', routeKey: 'F', bass: 87.31, triad: [174.61, 220.00, 261.63], voicing: [174.61, 220.00, 261.63, 329.63], arpeggio: [87.31, 174.61, 220.00, 261.63] },
+          { name: 'E Dominant 7', numeral: 'III7', role: 'Secondary Dominant (V7/vi)', badgeClass: 'secondary', notes: 'E - G♯ - B - D', routeKey: 'E', bass: 82.41, triad: [164.81, 207.65, 246.94], voicing: [146.83, 164.81, 207.65, 246.94], arpeggio: [82.41, 123.47, 164.81, 207.65] },
+          { name: 'A Minor 7', numeral: 'vi7', role: 'Minor Tonic 7th Target', badgeClass: 'tonic', notes: 'A - C - E - G', routeKey: 'A', bass: 110.00, triad: [220.00, 261.63, 329.63], voicing: [196.00, 220.00, 261.63, 329.63], arpeggio: [110.00, 164.81, 220.00, 261.63] },
+          { name: 'G Minor 7', numeral: 'v7', role: 'Passing Minor ii7 of IV', badgeClass: 'mediant', notes: 'G - B♭ - D - F', routeKey: 'G', bass: 98.00, triad: [196.00, 233.08, 293.66], voicing: [174.61, 196.00, 233.08, 293.66], arpeggio: [98.00, 146.83, 196.00, 233.08] },
+          { name: 'C Dominant 7', numeral: 'I7', role: 'Secondary Dominant (V7/IV)', badgeClass: 'secondary', notes: 'C - E - G - B♭', routeKey: 'C', bass: 65.41, triad: [130.81, 164.81, 196.00], voicing: [130.81, 164.81, 233.08, 261.63], arpeggio: [65.41, 130.81, 164.81, 233.08] }
+        ]
+      }
     };
 
-    window.playProgression = function(progKey, btn) {
+    // Logging & HUD Update Helper
+    function logChordEvent(progTitle, modeLabel, chord, stepNum, totalSteps) {
+      chordLogCounter++;
+      const counterEl = document.getElementById('chordLogCount');
+      if (counterEl) counterEl.textContent = `${chordLogCounter} Chords Logged`;
+
+      const dotEl = document.getElementById('logStatusDot');
+      if (dotEl) dotEl.classList.add('playing');
+
+      const stopBtn = document.getElementById('stopProgressionBtn');
+      if (stopBtn) stopBtn.style.display = 'inline-flex';
+
+      // Update HUD
+      const hudName = document.getElementById('hudChordName');
+      if (hudName) hudName.textContent = `${chord.name} (${chord.numeral})`;
+
+      const hudSub = document.getElementById('hudChordSub');
+      if (hudSub) hudSub.textContent = `${progTitle} • Step ${stepNum} of ${totalSteps} • ${modeLabel}`;
+
+      const hudNum = document.getElementById('hudNumeral');
+      if (hudNum) hudNum.textContent = chord.numeral;
+
+      const hudRole = document.getElementById('hudRole');
+      if (hudRole) hudRole.textContent = chord.role;
+
+      const hudNotes = document.getElementById('hudNotes');
+      if (hudNotes) hudNotes.textContent = chord.notes;
+
+      const hudGenre = document.getElementById('hudGenre');
+      if (hudGenre) hudGenre.textContent = progTitle;
+
+      // Table row
+      const tbody = document.getElementById('chordLogBody');
+      if (tbody) {
+        const emptyRow = tbody.querySelector('.log-empty-row');
+        if (emptyRow) emptyRow.remove();
+
+        const elapsedSec = ((Date.now() - sessionStartTime) / 1000).toFixed(1);
+        const mins = Math.floor(elapsedSec / 60).toString().padStart(2, '0');
+        const secs = (elapsedSec % 60).toFixed(1).padStart(4, '0');
+        const timeStr = `${mins}:${secs}`;
+
+        const tr = document.createElement('tr');
+        tr.className = 'log-row-active';
+        tr.innerHTML = `
+          <td style="font-family: monospace; color: var(--accent-cyan);">${timeStr}</td>
+          <td><strong>${progTitle}</strong></td>
+          <td><span class="log-badge ${modeLabel.startsWith('Long') ? 'secondary' : 'subdominant'}">${modeLabel}</span></td>
+          <td><span style="font-weight:700; color:#fff;">${chord.name}</span></td>
+          <td><span class="log-badge ${chord.badgeClass}">${chord.numeral}</span></td>
+          <td>${chord.role}</td>
+          <td><code style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;">${chord.notes}</code></td>
+        `;
+
+        tbody.insertBefore(tr, tbody.firstChild);
+
+        // Keep maximum 40 rows
+        while (tbody.children.length > 40) {
+          tbody.removeChild(tbody.lastChild);
+        }
+
+        setTimeout(() => {
+          tr.classList.remove('log-row-active');
+        }, 800);
+      }
+    }
+
+    // Clear Chord Progression Log
+    window.clearChordLog = function() {
+      const tbody = document.getElementById('chordLogBody');
+      if (tbody) {
+        tbody.innerHTML = `
+          <tr class="log-empty-row">
+            <td colspan="7" style="text-align:center; padding: 2rem 1rem; color: var(--text-muted);">
+              Log cleared. Press <strong>"Short Hook"</strong> or <strong>"Long Groove"</strong> on any card below to resume real-time harmonic tracking.
+            </td>
+          </tr>
+        `;
+      }
+      chordLogCounter = 0;
+      const counterEl = document.getElementById('chordLogCount');
+      if (counterEl) counterEl.textContent = '0 Chords Logged';
+    };
+
+    // Stop Playback
+    window.stopActiveProgression = function() {
+      activeProgressionTimeouts.forEach(t => clearTimeout(t));
+      activeProgressionTimeouts = [];
+
+      if (activeProgBtn) {
+        activeProgBtn.classList.remove('playing');
+        activeProgBtn.innerHTML = activeProgBtnHTML;
+        activeProgBtn = null;
+      }
+
+      document.querySelectorAll('.prog-step').forEach(s => s.classList.remove('active'));
+      clearKeyHighlights();
+
+      const dotEl = document.getElementById('logStatusDot');
+      if (dotEl) dotEl.classList.remove('playing');
+
+      const stopBtn = document.getElementById('stopProgressionBtn');
+      if (stopBtn) stopBtn.style.display = 'none';
+
+      const progTag = document.getElementById('progRouteTag');
+      if (progTag) progTag.textContent = 'Playback Stopped';
+
+      renderProgressionRoute();
+    };
+
+    // Dual-Mode Interactive Progression Player (Short Turnaround vs Long Groove)
+    window.playProgression = function(progKey, mode = 'short', btn = null) {
       const ctx = getCtx();
       if (!ctx) return;
 
-      const prog = progressionLibrary[progKey];
-      const stepEls = document.querySelectorAll(`#prog_${progKey} .prog-step`);
-      btn.classList.add('playing');
+      // Stop any existing progression first
+      window.stopActiveProgression();
 
-      prog.forEach((chord, i) => {
-        const chordDelay = i * 1.4;
-        setTimeout(() => {
+      const prog = progressionLibrary[progKey];
+      if (!prog) return;
+
+      const stepEls = document.querySelectorAll(`#prog_${progKey} .prog-step`);
+      if (btn) {
+        activeProgBtn = btn;
+        activeProgBtnHTML = btn.innerHTML;
+        btn.classList.add('playing');
+        btn.innerHTML = `<span style="display:inline-flex; align-items:center; gap:0.4rem;"><span class="pulse-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#fff;"></span>Playing ${mode === 'short' ? 'Hook...' : 'Groove...'}</span>`;
+      }
+
+      const isShort = (mode === 'short');
+      const stepDuration = isShort ? 1.2 : 2.7; // seconds per chord
+
+      prog.chords.forEach((chord, i) => {
+        const chordStartTime = i * stepDuration;
+
+        // Beat 1: Main chord arrival
+        const t1 = setTimeout(() => {
           clearKeyHighlights();
           stepEls.forEach((s, sIdx) => s.classList.toggle('active', sIdx === i));
-          pianoDisplay.textContent = `Progression: ${chord.name}`;
-          document.getElementById('progRouteTag').textContent = chord.name;
-          renderProgressionRoute(chord.name);
           
-          chord.freqs.forEach(f => {
-            playPianoTone(f, ctx.currentTime, 1.8, 0.24);
-            highlightKey(getNoteFromFreq(f), 1300);
+          if (pianoDisplay) {
+            pianoDisplay.textContent = `${prog.title}: ${chord.name} (${chord.numeral})`;
+          }
+
+          const progTag = document.getElementById('progRouteTag');
+          if (progTag) progTag.textContent = `${chord.name} (${chord.numeral})`;
+
+          renderProgressionRoute(chord.name);
+
+          // Log event
+          const modeLabel = isShort ? 'Short Hook' : `Long Groove (m.${i + 1})`;
+          logChordEvent(prog.title, modeLabel, chord, i + 1, prog.chords.length);
+
+          // Sound: Deep bass root note
+          playPianoTone(chord.bass, ctx.currentTime, isShort ? 1.4 : 2.2, 0.36);
+          highlightKey(getNoteFromFreq(chord.bass), isShort ? 1000 : 2200);
+
+          // Sound: Chord voicing
+          chord.voicing.forEach(f => {
+            playPianoTone(f, ctx.currentTime, isShort ? 1.4 : 1.8, 0.23);
+            highlightKey(getNoteFromFreq(f), isShort ? 1000 : 1600);
           });
-        }, chordDelay * 1000);
+        }, chordStartTime * 1000);
+        activeProgressionTimeouts.push(t1);
+
+        // Extended groove beats (only in Long mode)
+        if (!isShort) {
+          // Beat 2 (0.65s in): Syncopated upper-voicing rhythmic comp
+          const t2 = setTimeout(() => {
+            chord.voicing.slice(1).forEach(f => {
+              playPianoTone(f, ctx.currentTime, 0.8, 0.18);
+              highlightKey(getNoteFromFreq(f), 550);
+            });
+          }, (chordStartTime + 0.65) * 1000);
+          activeProgressionTimeouts.push(t2);
+
+          // Beat 3 (1.30s in): Bass octave pulse + middle harmony resonance
+          const t3 = setTimeout(() => {
+            playPianoTone(chord.bass * 2, ctx.currentTime, 1.1, 0.28);
+            highlightKey(getNoteFromFreq(chord.bass * 2), 700);
+            if (chord.triad[1]) {
+              playPianoTone(chord.triad[1], ctx.currentTime, 0.9, 0.16);
+            }
+          }, (chordStartTime + 1.3) * 1000);
+          activeProgressionTimeouts.push(t3);
+
+          // Beat 4 (1.95s in): Voice-leading arpeggio flourish into next chord
+          const t4 = setTimeout(() => {
+            chord.arpeggio.slice(-2).forEach((f, aIdx) => {
+              playPianoTone(f, ctx.currentTime + aIdx * 0.16, 0.7, 0.17);
+              highlightKey(getNoteFromFreq(f), 550);
+            });
+          }, (chordStartTime + 1.95) * 1000);
+          activeProgressionTimeouts.push(t4);
+        }
       });
 
-      setTimeout(() => {
-        btn.classList.remove('playing');
+      // Progression completion timeout
+      const totalDuration = prog.chords.length * stepDuration;
+      const tEnd = setTimeout(() => {
+        if (activeProgBtn) {
+          activeProgBtn.classList.remove('playing');
+          activeProgBtn.innerHTML = activeProgBtnHTML;
+          activeProgBtn = null;
+        }
+
         stepEls.forEach(s => s.classList.remove('active'));
-        document.getElementById('progRouteTag').textContent = 'Completed';
+        clearKeyHighlights();
+
+        const dotEl = document.getElementById('logStatusDot');
+        if (dotEl) dotEl.classList.remove('playing');
+
+        const stopBtn = document.getElementById('stopProgressionBtn');
+        if (stopBtn) stopBtn.style.display = 'none';
+
+        const progTag = document.getElementById('progRouteTag');
+        if (progTag) progTag.textContent = `${prog.title} Completed`;
+
         renderProgressionRoute();
-      }, prog.length * 1.4 * 1000);
+      }, totalDuration * 1000);
+      activeProgressionTimeouts.push(tEnd);
     };
 
     // ============================================================

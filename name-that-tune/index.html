@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Name That Tune — Laura's Music App</title>
+  <meta name="description" content="Test your musical ear and music trivia knowledge! Listen to synthesized melodies and name that tune across pop hits, movie soundtracks, video games, and classical masters.">
+  <meta name="theme-color" content="#0a0d14">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #121826;
+      --card-bg: rgba(22, 30, 48, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-pink: #ec4899;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-purple: #a855f7;
+      --accent-rose: #f43f5e;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 55%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 1.5rem;
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.15rem;
+      padding: 0.6rem 1.25rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.16);
+      transform: translateX(-3px);
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
+    }
+
+    .header-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.15rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-weight: 800;
+      font-size: 0.95rem;
+    }
+
+    .stat-score {
+      color: var(--accent-amber);
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .stat-streak {
+      color: var(--accent-pink);
+      border-color: rgba(236, 72, 153, 0.3);
+      background: rgba(236, 72, 153, 0.1);
+    }
+
+    main {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    /* Game Card */
+    .game-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem 2rem;
+      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1.2rem;
+    }
+
+    .round-indicator {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .category-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.18);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+
+    /* Turntable & Audio Canvas Stage */
+    .audio-stage {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .visualizer-canvas {
+      width: 100%;
+      height: 140px;
+      background: #060912;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 4px 18px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Big Play Button */
+    .play-btn {
+      min-height: 68px;
+      padding: 1.1rem 2.8rem;
+      border-radius: 999px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: inherit;
+      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      box-shadow: 0 8px 28px rgba(236, 72, 153, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      filter: brightness(1.15);
+      box-shadow: 0 12px 34px rgba(236, 72, 153, 0.65);
+    }
+
+    .play-btn:active {
+      transform: translateY(1px) scale(0.97);
+    }
+
+    .play-btn.playing {
+      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+      box-shadow: 0 0 32px rgba(56, 189, 248, 0.7);
+      animation: audioGlow 0.8s infinite alternate ease-in-out;
+    }
+
+    @keyframes audioGlow {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.04); }
+    }
+
+    .sub-controls {
+      display: flex;
+      gap: 0.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .sub-btn {
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .sub-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: var(--accent-cyan);
+    }
+
+    .sub-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* Answers Choice Grid */
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.2rem;
+      width: 100%;
+    }
+
+    .option-btn {
+      min-height: 72px;
+      padding: 1.1rem 1.5rem;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    }
+
+    .option-btn:hover:not(.disabled) {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.35);
+    }
+
+    .option-subtitle {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .option-btn.correct {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+      border-color: #34d399 !important;
+      box-shadow: 0 0 28px rgba(16, 185, 129, 0.6) !important;
+      transform: scale(1.02);
+      color: #fff !important;
+    }
+
+    .option-btn.wrong {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
+      border-color: #f87171 !important;
+      animation: shake 0.4s ease-in-out;
+      opacity: 0.8;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+
+    /* Fact & Feedback Box */
+    .feedback-box {
+      display: none;
+      background: rgba(10, 15, 26, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      text-align: left;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .feedback-header {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .feedback-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .next-btn {
+      align-self: flex-end;
+      min-height: 52px;
+      padding: 0.8rem 2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #000;
+      font-size: 1.1rem;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .next-btn:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Confetti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Summary Card */
+    .summary-box {
+      display: none;
+      flex-direction: column;
+      gap: 1.8rem;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .summary-badge {
+      font-size: 4.5rem;
+      animation: bounce 1.2s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-12px); }
+    }
+
+    .summary-title {
+      font-size: 2.2rem;
+      font-weight: 900;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .summary-score {
+      font-size: 1.4rem;
+      color: var(--accent-amber);
+      font-weight: 800;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Confetti Layer -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <header>
+    <a href="../index.html" class="back-link">
+      <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <span>Laura's Music App</span>
+    </a>
+
+    <div class="header-stats">
+      <div class="stat-pill stat-score">
+        <span>🏆 Score:</span>
+        <span id="scoreVal">0</span>
+      </div>
+      <div class="stat-pill stat-streak">
+        <span>🔥 Streak:</span>
+        <span id="streakVal">0</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="game-card" id="gameCard">
+      <!-- Question Info -->
+      <div class="question-header">
+        <span class="round-indicator" id="roundIndicator">Question 1 / 10</span>
+        <span class="category-badge" id="categoryBadge">Classic Rock & Pop</span>
+      </div>
+
+      <!-- Stage & Audio Controls -->
+      <div class="audio-stage">
+        <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
+
+        <button class="play-btn" id="playBtn" onclick="toggleTunePlay()">
+          <svg style="width:28px;height:28px;fill:currentColor" viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+          <span id="playBtnText">Listen to Melody</span>
+        </button>
+
+        <div class="sub-controls">
+          <button class="sub-btn active" id="speedNormalBtn" onclick="setSpeed(1.0, this)">1.0x Normal</button>
+          <button class="sub-btn" id="speedSlowBtn" onclick="setSpeed(0.75, this)">0.75x Slower</button>
+          <button class="sub-btn" onclick="replayTune()">Replay</button>
+        </div>
+      </div>
+
+      <!-- Multiple Choice Options -->
+      <div class="options-grid" id="optionsGrid">
+        <!-- 4 buttons dynamically populated -->
+      </div>
+
+      <!-- Fact & Explanation Box -->
+      <div class="feedback-box" id="feedbackBox">
+        <div class="feedback-header" id="feedbackHeader"></div>
+        <p class="feedback-desc" id="feedbackDesc"></p>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question &rarr;</button>
+      </div>
+
+      <!-- Final Summary -->
+      <div class="summary-box" id="summaryBox">
+        <div class="summary-badge" id="summaryEmoji">🏆</div>
+        <h2 class="summary-title" id="summaryTitle">Master Detective!</h2>
+        <div class="summary-score" id="summaryScore">Final Score: 1000 pts</div>
+        <p style="color:var(--text-muted); max-width:500px; line-height:1.6;" id="summaryMsg"></p>
+        <button class="play-btn" onclick="restartGame()">Play Again</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>Name That Tune</strong> &bull; An interactive ear-training & music recognition experiment in <strong>Laura's Music App</strong>.</p>
+  </footer>
+
+  <script>
+    // Audio Context
+    let audioCtx = null;
+    let masterCompressor = null;
+
+    function getCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) {
+          audioCtx = new AC();
+          masterCompressor = audioCtx.createDynamicsCompressor();
+          masterCompressor.connect(audioCtx.destination);
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Comprehensive Melody Library (20 Famous Tunes)
+    const TUNE_LIBRARY = [
+      {
+        title: "Star Wars (Main Title)",
+        artist: "John Williams (1977)",
+        category: "Movie & TV Themes",
+        fact: "Famous for its triumphant brass fanfare, opening with a bold Perfect 5th interval leap (D to A) that instantly evokes heroic grandeur.",
+        bpm: 108,
+        notes: [
+          { f: 293.66, d: 0.4 }, // D4
+          { f: 440.00, d: 0.8 }, // A4
+          { f: 392.00, d: 0.25 }, // G4
+          { f: 369.99, d: 0.25 }, // F#4
+          { f: 329.63, d: 0.25 }, // E4
+          { f: 587.33, d: 0.8 }, // D5
+          { f: 440.00, d: 0.4 }  // A4
+        ],
+        distractors: [
+          { title: "Star Trek Theme", subtitle: "Alexander Courage" },
+          { title: "Jurassic Park Theme", subtitle: "John Williams" },
+          { title: "Indiana Jones March", subtitle: "John Williams" }
+        ]
+      },
+      {
+        title: "Super Mario Bros (Theme)",
+        artist: "Koji Kondo (1985)",
+        category: "Video Game Classics",
+        fact: "Composed on the NES 2A03 chip using calypso-inspired swing rhythms. It is recognized by over 90% of gamers worldwide.",
+        bpm: 140,
+        notes: [
+          { f: 659.25, d: 0.18 }, // E5
+          { f: 659.25, d: 0.22 }, // E5
+          { f: 0, d: 0.18 },
+          { f: 659.25, d: 0.22 }, // E5
+          { f: 0, d: 0.18 },
+          { f: 523.25, d: 0.22 }, // C5
+          { f: 659.25, d: 0.35 }, // E5
+          { f: 783.99, d: 0.45 }, // G5
+          { f: 0, d: 0.35 },
+          { f: 392.00, d: 0.45 }  // G4
+        ],
+        distractors: [
+          { title: "The Legend of Zelda", subtitle: "Koji Kondo" },
+          { title: "Sonic the Hedgehog", subtitle: "Masato Nakamura" },
+          { title: "Pac-Man Theme", subtitle: "Toshio Kai" }
+        ]
+      },
+      {
+        title: "Beethoven's 5th Symphony",
+        artist: "Ludwig van Beethoven (1808)",
+        category: "Classical Masterpieces",
+        fact: "The legendary 'short-short-short-long' motif is described by historians as 'Fate knocking at the door'.",
+        bpm: 108,
+        notes: [
+          { f: 392.00, d: 0.22 }, // G4
+          { f: 392.00, d: 0.22 }, // G4
+          { f: 392.00, d: 0.22 }, // G4
+          { f: 311.13, d: 0.9 },  // Eb4
+          { f: 0, d: 0.4 },
+          { f: 349.23, d: 0.22 }, // F4
+          { f: 349.23, d: 0.22 }, // F4
+          { f: 349.23, d: 0.22 }, // F4
+          { f: 293.66, d: 1.1 }   // D4
+        ],
+        distractors: [
+          { title: "Mozart's Symphony No. 40", subtitle: "W.A. Mozart" },
+          { title: "Ode to Joy (9th Symphony)", subtitle: "Beethoven" },
+          { title: "Tchaikovsky's 1812 Overture", subtitle: "P.I. Tchaikovsky" }
+        ]
+      },
+      {
+        title: "Tetris (Korobeiniki)",
+        artist: "Russian Folk Song / Hirokazu Tanaka (1989)",
+        category: "Video Game Classics",
+        fact: "Derived from a 19th-century Russian poem, this energetic minor tune became the definitive soundtrack of Game Boy gaming.",
+        bpm: 130,
+        notes: [
+          { f: 659.25, d: 0.35 }, // E5
+          { f: 493.88, d: 0.2 },  // B4
+          { f: 523.25, d: 0.2 },  // C5
+          { f: 587.33, d: 0.35 }, // D5
+          { f: 523.25, d: 0.2 },  // C5
+          { f: 493.88, d: 0.2 },  // B4
+          { f: 440.00, d: 0.4 },  // A4
+          { f: 440.00, d: 0.2 },  // A4
+          { f: 523.25, d: 0.2 },  // C5
+          { f: 659.25, d: 0.4 }   // E5
+        ],
+        distractors: [
+          { title: "Duck Hunt Theme", subtitle: "Nintendo" },
+          { title: "Pokemon Battle Theme", subtitle: "Junichi Masuda" },
+          { title: "Space Invaders", subtitle: "Taito" }
+        ]
+      },
+      {
+        title: "The Pink Panther Theme",
+        artist: "Henry Mancini (1963)",
+        category: "Movie & TV Themes",
+        fact: "Known for its slinky chromatic grace notes and minor blues mystery played on tenor saxophone.",
+        bpm: 110,
+        notes: [
+          { f: 311.13, d: 0.15 }, // D#4
+          { f: 329.63, d: 0.4 },  // E4
+          { f: 369.99, d: 0.15 }, // F#4
+          { f: 392.00, d: 0.4 },  // G4
+          { f: 311.13, d: 0.15 }, // D#4
+          { f: 329.63, d: 0.25 }, // E4
+          { f: 369.99, d: 0.15 }, // F#4
+          { f: 392.00, d: 0.25 }, // G4
+          { f: 523.25, d: 0.3 },  // C5
+          { f: 493.88, d: 0.5 }   // B4
+        ],
+        distractors: [
+          { title: "James Bond 007 Theme", subtitle: "Monty Norman" },
+          { title: "Mission: Impossible", subtitle: "Lalo Schifrin" },
+          { title: "The Godfather Waltz", subtitle: "Nino Rota" }
+        ]
+      },
+      {
+        title: "Für Elise",
+        artist: "Ludwig van Beethoven (1810)",
+        category: "Classical Masterpieces",
+        fact: "Beethoven's famous Bagatelle in A Minor switches rapidly between E and D-sharp (a half-step neighbor tone) before cascading down.",
+        bpm: 120,
+        notes: [
+          { f: 659.25, d: 0.25 }, // E5
+          { f: 622.25, d: 0.25 }, // D#5
+          { f: 659.25, d: 0.25 }, // E5
+          { f: 622.25, d: 0.25 }, // D#5
+          { f: 659.25, d: 0.25 }, // E5
+          { f: 493.88, d: 0.25 }, // B4
+          { f: 587.33, d: 0.25 }, // D5
+          { f: 523.25, d: 0.25 }, // C5
+          { f: 440.00, d: 0.6 }   // A4
+        ],
+        distractors: [
+          { title: "Moonlight Sonata", subtitle: "Beethoven" },
+          { title: "Clair de Lune", subtitle: "Claude Debussy" },
+          { title: "Chopin's Nocturne Op. 9", subtitle: "Frédéric Chopin" }
+        ]
+      },
+      {
+        title: "The Simpsons Theme",
+        artist: "Danny Elfman (1989)",
+        category: "Movie & TV Themes",
+        fact: "Famously composed in the rare Lydian Dominant scale, featuring an eerie raised 4th (Tritone C to F#) on the word 'The Simp-sons!'.",
+        bpm: 130,
+        notes: [
+          { f: 261.63, d: 0.4 }, // C4
+          { f: 329.63, d: 0.3 }, // E4
+          { f: 369.99, d: 0.3 }, // F#4
+          { f: 440.00, d: 0.4 }, // A4
+          { f: 392.00, d: 0.5 }, // G4
+          { f: 329.63, d: 0.3 }, // E4
+          { f: 261.63, d: 0.4 }  // C4
+        ],
+        distractors: [
+          { title: "Family Guy Theme", subtitle: "Walter Murphy" },
+          { title: "The Flintstones", subtitle: "Hoyt Curtin" },
+          { title: "Futurama Theme", subtitle: "Christopher Tyng" }
+        ]
+      },
+      {
+        title: "Billie Jean",
+        artist: "Michael Jackson (1982)",
+        category: "Classic Rock & Pop",
+        fact: "Features one of the most famous baseline grooves in pop history in F# Dorian mode, produced by Quincy Jones.",
+        bpm: 117,
+        notes: [
+          { f: 185.00, d: 0.25 }, // F#3
+          { f: 277.18, d: 0.25 }, // C#4
+          { f: 329.63, d: 0.25 }, // E4
+          { f: 369.99, d: 0.25 }, // F#4
+          { f: 329.63, d: 0.25 }, // E4
+          { f: 277.18, d: 0.25 }, // C#4
+          { f: 246.94, d: 0.25 }, // B3
+          { f: 277.18, d: 0.25 }  // C#4
+        ],
+        distractors: [
+          { title: "Smooth Criminal", subtitle: "Michael Jackson" },
+          { title: "Superstition", subtitle: "Stevie Wonder" },
+          { title: "Stayin' Alive", subtitle: "Bee Gees" }
+        ]
+      },
+      {
+        title: "Hedwig's Theme (Harry Potter)",
+        artist: "John Williams (2001)",
+        category: "Movie & TV Themes",
+        fact: "Played on the magical celesta (a bell piano) in E minor, setting the enchanting tone for the entire Wizarding World.",
+        bpm: 120,
+        notes: [
+          { f: 493.88, d: 0.35 }, // B4
+          { f: 659.25, d: 0.55 }, // E5
+          { f: 783.99, d: 0.3 },  // G5
+          { f: 739.99, d: 0.3 },  // F#5
+          { f: 659.25, d: 0.6 },  // E5
+          { f: 987.77, d: 0.4 },  // B5
+          { f: 880.00, d: 0.8 }   // A5
+        ],
+        distractors: [
+          { title: "Lord of the Rings Shire Theme", subtitle: "Howard Shore" },
+          { title: "Pirates of the Caribbean", subtitle: "Klaus Badelt" },
+          { title: "Chronicles of Narnia", subtitle: "Harry Gregson-Williams" }
+        ]
+      },
+      {
+        title: "Take On Me",
+        artist: "A-ha (1985)",
+        category: "Classic Rock & Pop",
+        fact: "Famous for its sparkling Roland Juno-60 synth riff and Morten Harket's soaring 2.5-octave vocal range.",
+        bpm: 169,
+        notes: [
+          { f: 369.99, d: 0.18 }, // F#4
+          { f: 369.99, d: 0.18 }, // F#4
+          { f: 293.66, d: 0.18 }, // D4
+          { f: 246.94, d: 0.18 }, // B3
+          { f: 329.63, d: 0.22 }, // E4
+          { f: 329.63, d: 0.22 }, // E4
+          { f: 415.30, d: 0.22 }, // G#4
+          { f: 415.30, d: 0.22 }, // G#4
+          { f: 440.00, d: 0.35 }  // A4
+        ],
+        distractors: [
+          { title: "Sweet Dreams", subtitle: "Eurythmics" },
+          { title: "Blue (Da Ba Dee)", subtitle: "Eiffel 65" },
+          { title: "Don't You Want Me", subtitle: "The Human League" }
+        ]
+      },
+      // 11. The Imperial March (Darth Vader's Theme)
+      {
+        id: "imperial-march",
+        title: "The Imperial March",
+        subtitle: "Darth Vader's Theme",
+        artist: "John Williams (1980)",
+        category: "Movies & Cinema",
+        categoryClass: "badge-movie",
+        fact: "The Imperial March in G minor uses heavy brass orchestration and dotted rhythmic march figures to personify galactic tyranny and power.",
+        waveform: "sawtooth",
+        notes: [
+          { f: 392.00, d: 0.45 }, // G4
+          { f: 392.00, d: 0.45 }, // G4
+          { f: 392.00, d: 0.45 }, // G4
+          { f: 311.13, d: 0.32 }, // Eb4
+          { f: 466.16, d: 0.14 }, // Bb4
+          { f: 392.00, d: 0.45 }, // G4
+          { f: 311.13, d: 0.32 }, // Eb4
+          { f: 466.16, d: 0.14 }, // Bb4
+          { f: 392.00, d: 0.75 }  // G4
+        ],
+        distractors: [
+          { title: "Duel of the Fates", subtitle: "John Williams" },
+          { title: "The Raiders March (Indiana Jones)", subtitle: "John Williams" },
+          { title: "Superman Theme", subtitle: "John Williams" }
+        ]
+      },
+      // 12. Seven Nation Army
+      {
+        id: "seven-nation-army",
+        title: "Seven Nation Army",
+        subtitle: "The Iconic Riff",
+        artist: "The White Stripes (2003)",
+        category: "Pop & Rock Hits",
+        categoryClass: "badge-pop",
+        fact: "Jack White created the legendary bassline not on a bass, but by running an acoustic hollowbody semi-acoustic guitar through a DigiTech Whammy pedal pitched one octave down.",
+        waveform: "triangle",
+        notes: [
+          { f: 329.63, d: 0.45 }, // E4
+          { f: 329.63, d: 0.22 }, // E4
+          { f: 392.00, d: 0.32 }, // G4
+          { f: 329.63, d: 0.32 }, // E4
+          { f: 293.66, d: 0.25 }, // D4
+          { f: 261.63, d: 0.55 }, // C4
+          { f: 246.94, d: 0.65 }  // B3
+        ],
+        distractors: [
+          { title: "Feel Good Inc.", subtitle: "Gorillaz" },
+          { title: "Another One Bites the Dust", subtitle: "Queen" },
+          { title: "Sweet Child O' Mine", subtitle: "Guns N' Roses" }
+        ]
+      },
+      // 13. Ode to Joy
+      {
+        id: "ode-to-joy",
+        title: "Ode to Joy",
+        subtitle: "Symphony No. 9 in D minor",
+        artist: "Ludwig van Beethoven (1824)",
+        category: "Classical Masterworks",
+        categoryClass: "badge-classic",
+        fact: "Beethoven was completely deaf when he composed the 9th Symphony. The famous theme is almost entirely stepwise diatonic motion, making it universally recognizable.",
+        waveform: "sine",
+        notes: [
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 392.00, d: 0.35 }, // G4
+          { f: 392.00, d: 0.35 }, // G4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 261.63, d: 0.35 }, // C4
+          { f: 261.63, d: 0.35 }, // C4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 329.63, d: 0.45 }, // E4
+          { f: 293.66, d: 0.20 }, // D4
+          { f: 293.66, d: 0.70 }  // D4
+        ],
+        distractors: [
+          { title: "Moonlight Sonata", subtitle: "Beethoven" },
+          { title: "Eine kleine Nachtmusik", subtitle: "Mozart" },
+          { title: "Spring (The Four Seasons)", subtitle: "Vivaldi" }
+        ]
+      },
+      // 14. Smoke on the Water
+      {
+        id: "smoke-on-the-water",
+        title: "Smoke on the Water",
+        subtitle: "The 0-3-5 Riff",
+        artist: "Deep Purple (1972)",
+        category: "Pop & Rock Hits",
+        categoryClass: "badge-pop",
+        fact: "Ritchie Blackmore played this famous riff using fourths (power dyads) plucked with bare fingers rather than a pick, inspired by parallel fifths in medieval modal harmony.",
+        waveform: "sawtooth",
+        notes: [
+          { f: 196.00, d: 0.35 }, // G3
+          { f: 233.08, d: 0.35 }, // Bb3
+          { f: 261.63, d: 0.45 }, // C4
+          { f: 196.00, d: 0.35 }, // G3
+          { f: 233.08, d: 0.35 }, // Bb3
+          { f: 277.18, d: 0.20 }, // Db4
+          { f: 261.63, d: 0.55 }, // C4
+          { f: 196.00, d: 0.35 }, // G3
+          { f: 233.08, d: 0.35 }, // Bb3
+          { f: 261.63, d: 0.45 }, // C4
+          { f: 233.08, d: 0.35 }, // Bb3
+          { f: 196.00, d: 0.70 }  // G3
+        ],
+        distractors: [
+          { title: "Iron Man", subtitle: "Black Sabbath" },
+          { title: "Back in Black", subtitle: "AC/DC" },
+          { title: "Whole Lotta Love", subtitle: "Led Zeppelin" }
+        ]
+      },
+      // 15. The Legend of Zelda (Main Theme)
+      {
+        id: "zelda-theme",
+        title: "The Legend of Zelda",
+        subtitle: "Overworld Main Theme",
+        artist: "Koji Kondo (1986)",
+        category: "Video Games",
+        categoryClass: "badge-game",
+        fact: "Koji Kondo wrote the iconic Overworld Theme overnight after learning that Ravel's Bolero (his original planned theme) had not yet entered the public domain in Japan!",
+        waveform: "square",
+        notes: [
+          { f: 233.08, d: 0.40 }, // Bb3
+          { f: 349.23, d: 0.40 }, // F4
+          { f: 349.23, d: 0.15 }, // F4
+          { f: 349.23, d: 0.15 }, // F4
+          { f: 392.00, d: 0.15 }, // G4
+          { f: 440.00, d: 0.15 }, // A4
+          { f: 466.16, d: 0.65 }, // Bb4
+          { f: 466.16, d: 0.15 }, // Bb4
+          { f: 466.16, d: 0.15 }, // Bb4
+          { f: 523.25, d: 0.15 }, // C5
+          { f: 587.33, d: 0.15 }, // D5
+          { f: 622.25, d: 0.65 }  // Eb5
+        ],
+        distractors: [
+          { title: "Song of Storms", subtitle: "Koji Kondo" },
+          { title: "Lost Woods Theme", subtitle: "Koji Kondo" },
+          { title: "Pokemon Theme", subtitle: "Junichi Masuda" }
+        ]
+      },
+      // 16. Mission: Impossible Theme
+      {
+        id: "mission-impossible",
+        title: "Mission: Impossible Theme",
+        subtitle: "The 5/4 Spy Cadence",
+        artist: "Lalo Schifrin (1966)",
+        category: "Movies & Cinema",
+        categoryClass: "badge-movie",
+        fact: "The rhythm of Mission: Impossible is written in 5/4 time signature (3+2), which spells out 'M-I' in Morse code: two dashes (--) followed by two dots (..).",
+        waveform: "sawtooth",
+        notes: [
+          { f: 196.00, d: 0.40 }, // G3
+          { f: 196.00, d: 0.40 }, // G3
+          { f: 233.08, d: 0.22 }, // Bb3
+          { f: 261.63, d: 0.22 }, // C4
+          { f: 196.00, d: 0.40 }, // G3
+          { f: 196.00, d: 0.40 }, // G3
+          { f: 185.00, d: 0.22 }, // F3
+          { f: 196.00, d: 0.22 }  // F#3
+        ],
+        distractors: [
+          { title: "James Bond 007 Theme", subtitle: "Monty Norman" },
+          { title: "Pink Panther Theme", subtitle: "Henry Mancini" },
+          { title: "Axel F (Beverly Hills Cop)", subtitle: "Harold Faltermeyer" }
+        ]
+      },
+      // 17. Twinkle, Twinkle Little Star
+      {
+        id: "twinkle-twinkle",
+        title: "Twinkle, Twinkle Little Star",
+        subtitle: "Ah! vous dirai-je, maman",
+        artist: "Traditional / W.A. Mozart (1781)",
+        category: "Classical Masterworks",
+        categoryClass: "badge-classic",
+        fact: "While popular as a nursery lullaby, Mozart composed 12 brilliant classical piano variations on this French 18th-century melody (K. 265).",
+        waveform: "sine",
+        notes: [
+          { f: 261.63, d: 0.35 }, // C4
+          { f: 261.63, d: 0.35 }, // C4
+          { f: 392.00, d: 0.35 }, // G4
+          { f: 392.00, d: 0.35 }, // G4
+          { f: 440.00, d: 0.35 }, // A4
+          { f: 440.00, d: 0.35 }, // A4
+          { f: 392.00, d: 0.70 }, // G4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 329.63, d: 0.35 }, // E4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 261.63, d: 0.70 }  // C4
+        ],
+        distractors: [
+          { title: "Baa Baa Black Sheep", subtitle: "Traditional" },
+          { title: "The Alphabet Song", subtitle: "Traditional" },
+          { title: "Mary Had a Little Lamb", subtitle: "Lowell Mason" }
+        ]
+      },
+      // 18. The Godfather Theme
+      {
+        id: "godfather",
+        title: "The Godfather Theme",
+        subtitle: "Speak Softly, Love",
+        artist: "Nino Rota (1972)",
+        category: "Movies & Cinema",
+        categoryClass: "badge-movie",
+        fact: "Nino Rota's melancholic Italian waltz uses a natural minor scale with chromatic neighboring tones to evoke Sicilian tragedy and family legacy.",
+        waveform: "triangle",
+        notes: [
+          { f: 261.63, d: 0.40 }, // C4
+          { f: 349.23, d: 0.40 }, // F4
+          { f: 415.30, d: 0.40 }, // Ab4
+          { f: 392.00, d: 0.25 }, // G4
+          { f: 349.23, d: 0.40 }, // F4
+          { f: 415.30, d: 0.40 }, // Ab4
+          { f: 349.23, d: 0.30 }, // F4
+          { f: 329.63, d: 0.25 }, // E4
+          { f: 293.66, d: 0.30 }, // D4
+          { f: 261.63, d: 0.60 }  // C4
+        ],
+        distractors: [
+          { title: "Cinema Paradiso", subtitle: "Ennio Morricone" },
+          { title: "Schindler's List", subtitle: "John Williams" },
+          { title: "Tarantella Napoletana", subtitle: "Traditional" }
+        ]
+      },
+      // 19. Bohemian Rhapsody
+      {
+        id: "bohemian-rhapsody",
+        title: "Bohemian Rhapsody",
+        subtitle: "Mama, just killed a man...",
+        artist: "Queen / Freddie Mercury (1975)",
+        category: "Pop & Rock Hits",
+        categoryClass: "badge-pop",
+        fact: "Freddie Mercury composed this operatic rock suite with 180 separate vocal overdubs using analog tape. The ballad section melody opens with a gentle descending sixth.",
+        waveform: "triangle",
+        notes: [
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 392.00, d: 0.50 }, // G4
+          { f: 349.23, d: 0.35 }, // F4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 261.63, d: 0.50 }, // C4
+          { f: 293.66, d: 0.35 }, // D4
+          { f: 349.23, d: 0.70 }  // F4
+        ],
+        distractors: [
+          { title: "Don't Stop Me Now", subtitle: "Queen" },
+          { title: "We Are the Champions", subtitle: "Queen" },
+          { title: "Hey Jude", subtitle: "The Beatles" }
+        ]
+      },
+      // 20. Stayin' Alive
+      {
+        id: "stayin-alive",
+        title: "Stayin' Alive",
+        subtitle: "Saturday Night Fever Groove",
+        artist: "Bee Gees (1977)",
+        category: "Pop & Rock Hits",
+        categoryClass: "badge-pop",
+        fact: "The tempo of Stayin' Alive (104 BPM) matches the ideal rate of 100-120 compressions per minute recommended by the American Heart Association for CPR!",
+        waveform: "sawtooth",
+        notes: [
+          { f: 349.23, d: 0.30 }, // F4
+          { f: 349.23, d: 0.30 }, // F4
+          { f: 349.23, d: 0.30 }, // F4
+          { f: 329.63, d: 0.30 }, // E4
+          { f: 349.23, d: 0.40 }, // F4
+          { f: 293.66, d: 0.55 }, // D4
+          { f: 261.63, d: 0.30 }, // C4
+          { f: 293.66, d: 0.65 }  // D4
+        ],
+        distractors: [
+          { title: "Night Fever", subtitle: "Bee Gees" },
+          { title: "Disco Inferno", subtitle: "The Trammps" },
+          { title: "I Will Survive", subtitle: "Gloria Gaynor" }
+        ]
+      }
+    ];
+
+    let currentScore = 0;
+    let currentStreak = 0;
+    let currentRound = 0;
+    let totalRounds = 10;
+    let currentTune = null;
+    let playSpeed = 1.0;
+    let isTunePlaying = false;
+    let melodyTimeouts = [];
+
+    // Visualizer Canvas
+    const canvas = document.getElementById('visualizerCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 140;
+    let visualBars = new Array(36).fill(0);
+
+    function renderVisualizer() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      const barW = w / visualBars.length;
+
+      for (let i = 0; i < visualBars.length; i++) {
+        const barH = visualBars[i] * (h * 0.8);
+        ctx.fillStyle = `hsl(${180 + i * 4}, 90%, ${isTunePlaying ? 65 : 45}%)`;
+        ctx.fillRect(i * barW + 2, h - barH - 10, barW - 4, barH + 2);
+        visualBars[i] *= 0.92; // Decay
+      }
+      requestAnimationFrame(renderVisualizer);
+    }
+    requestAnimationFrame(renderVisualizer);
+
+    function playSynthNote(freq, duration) {
+      if (freq === 0) return;
+      const actx = getCtx();
+      if (!actx) return;
+      const now = actx.currentTime;
+
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.35, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      osc.connect(gain);
+      gain.connect(masterCompressor || actx.destination);
+
+      osc.start(now);
+      osc.stop(now + duration);
+
+      // Boost visualizer bars
+      const barIdx = Math.floor((freq / 1000) * visualBars.length) % visualBars.length;
+      visualBars[barIdx] = 1.0;
+      if (visualBars[barIdx - 1]) visualBars[barIdx - 1] = 0.6;
+      if (visualBars[barIdx + 1]) visualBars[barIdx + 1] = 0.6;
+    }
+
+    function stopMelodyPlayback() {
+      melodyTimeouts.forEach(t => clearTimeout(t));
+      melodyTimeouts = [];
+      isTunePlaying = false;
+      document.getElementById('playBtn').classList.remove('playing');
+      document.getElementById('playBtnText').textContent = 'Replay Melody';
+    }
+
+    function playMelody(tune) {
+      stopMelodyPlayback();
+      getCtx();
+      isTunePlaying = true;
+      const playBtn = document.getElementById('playBtn');
+      playBtn.classList.add('playing');
+      document.getElementById('playBtnText').textContent = 'Playing Melody...';
+
+      let currentTime = 0;
+      tune.notes.forEach((n, idx) => {
+        const dur = (n.d / playSpeed);
+        const t = setTimeout(() => {
+          playSynthNote(n.f, dur * 0.9);
+        }, currentTime * 1000);
+        melodyTimeouts.push(t);
+        currentTime += dur;
+      });
+
+      const endTimeout = setTimeout(() => {
+        isTunePlaying = false;
+        playBtn.classList.remove('playing');
+        document.getElementById('playBtnText').textContent = 'Replay Melody';
+      }, currentTime * 1000 + 100);
+      melodyTimeouts.push(endTimeout);
+    }
+
+    function toggleTunePlay() {
+      if (isTunePlaying) {
+        stopMelodyPlayback();
+      } else if (currentTune) {
+        playMelody(currentTune);
+      }
+    }
+
+    function replayTune() {
+      if (currentTune) playMelody(currentTune);
+    }
+
+    function setSpeed(speed, btn) {
+      playSpeed = speed;
+      document.querySelectorAll('#speedNormalBtn, #speedSlowBtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (currentTune) playMelody(currentTune);
+    }
+
+    // Question Flow
+    function loadQuestion(roundIdx) {
+      stopMelodyPlayback();
+      currentTune = TUNE_LIBRARY[roundIdx % TUNE_LIBRARY.length];
+      document.getElementById('roundIndicator').textContent = `Question ${roundIdx + 1} / ${totalRounds}`;
+      document.getElementById('categoryBadge').textContent = currentTune.category;
+      document.getElementById('feedbackBox').style.display = 'none';
+
+      // Assemble 4 choices (1 correct + 3 distractors) shuffled
+      const choices = [
+        { title: currentTune.title, subtitle: currentTune.artist, correct: true },
+        ...currentTune.distractors.map(d => ({ title: d.title, subtitle: d.subtitle, correct: false }))
+      ];
+      choices.sort(() => Math.random() - 0.5);
+
+      const grid = document.getElementById('optionsGrid');
+      grid.innerHTML = '';
+      choices.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+          <span>${c.title}</span>
+          <span class="option-subtitle">${c.subtitle}</span>
+        `;
+        btn.onclick = () => selectAnswer(btn, c.correct);
+        grid.appendChild(btn);
+      });
+
+      // Auto-play tune after small delay
+      setTimeout(() => playMelody(currentTune), 400);
+    }
+
+    function selectAnswer(button, isCorrect) {
+      stopMelodyPlayback();
+      const allButtons = document.querySelectorAll('.option-btn');
+      allButtons.forEach(b => b.classList.add('disabled'));
+
+      const feedbackBox = document.getElementById('feedbackBox');
+      const header = document.getElementById('feedbackHeader');
+      const desc = document.getElementById('feedbackDesc');
+      feedbackBox.style.display = 'flex';
+
+      if (isCorrect) {
+        button.classList.add('correct');
+        currentScore += 100 + (currentStreak * 25);
+        currentStreak++;
+        document.getElementById('scoreVal').textContent = currentScore;
+        document.getElementById('streakVal').textContent = currentStreak;
+
+        header.innerHTML = `<span style="color:#10b981;">✓ Correct! You Named That Tune!</span>`;
+        desc.innerHTML = `<strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+        launchConfetti();
+      } else {
+        button.classList.add('wrong');
+        currentStreak = 0;
+        document.getElementById('streakVal').textContent = currentStreak;
+
+        // Highlight correct button
+        allButtons.forEach(b => {
+          if (b.innerText.includes(currentTune.title)) {
+            b.classList.add('correct');
+          }
+        });
+
+        header.innerHTML = `<span style="color:#ef4444;">✗ Not Quite!</span>`;
+        desc.innerHTML = `The correct song was <strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+      }
+    }
+
+    function nextQuestion() {
+      currentRound++;
+      if (currentRound >= totalRounds) {
+        showGameOver();
+      } else {
+        loadQuestion(currentRound);
+      }
+    }
+
+    function showGameOver() {
+      stopMelodyPlayback();
+      document.getElementById('optionsGrid').style.display = 'none';
+      document.getElementById('feedbackBox').style.display = 'none';
+      document.getElementById('roundIndicator').textContent = 'Game Complete!';
+
+      const summaryBox = document.getElementById('summaryBox');
+      summaryBox.style.display = 'flex';
+      document.getElementById('summaryScore').textContent = `Final Score: ${currentScore} points`;
+
+      let rankEmoji = '🏆';
+      let rankTitle = 'Mozart Maestro!';
+      let rankMsg = 'Incredible ear! You identified nearly every melody with exceptional musical intuition.';
+
+      if (currentScore >= 1200) {
+        rankEmoji = '👑'; rankTitle = 'Platinum Ear Virtuoso!';
+      } else if (currentScore >= 700) {
+        rankEmoji = '🎧'; rankTitle = 'Tune Detective!'; rankMsg = 'Great job recognizing so many diverse musical themes and genres!';
+      } else {
+        rankEmoji = '🎵'; rankTitle = 'Music Explorer!'; rankMsg = 'Keep listening and exploring! Musical recognition gets sharper with every round.';
+      }
+
+      document.getElementById('summaryEmoji').textContent = rankEmoji;
+      document.getElementById('summaryTitle').textContent = rankTitle;
+      document.getElementById('summaryMsg').textContent = rankMsg;
+    }
+
+    function restartGame() {
+      currentScore = 0;
+      currentStreak = 0;
+      currentRound = 0;
+      document.getElementById('scoreVal').textContent = '0';
+      document.getElementById('streakVal').textContent = '0';
+      document.getElementById('optionsGrid').style.display = 'grid';
+      document.getElementById('summaryBox').style.display = 'none';
+      TUNE_LIBRARY.sort(() => Math.random() - 0.5);
+      loadQuestion(0);
+    }
+
+    // Confetti Animation
+    const cCanvas = document.getElementById('confettiCanvas');
+    const cCtx = cCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeConfetti() {
+      cCanvas.width = window.innerWidth;
+      cCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfetti);
+    resizeConfetti();
+
+    function launchConfetti() {
+      particles = [];
+      const colors = ['#38bdf8', '#ec4899', '#f59e0b', '#10b981', '#a855f7'];
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: cCanvas.width / 2,
+          y: cCanvas.height * 0.4,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.8) * 16,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1.0
+        });
+      }
+    }
+
+    function renderConfetti() {
+      cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+      particles.forEach((p, idx) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.4; // gravity
+        p.alpha -= 0.015;
+        if (p.alpha <= 0) {
+          particles.splice(idx, 1);
+        } else {
+          cCtx.beginPath();
+          cCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          cCtx.fillStyle = p.color;
+          cCtx.globalAlpha = p.alpha;
+          cCtx.fill();
+        }
+      });
+      cCtx.globalAlpha = 1.0;
+      requestAnimationFrame(renderConfetti);
+    }
+    requestAnimationFrame(renderConfetti);
+
+    // Initial Start
+    TUNE_LIBRARY.sort(() => Math.random() - 0.5);
+    loadQuestion(0);
+  </script>
+</body>
+</html>
