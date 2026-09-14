@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Music Terminology Lab — Laura's Music App</title>
+  <meta name="description" content="Explore and master fundamental music terminology through hands-on interactive audio experiments. Learn pitch, harmony, rhythm, timbre, ADSR, dynamics, and scales.">
+  <meta name="theme-color" content="#0a0d14">
+
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #121824;
+      --card-bg: rgba(22, 30, 46, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-pink: #ec4899;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-purple: #a855f7;
+      --accent-indigo: #6366f1;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      --transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 45%),
+        radial-gradient(circle at 50% 70%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Top Navigation */
+    header {
+      padding: 2rem 1.5rem 1.5rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.15rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+    }
+
+    .back-link:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateX(-2px);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      transition: var(--transition);
+    }
+
+    .btn-badge:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--accent-purple);
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .hero h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Section Navigator Pills */
+    .nav-pills {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .nav-pill {
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .nav-pill:hover,
+    .nav-pill.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5rem;
+    }
+
+    .category-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.75rem;
+    }
+
+    .category-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    .category-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .term-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Term Card */
+    .term-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-card);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      backdrop-filter: blur(16px);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .term-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
+    }
+
+    .term-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .term-name {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .term-phonetic {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .term-def {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .term-def strong {
+      color: #fff;
+    }
+
+    /* Interactive Experiment Box */
+    .experiment-box {
+      margin-top: auto;
+      background: rgba(10, 14, 23, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .experiment-label {
+      font-size: 0.775rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-amber);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .exp-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    /* Buttons & Inputs */
+    .exp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--exp-btn-bg, var(--accent-cyan));
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .exp-btn:hover {
+      filter: brightness(1.15);
+      transform: scale(1.02);
+    }
+
+    .exp-btn.secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .exp-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .exp-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .exp-slider {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .exp-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    .exp-val {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      min-width: 55px;
+      text-align: right;
+    }
+
+    /* Mini Oscilloscope / Canvas */
+    .mini-canvas {
+      width: 100%;
+      height: 64px;
+      background: #080c14;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Footer */
+    footer {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 640px) {
+      .term-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="top-bar">
+      <a href="index.html" class="back-link">
+        <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Laura's Music App</span>
+      </a>
+
+      <div class="top-actions">
+        <button id="audioUnlockBtn" class="btn-badge">
+          <div class="pulse-dot"></div>
+          <span id="audioStatusText">Audio Active</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <span class="hero-tag">Interactive Music Academy</span>
+      <h1>Music Terminology Lab</h1>
+      <p>Discover the science, acoustic physics, and artistry behind musical language. Play with each concept below to hear what the words mean in action.</p>
+    </div>
+
+    <!-- Quick Navigation Pills -->
+    <div class="nav-pills">
+      <a href="#pitch" class="nav-pill">Pitch & Frequency</a>
+      <a href="#intervals" class="nav-pill">Intervals & Scales</a>
+      <a href="#harmony" class="nav-pill">Harmony & Chords</a>
+      <a href="#rhythm" class="nav-pill">Rhythm & Tempo</a>
+      <a href="#timbre" class="nav-pill">Timbre & Waveforms</a>
+      <a href="#dynamics" class="nav-pill">Dynamics & Envelopes</a>
+      <a href="#articulation" class="nav-pill">Articulation</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- SECTION 1: PITCH & FREQUENCY -->
+    <section class="category-section" id="pitch">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #38bdf8, #0284c7);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+        <h2 class="category-title">Pitch, Frequency & Octaves</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 1. Pitch & Frequency -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Pitch & Frequency</h3>
+            <span class="term-phonetic">Hertz (Hz)</span>
+          </div>
+          <p class="term-def">
+            <strong>Pitch</strong> is how high or low a musical sound seems to our ears. Acoustically, it is governed by <strong>Frequency</strong> &mdash; the number of complete sound wave vibrations per second, measured in <strong>Hertz (Hz)</strong>. Faster vibrations produce higher pitches; slower vibrations produce lower pitches.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Frequency Sweeper</span>
+            <div class="exp-slider-wrap">
+              <input type="range" id="pitchSlider" class="exp-slider" min="60" max="1200" value="440">
+              <span id="pitchVal" class="exp-val">440 Hz (A4)</span>
+            </div>
+            <div class="exp-controls">
+              <button class="exp-btn" id="playPitchBtn">Tone On / Off</button>
+            </div>
+            <canvas id="pitchCanvas" class="mini-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- 2. Octave -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Octave</h3>
+            <span class="term-phonetic">[AHK-tiv] &bull; 2:1 Ratio</span>
+          </div>
+          <p class="term-def">
+            An <strong>Octave</strong> is the musical interval between one pitch and another with double or half its frequency. Because the wave peaks align precisely every second cycle, our brains perceive octaves as the "same" note at a different height.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Octave Ladder</span>
+            <p style="font-size:0.8rem; color:var(--text-muted);">Click to double the frequency and hear how the note ascends across 4 octaves:</p>
+            <div class="exp-controls">
+              <button class="exp-btn secondary" onclick="playOctave(110)">A2 (110Hz)</button>
+              <button class="exp-btn secondary" onclick="playOctave(220)">A3 (220Hz)</button>
+              <button class="exp-btn secondary" onclick="playOctave(440)">A4 (440Hz)</button>
+              <button class="exp-btn secondary" onclick="playOctave(880)">A5 (880Hz)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTERVALS & SCALES -->
+    <section class="category-section" id="intervals">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </div>
+        <h2 class="category-title">Intervals, Scales & Arpeggios</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 3. Interval -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Interval</h3>
+            <span class="term-phonetic">Pitch Distance</span>
+          </div>
+          <p class="term-def">
+            An <strong>Interval</strong> is the distance in pitch between two notes. When notes sound together, it's a <strong>harmonic interval</strong>; when sounded in sequence, it's a <strong>melodic interval</strong>. Smaller intervals like half-steps and whole-steps form scales.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Interval Explorer</span>
+            <div class="exp-controls">
+              <select id="intervalSelect" style="padding:0.4rem 0.8rem; border-radius:8px; background:#1e293b; color:#fff; border:1px solid rgba(255,255,255,0.2);">
+                <option value="1">Minor 2nd (Half Step - Tense)</option>
+                <option value="4">Major 3rd (Bright / Happy)</option>
+                <option value="6">Tritone (Devil's Interval)</option>
+                <option value="7" selected>Perfect 5th (Open / Pure)</option>
+                <option value="12">Octave (Consonant)</option>
+              </select>
+              <button class="exp-btn" onclick="playCurrentInterval('harmonic')">Harmonic</button>
+              <button class="exp-btn secondary" onclick="playCurrentInterval('melodic')">Melodic</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Scale -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Scale</h3>
+            <span class="term-phonetic">Latin: Scala (Ladder)</span>
+          </div>
+          <p class="term-def">
+            A <strong>Scale</strong> is an organized ladder of notes spanning an octave. The formula of whole-steps and half-steps dictates the scale's emotional quality &mdash; e.g. <strong>Major</strong> feels bright and uplifting, while <strong>Minor</strong> feels reflective or dramatic.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Scale Mode Explorer</span>
+            <div class="exp-controls">
+              <button class="exp-btn secondary" onclick="playScale('major')">Major (C-D-E-F-G-A-B-C)</button>
+              <button class="exp-btn secondary" onclick="playScale('minor')">Natural Minor (A-B-C-D-E-F-G-A)</button>
+              <button class="exp-btn secondary" onclick="playScale('pentatonic')">Pentatonic (5-Note Scale)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Arpeggio -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Arpeggio</h3>
+            <span class="term-phonetic">[ahr-PEJ-ee-oh] &bull; Broken Chord</span>
+          </div>
+          <p class="term-def">
+            An <strong>Arpeggio</strong> (from Italian <em>arpeggiare</em>, meaning "to play on a harp") is a broken chord where the individual notes of a triad or seventh chord are played rapidly one after another rather than struck at the same instant.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Broken Chord Harp</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playArpeggio([261.63, 329.63, 392.00, 523.25])">C Major Arpeggio</button>
+              <button class="exp-btn secondary" onclick="playArpeggio([261.63, 311.13, 392.00, 523.25])">C Minor Arpeggio</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: HARMONY & CHORDS -->
+    <section class="category-section" id="harmony">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h2 class="category-title">Harmony, Chords & Consonance</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 6. Chords & Triads -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Chords & Triads</h3>
+            <span class="term-phonetic">Harmonic Foundation</span>
+          </div>
+          <p class="term-def">
+            A <strong>Chord</strong> is three or more notes sounded together. The fundamental building block is a <strong>Triad</strong>, consisting of a Root, a Third, and a Fifth. A single semitone change on the 3rd shifts a chord from cheerful Major to melancholic Minor.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Major vs. Minor Triad</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playChord([261.63, 329.63, 392.00])">Play C Major (C - E - G)</button>
+              <button class="exp-btn secondary" onclick="playChord([261.63, 311.13, 392.00])">Play C Minor (C - E♭ - G)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Consonance vs Dissonance -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Consonance vs. Dissonance</h3>
+            <span class="term-phonetic">Acoustic Stability & Tension</span>
+          </div>
+          <p class="term-def">
+            <strong>Consonance</strong> sounds stable, pleasant, and resolved because the frequencies share simple mathematical ratios. <strong>Dissonance</strong> produces tension and auditory "beating" because frequencies are too close and acoustically clash.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Tension & Beating Lab</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playBeating(440, 660)">Consonant 5th (440 + 660Hz)</button>
+              <button class="exp-btn secondary" onclick="playBeating(440, 444)">Dissonant Beating (440 + 444Hz)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Cadence -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Cadence</h3>
+            <span class="term-phonetic">Musical Punctuation</span>
+          </div>
+          <p class="term-def">
+            A <strong>Cadence</strong> is a harmonic two-chord progression that ends a musical phrase, acting like a comma or period in a sentence. The most famous is the <strong>Authentic Cadence (V-I)</strong>, creating ultimate resolution and finality.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Chord Cadence Player</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playCadence('authentic')">Authentic (V &rarr; I Resolution)</button>
+              <button class="exp-btn secondary" onclick="playCadence('plagal')">Plagal (IV &rarr; I "Amen")</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: RHYTHM, TEMPO & METER -->
+    <section class="category-section" id="rhythm">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        </div>
+        <h2 class="category-title">Rhythm, Meter & Tempo</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 9. Tempo -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Tempo (BPM)</h3>
+            <span class="term-phonetic">Italian: Time / Speed</span>
+          </div>
+          <p class="term-def">
+            <strong>Tempo</strong> is the pace of the music, measured in <strong>Beats Per Minute (BPM)</strong>. Classical Italian terms describe tempo moods: <em>Adagio</em> (slow, 66 BPM), <em>Andante</em> (walking pace, 90 BPM), <em>Allegro</em> (fast, 130 BPM), and <em>Presto</em> (very fast, 180 BPM).
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Tap Metronome</span>
+            <div class="exp-slider-wrap">
+              <input type="range" id="tempoSlider" class="exp-slider" min="50" max="200" value="110">
+              <span id="tempoVal" class="exp-val">110 BPM</span>
+            </div>
+            <div class="exp-controls">
+              <button class="exp-btn" id="metronomeToggleBtn">Start Metronome</button>
+              <button class="exp-btn secondary" id="tapTempoBtn">Tap Tempo</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 10. Time Signature & Meter -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Meter & Time Signature</h3>
+            <span class="term-phonetic">4/4 &bull; 3/4 &bull; 6/8</span>
+          </div>
+          <p class="term-def">
+            <strong>Meter</strong> organizes pulses into recurring patterns of strong and weak beats. <strong>4/4</strong> (Common Time) has 4 beats per bar with an accent on 1. <strong>3/4</strong> (Waltz) has 3 beats (STRONG-weak-weak). <strong>6/8</strong> groups into two compound pulses of three.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Meter Beat Machine</span>
+            <div class="exp-controls">
+              <button class="exp-btn secondary" onclick="startMeter(4)">4/4 (March/Pop)</button>
+              <button class="exp-btn secondary" onclick="startMeter(3)">3/4 (Waltz)</button>
+              <button class="exp-btn secondary" onclick="startMeter(6)">6/8 (Compound)</button>
+              <button class="exp-btn secondary" onclick="stopMeter()">Stop</button>
+            </div>
+            <span id="meterStatus" style="font-size:0.8rem; color:var(--text-muted);">Select a meter to hear the accented downbeat.</span>
+          </div>
+        </div>
+
+        <!-- 11. Polyrhythm -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Polyrhythm</h3>
+            <span class="term-phonetic">Cross-Rhythms (3:2)</span>
+          </div>
+          <p class="term-def">
+            A <strong>Polyrhythm</strong> is the simultaneous sounding of two different metric subdivisions that do not easily divide into each other &mdash; such as playing 3 equal beats on one drum in the exact same time as 2 equal beats on another.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: 3 against 2 Polyrhythm</span>
+            <div class="exp-controls">
+              <button class="exp-btn" id="polyrhythmBtn">Play 3:2 Polyrhythm</button>
+            </div>
+            <span id="polyStatus" style="font-size:0.8rem; color:var(--text-muted);">High pitch clicks 3 times, Low pitch clicks 2 times.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: TIMBRE & WAVEFORMS -->
+    <section class="category-section" id="timbre">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #a855f7, #7e22ce);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+        <h2 class="category-title">Timbre, Waveforms & Harmonics</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 12. Timbre & Waveforms -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Timbre ("Tone Color")</h3>
+            <span class="term-phonetic">[TAM-ber]</span>
+          </div>
+          <p class="term-def">
+            <strong>Timbre</strong> is the unique texture that allows you to tell a flute, piano, and violin apart even when they play the exact same pitch and volume. In electronic synthesis, timbre starts with the geometric <strong>waveform shape</strong>.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Waveform Synthesizer</span>
+            <div class="exp-controls">
+              <button class="exp-btn secondary active-wave" onclick="setWaveform('sine', this)">Sine (Flute/Pure)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('triangle', this)">Triangle (Warm)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('sawtooth', this)">Sawtooth (Brass/Bright)</button>
+              <button class="exp-btn secondary" onclick="setWaveform('square', this)">Square (Chiptune/Hollow)</button>
+            </div>
+            <div class="exp-controls" style="margin-top:0.4rem;">
+              <button class="exp-btn" onmousedown="startWaveTone()" onmouseup="stopWaveTone()" ontouchstart="startWaveTone()" ontouchend="stopWaveTone()">Hold to Play C4 (261Hz)</button>
+            </div>
+            <canvas id="oscCanvas" class="mini-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- 13. Harmonics & Overtones -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Harmonics & Overtones</h3>
+            <span class="term-phonetic">The Harmonic Series</span>
+          </div>
+          <p class="term-def">
+            Every acoustic note is actually a composite chord of a <strong>Fundamental frequency (f)</strong> and quieter mathematical multiples (2f, 3f, 4f...). This overtone recipe is what creates an instrument's rich acoustic character.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Additive Harmonic Blender</span>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">1st (Fund.):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="1"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">2nd (Octave):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.5"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">3rd (5th):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.3"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.75rem;width:80px;">4th (2nd Oct):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.15"></div>
+            </div>
+            <div class="exp-controls">
+              <button class="exp-btn" id="harmonicBlendBtn">Play Harmonic Blend</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: DYNAMICS & ENVELOPES -->
+    <section class="category-section" id="dynamics">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        </div>
+        <h2 class="category-title">Dynamics & ADSR Envelopes</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 14. Dynamics -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Dynamics</h3>
+            <span class="term-phonetic">Volume & Expression</span>
+          </div>
+          <p class="term-def">
+            <strong>Dynamics</strong> denote variations in volume: <strong>pp</strong> (pianissimo, very soft), <strong>p</strong> (piano), <strong>mf</strong> (mezzo-forte, medium loud), <strong>f</strong> (forte, loud), and <strong>ff</strong> (fortissimo). <strong>Crescendo</strong> means gradually getting louder; <strong>Decrescendo</strong> means fading softer.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Crescendo / Decrescendo Swell</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playCrescendo()">Hear Crescendo (pp &rarr; ff)</button>
+              <button class="exp-btn secondary" onclick="playDecrescendo()">Hear Decrescendo (ff &rarr; pp)</button>
+            </div>
+            <div id="dynamicIndicator" style="font-size:0.9rem; font-weight:700; color:var(--accent-amber); text-align:center; height:20px;"></div>
+          </div>
+        </div>
+
+        <!-- 15. ADSR Envelope -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">ADSR Envelope</h3>
+            <span class="term-phonetic">Attack &bull; Decay &bull; Sustain &bull; Release</span>
+          </div>
+          <p class="term-def">
+            An <strong>ADSR Envelope</strong> determines how sound volume evolves over time:
+            <strong>Attack</strong> (initial onset), <strong>Decay</strong> (drop to sustain level), <strong>Sustain</strong> (volume while held), and <strong>Release</strong> (tail fade after release). A piano has instantaneous attack; a cello has gentle attack.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: ADSR Sound Shaper</span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div><span style="font-size:0.75rem;">Attack:</span><input type="range" id="adsrA" class="exp-slider" min="0.01" max="1.5" step="0.05" value="0.05"></div>
+              <div><span style="font-size:0.75rem;">Decay:</span><input type="range" id="adsrD" class="exp-slider" min="0.05" max="1" step="0.05" value="0.2"></div>
+              <div><span style="font-size:0.75rem;">Sustain:</span><input type="range" id="adsrS" class="exp-slider" min="0" max="1" step="0.05" value="0.6"></div>
+              <div><span style="font-size:0.75rem;">Release:</span><input type="range" id="adsrR" class="exp-slider" min="0.05" max="2" step="0.1" value="0.5"></div>
+            </div>
+            <div class="exp-controls" style="margin-top:0.4rem;">
+              <button class="exp-btn" onmousedown="triggerADSR(true)" onmouseup="triggerADSR(false)" ontouchstart="triggerADSR(true)" ontouchend="triggerADSR(false)">Hold to Play Shaped Note</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: ARTICULATION -->
+    <section class="category-section" id="articulation">
+      <div class="category-header">
+        <div class="category-icon" style="background: linear-gradient(135deg, #f43f5e, #be123c);">
+          <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <h2 class="category-title">Articulation & Expression</h2>
+      </div>
+
+      <div class="term-grid">
+        <!-- 16. Staccato vs Legato -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Staccato vs. Legato</h3>
+            <span class="term-phonetic">Detached vs. Connected</span>
+          </div>
+          <p class="term-def">
+            <strong>Staccato</strong> (Italian: "detached") instructs notes to be played short, crisp, and separate. <strong>Legato</strong> (Italian: "bound together") instructs notes to be smoothly connected and flowing without breaks.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Articulation Comparison</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playArticulation('staccato')">Hear Staccato (Crisp & Short)</button>
+              <button class="exp-btn secondary" onclick="playArticulation('legato')">Hear Legato (Smooth & Slurred)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 17. Glissando & Vibrato -->
+        <div class="term-card">
+          <div class="term-title-row">
+            <h3 class="term-name">Glissando & Vibrato</h3>
+            <span class="term-phonetic">Glide & Pitch Wobble</span>
+          </div>
+          <p class="term-def">
+            <strong>Glissando</strong> is a continuous slide upwards or downwards between two pitches (like a trombone slide). <strong>Vibrato</strong> is a slight, pulsing fluctuation in pitch used by singers, violinists, and cellists to add warmth and richness.
+          </p>
+          <div class="experiment-box">
+            <span class="experiment-label">Interactive Experiment: Glide & Vibrato Player</span>
+            <div class="exp-controls">
+              <button class="exp-btn" onclick="playGlissando()">Hear Glissando Slide (C4 &rarr; C5)</button>
+              <button class="exp-btn secondary" onclick="playVibrato()">Hear Singing Vibrato</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>
+      Music Terminology Lab &bull; Part of <strong>Laura's Music App</strong>.<br>
+      Learn music theory through real interactive audio synthesis.
+    </p>
+  </footer>
+
+  <!-- Web Audio Synthesis Scripts -->
+  <script>
+    let audioCtx = null;
+    function getCtx() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    document.getElementById('audioUnlockBtn').addEventListener('click', () => {
+      getCtx();
+      document.getElementById('audioStatusText').textContent = 'Audio Ready';
+    });
+
+    // 1. Pitch & Frequency Sweeper
+    let pitchOsc = null;
+    let pitchGain = null;
+    const pitchSlider = document.getElementById('pitchSlider');
+    const pitchVal = document.getElementById('pitchVal');
+    const playPitchBtn = document.getElementById('playPitchBtn');
+    const pitchCanvas = document.getElementById('pitchCanvas');
+    const pCtx = pitchCanvas.getContext('2d');
+
+    function drawWave(freq) {
+      pCtx.clearRect(0, 0, pitchCanvas.width, pitchCanvas.height);
+      pCtx.beginPath();
+      pCtx.strokeStyle = '#38bdf8';
+      pCtx.lineWidth = 2;
+      const w = pitchCanvas.width;
+      const h = pitchCanvas.height;
+      const cycles = (freq / 80);
+      for (let x = 0; x < w; x++) {
+        const y = h / 2 + Math.sin((x / w) * cycles * 2 * Math.PI) * (h / 2.5);
+        if (x === 0) pCtx.moveTo(x, y);
+        else pCtx.lineTo(x, y);
+      }
+      pCtx.stroke();
+    }
+    pitchCanvas.width = 320;
+    pitchCanvas.height = 64;
+    drawWave(440);
+
+    pitchSlider.addEventListener('input', (e) => {
+      const f = parseFloat(e.target.value);
+      pitchVal.textContent = `${Math.round(f)} Hz`;
+      drawWave(f);
+      if (pitchOsc) {
+        pitchOsc.frequency.setValueAtTime(f, getCtx().currentTime);
+      }
+    });
+
+    playPitchBtn.addEventListener('click', () => {
+      const ctx = getCtx();
+      if (!ctx) return;
+      if (pitchOsc) {
+        pitchGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        setTimeout(() => {
+          if (pitchOsc) { pitchOsc.stop(); pitchOsc.disconnect(); pitchOsc = null; }
+        }, 120);
+        playPitchBtn.textContent = 'Tone On';
+      } else {
+        pitchOsc = ctx.createOscillator();
+        pitchGain = ctx.createGain();
+        pitchOsc.type = 'sine';
+        pitchOsc.frequency.setValueAtTime(parseFloat(pitchSlider.value), ctx.currentTime);
+        pitchGain.gain.setValueAtTime(0.25, ctx.currentTime);
+        pitchOsc.connect(pitchGain);
+        pitchGain.connect(ctx.destination);
+        pitchOsc.start();
+        playPitchBtn.textContent = 'Tone Off';
+      }
+    });
+
+    // 2. Octave Ladder
+    window.playOctave = function(freq) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 1.2);
+    };
+
+    // 3. Interval Player
+    window.playCurrentInterval = function(mode) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const semitones = parseInt(document.getElementById('intervalSelect').value);
+      const rootFreq = 261.63; // C4
+      const intervalFreq = rootFreq * Math.pow(2, semitones / 12);
+      const now = ctx.currentTime;
+
+      if (mode === 'harmonic') {
+        [rootFreq, intervalFreq].forEach(f => {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'triangle';
+          o.frequency.setValueAtTime(f, now);
+          g.gain.setValueAtTime(0.25, now);
+          g.gain.exponentialRampToValueAtTime(0.0001, now + 1.4);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start(now);
+          o.stop(now + 1.4);
+        });
+      } else {
+        // Melodic (sequence)
+        const o1 = ctx.createOscillator();
+        const g1 = ctx.createGain();
+        o1.type = 'triangle';
+        o1.frequency.setValueAtTime(rootFreq, now);
+        g1.gain.setValueAtTime(0.3, now);
+        g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.6);
+        o1.connect(g1);
+        g1.connect(ctx.destination);
+        o1.start(now);
+        o1.stop(now + 0.6);
+
+        const o2 = ctx.createOscillator();
+        const g2 = ctx.createGain();
+        o2.type = 'triangle';
+        o2.frequency.setValueAtTime(intervalFreq, now + 0.55);
+        g2.gain.setValueAtTime(0.3, now + 0.55);
+        g2.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+        o2.connect(g2);
+        g2.connect(ctx.destination);
+        o2.start(now + 0.55);
+        o2.stop(now + 1.6);
+      }
+    };
+
+    // 4. Scale Player
+    window.playScale = function(type) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      let semitones = [];
+      if (type === 'major') semitones = [0, 2, 4, 5, 7, 9, 11, 12];
+      else if (type === 'minor') semitones = [0, 2, 3, 5, 7, 8, 10, 12];
+      else semitones = [0, 2, 4, 7, 9, 12]; // pentatonic
+
+      const root = 261.63;
+      const now = ctx.currentTime;
+      semitones.forEach((st, idx) => {
+        const time = now + idx * 0.28;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(root * Math.pow(2, st / 12), time);
+        g.gain.setValueAtTime(0.28, time);
+        g.gain.exponentialRampToValueAtTime(0.0001, time + 0.35);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(time);
+        o.stop(time + 0.35);
+      });
+    };
+
+    // 5. Arpeggio Player
+    window.playArpeggio = function(notes) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      notes.forEach((freq, i) => {
+        const time = now + i * 0.18;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, time);
+        g.gain.setValueAtTime(0.3, time);
+        g.gain.exponentialRampToValueAtTime(0.0001, time + 0.8);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(time);
+        o.stop(time + 0.8);
+      });
+    };
+
+    // 6. Chords Player
+    window.playChord = function(frequencies) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      frequencies.forEach(f => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now);
+        g.gain.setValueAtTime(0.2, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now);
+        o.stop(now + 1.6);
+      });
+    };
+
+    // 7. Beating & Tension Lab
+    window.playBeating = function(f1, f2) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      [f1, f2].forEach(f => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(f, now);
+        g.gain.setValueAtTime(0.25, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now);
+        o.stop(now + 2.2);
+      });
+    };
+
+    // 8. Cadence Player
+    window.playCadence = function(cadenceType) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      let chord1, chord2;
+      if (cadenceType === 'authentic') {
+        // G7 -> C
+        chord1 = [196.00, 246.94, 293.66, 349.23];
+        chord2 = [261.63, 329.63, 392.00, 523.25];
+      } else {
+        // F -> C
+        chord1 = [174.61, 220.00, 261.63];
+        chord2 = [261.63, 329.63, 392.00];
+      }
+      // Play Chord 1
+      chord1.forEach(f => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now);
+        g.gain.setValueAtTime(0.22, now);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now);
+        o.stop(now + 1.2);
+      });
+      // Play Chord 2
+      chord2.forEach(f => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, now + 1.1);
+        g.gain.setValueAtTime(0.25, now + 1.1);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 3.0);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(now + 1.1);
+        o.stop(now + 3.0);
+      });
+    };
+
+    // 9. Metronome
+    let metronomeInterval = null;
+    const tempoSlider = document.getElementById('tempoSlider');
+    const tempoVal = document.getElementById('tempoVal');
+    const metronomeToggleBtn = document.getElementById('metronomeToggleBtn');
+
+    function tick(isStrong = false) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(isStrong ? 1200 : 800, now);
+      gain.gain.setValueAtTime(isStrong ? 0.4 : 0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.06);
+    }
+
+    tempoSlider.addEventListener('input', (e) => {
+      tempoVal.textContent = `${e.target.value} BPM`;
+      if (metronomeInterval) {
+        clearInterval(metronomeInterval);
+        metronomeInterval = setInterval(tick, (60 / parseInt(e.target.value)) * 1000);
+      }
+    });
+
+    metronomeToggleBtn.addEventListener('click', () => {
+      if (metronomeInterval) {
+        clearInterval(metronomeInterval);
+        metronomeInterval = null;
+        metronomeToggleBtn.textContent = 'Start Metronome';
+      } else {
+        getCtx();
+        tick(true);
+        metronomeInterval = setInterval(tick, (60 / parseInt(tempoSlider.value)) * 1000);
+        metronomeToggleBtn.textContent = 'Stop Metronome';
+      }
+    });
+
+    // Tap tempo
+    let tapTimes = [];
+    document.getElementById('tapTempoBtn').addEventListener('click', () => {
+      const now = Date.now();
+      tapTimes.push(now);
+      if (tapTimes.length > 4) tapTimes.shift();
+      if (tapTimes.length > 1) {
+        const diffs = [];
+        for (let i = 1; i < tapTimes.length; i++) diffs.push(tapTimes[i] - tapTimes[i - 1]);
+        const avg = diffs.reduce((a, b) => a + b) / diffs.length;
+        const bpm = Math.min(200, Math.max(50, Math.round(60000 / avg)));
+        tempoSlider.value = bpm;
+        tempoVal.textContent = `${bpm} BPM`;
+        if (metronomeInterval) {
+          clearInterval(metronomeInterval);
+          metronomeInterval = setInterval(tick, (60 / bpm) * 1000);
+        }
+      }
+      tick(true);
+    });
+
+    // 10. Meter Beat Machine
+    let meterInterval = null;
+    let currentBeat = 0;
+    window.startMeter = function(beats) {
+      stopMeter();
+      getCtx();
+      currentBeat = 0;
+      const statusEl = document.getElementById('meterStatus');
+      const bpm = 110;
+      meterInterval = setInterval(() => {
+        const isDownbeat = (currentBeat % beats === 0);
+        tick(isDownbeat);
+        statusEl.textContent = `Beat: ${(currentBeat % beats) + 1} / ${beats} ${isDownbeat ? '(STRONG ACCENT)' : '(weak)'}`;
+        currentBeat++;
+      }, (60 / bpm) * 1000);
+    };
+
+    window.stopMeter = function() {
+      if (meterInterval) {
+        clearInterval(meterInterval);
+        meterInterval = null;
+      }
+      document.getElementById('meterStatus').textContent = 'Meter stopped.';
+    };
+
+    // 11. Polyrhythm (3 against 2)
+    let polyInterval = null;
+    document.getElementById('polyrhythmBtn').addEventListener('click', () => {
+      const btn = document.getElementById('polyrhythmBtn');
+      if (polyInterval) {
+        clearInterval(polyInterval);
+        polyInterval = null;
+        btn.textContent = 'Play 3:2 Polyrhythm';
+        return;
+      }
+      getCtx();
+      btn.textContent = 'Stop 3:2 Polyrhythm';
+      let step = 0;
+      // LCM of 3 and 2 is 6 pulses per measure
+      polyInterval = setInterval(() => {
+        const ctx = getCtx();
+        const now = ctx.currentTime;
+        // Pulse 3 plays on 0, 2, 4
+        if (step % 2 === 0) {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.frequency.setValueAtTime(1000, now);
+          g.gain.setValueAtTime(0.3, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start();
+          o.stop(now + 0.05);
+        }
+        // Pulse 2 plays on 0, 3
+        if (step % 3 === 0) {
+          const o = ctx.createOscillator();
+          const g = ctx.createGain();
+          o.type = 'square';
+          o.frequency.setValueAtTime(320, now);
+          g.gain.setValueAtTime(0.3, now);
+          g.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+          o.connect(g);
+          g.connect(ctx.destination);
+          o.start();
+          o.stop(now + 0.08);
+        }
+        step = (step + 1) % 6;
+      }, 160);
+    });
+
+    // 12. Waveform Synth & Oscilloscope
+    let currentWaveform = 'sine';
+    let waveOsc = null;
+    let waveGain = null;
+    const oscCanvas = document.getElementById('oscCanvas');
+    const oCtx = oscCanvas.getContext('2d');
+    oscCanvas.width = 320;
+    oscCanvas.height = 64;
+
+    function renderOscScope(type) {
+      oCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+      oCtx.beginPath();
+      oCtx.strokeStyle = '#a855f7';
+      oCtx.lineWidth = 2;
+      const w = oscCanvas.width;
+      const h = oscCanvas.height;
+      for (let x = 0; x < w; x++) {
+        let y = h / 2;
+        const progress = (x / w) * 4 * Math.PI;
+        if (type === 'sine') y += Math.sin(progress) * (h / 2.6);
+        else if (type === 'triangle') y += (Math.asin(Math.sin(progress)) / (Math.PI / 2)) * (h / 2.6);
+        else if (type === 'sawtooth') y += (((progress % (2 * Math.PI)) / Math.PI) - 1) * (h / 2.6);
+        else if (type === 'square') y += (Math.sin(progress) >= 0 ? 1 : -1) * (h / 2.8);
+        if (x === 0) oCtx.moveTo(x, y);
+        else oCtx.lineTo(x, y);
+      }
+      oCtx.stroke();
+    }
+    renderOscScope('sine');
+
+    window.setWaveform = function(type, btn) {
+      currentWaveform = type;
+      renderOscScope(type);
+      document.querySelectorAll('.active-wave').forEach(b => b.classList.remove('active-wave'));
+      btn.classList.add('active-wave');
+      if (waveOsc) waveOsc.type = type;
+    };
+
+    window.startWaveTone = function() {
+      const ctx = getCtx();
+      if (!ctx || waveOsc) return;
+      waveOsc = ctx.createOscillator();
+      waveGain = ctx.createGain();
+      waveOsc.type = currentWaveform;
+      waveOsc.frequency.setValueAtTime(261.63, ctx.currentTime);
+      waveGain.gain.setValueAtTime(0.3, ctx.currentTime);
+      waveOsc.connect(waveGain);
+      waveGain.connect(ctx.destination);
+      waveOsc.start();
+    };
+
+    window.stopWaveTone = function() {
+      if (waveOsc) {
+        const ctx = getCtx();
+        waveGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        setTimeout(() => {
+          if (waveOsc) { waveOsc.stop(); waveOsc.disconnect(); waveOsc = null; }
+        }, 100);
+      }
+    };
+
+    // 13. Additive Harmonics Blender
+    let blendOscs = [];
+    document.getElementById('harmonicBlendBtn').addEventListener('click', () => {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const btn = document.getElementById('harmonicBlendBtn');
+      if (blendOscs.length > 0) {
+        blendOscs.forEach(({ osc, gain }) => {
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+          setTimeout(() => { osc.stop(); osc.disconnect(); }, 120);
+        });
+        blendOscs = [];
+        btn.textContent = 'Play Harmonic Blend';
+        return;
+      }
+      btn.textContent = 'Stop Blend';
+      const sliders = document.querySelectorAll('.h-slider');
+      const fund = 220; // A3
+      sliders.forEach((slider, idx) => {
+        const harmonicNum = idx + 1;
+        const amp = parseFloat(slider.value) * 0.18;
+        if (amp > 0.01) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(fund * harmonicNum, ctx.currentTime);
+          gain.gain.setValueAtTime(amp, ctx.currentTime);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          blendOscs.push({ osc, gain });
+        }
+      });
+    });
+
+    // 14. Dynamics
+    window.playCrescendo = function() {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(329.63, now); // E4
+      gain.gain.setValueAtTime(0.02, now); // pp
+      gain.gain.linearRampToValueAtTime(0.45, now + 2.0); // ff
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 2.6);
+
+      const ind = document.getElementById('dynamicIndicator');
+      ind.textContent = 'pp (soft) ────────► ff (loud!)';
+      setTimeout(() => ind.textContent = '', 2700);
+    };
+
+    window.playDecrescendo = function() {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(329.63, now);
+      gain.gain.setValueAtTime(0.45, now); // ff
+      gain.gain.linearRampToValueAtTime(0.02, now + 2.0); // pp
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 2.6);
+
+      const ind = document.getElementById('dynamicIndicator');
+      ind.textContent = 'ff (loud) ────────► pp (whisper soft)';
+      setTimeout(() => ind.textContent = '', 2700);
+    };
+
+    // 15. ADSR Envelope Shaper
+    let adsrOsc = null;
+    let adsrGain = null;
+    window.triggerADSR = function(isPress) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const a = parseFloat(document.getElementById('adsrA').value);
+      const d = parseFloat(document.getElementById('adsrD').value);
+      const s = parseFloat(document.getElementById('adsrS').value);
+      const r = parseFloat(document.getElementById('adsrR').value);
+      const now = ctx.currentTime;
+
+      if (isPress) {
+        if (adsrOsc) { adsrOsc.stop(); adsrOsc.disconnect(); }
+        adsrOsc = ctx.createOscillator();
+        adsrGain = ctx.createGain();
+        adsrOsc.type = 'sawtooth';
+        adsrOsc.frequency.setValueAtTime(392.00, now); // G4
+        // ADSR Attack -> Decay -> Sustain
+        adsrGain.gain.setValueAtTime(0.0001, now);
+        adsrGain.gain.linearRampToValueAtTime(0.35, now + a);
+        adsrGain.gain.linearRampToValueAtTime(0.35 * s, now + a + d);
+
+        adsrOsc.connect(adsrGain);
+        adsrGain.connect(ctx.destination);
+        adsrOsc.start(now);
+      } else {
+        if (adsrGain) {
+          adsrGain.gain.cancelScheduledValues(now);
+          adsrGain.gain.setValueAtTime(adsrGain.gain.value, now);
+          adsrGain.gain.linearRampToValueAtTime(0.0001, now + r);
+          setTimeout(() => {
+            if (adsrOsc) { adsrOsc.stop(); adsrOsc.disconnect(); adsrOsc = null; }
+          }, r * 1000 + 50);
+        }
+      }
+    };
+
+    // 16. Staccato vs Legato
+    window.playArticulation = function(style) {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const notes = [261.63, 293.66, 329.63, 349.23, 392.00];
+      const now = ctx.currentTime;
+      const noteDuration = style === 'staccato' ? 0.12 : 0.38;
+      const stepTime = 0.38;
+
+      notes.forEach((f, idx) => {
+        const time = now + idx * stepTime;
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(f, time);
+        g.gain.setValueAtTime(0.3, time);
+        g.gain.exponentialRampToValueAtTime(0.0001, time + noteDuration);
+        o.connect(g);
+        g.connect(ctx.destination);
+        o.start(time);
+        o.stop(time + noteDuration);
+      });
+    };
+
+    // 17. Glissando & Vibrato
+    window.playGlissando = function() {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(261.63, now); // C4
+      osc.frequency.exponentialRampToValueAtTime(523.25, now + 1.2); // slide to C5
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 1.6);
+    };
+
+    window.playVibrato = function() {
+      const ctx = getCtx();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const carrier = ctx.createOscillator();
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      const masterGain = ctx.createGain();
+
+      carrier.frequency.setValueAtTime(440, now);
+      lfo.frequency.setValueAtTime(5.5, now); // 5.5 Hz vibrato rate
+      lfoGain.gain.setValueAtTime(14, now); // 14 Hz pitch wobble depth
+
+      lfo.connect(lfoGain);
+      lfoGain.connect(carrier.frequency);
+
+      masterGain.gain.setValueAtTime(0.3, now);
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0);
+
+      carrier.connect(masterGain);
+      masterGain.connect(ctx.destination);
+
+      lfo.start(now);
+      carrier.start(now);
+      lfo.stop(now + 2.0);
+      carrier.stop(now + 2.0);
+    };
+  </script>
+</body>
+</html>
