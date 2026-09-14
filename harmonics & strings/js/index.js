@@ -24,9 +24,10 @@ function parseQueryString(){
 var q = parseQueryString();
 for(var i=0; i < q.length; i++){
 	if(q[i].mode != undefined){
-		if(Number(q[i].mode) == 1) MODE = Number(q[i].mode);
+		MODE = Number(q[i].mode);
 	}
 }
+
 
 // if(query == "mode=1"){
 // 	MODE =1;

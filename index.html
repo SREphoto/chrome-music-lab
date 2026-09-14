@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Chrome Music Lab — Interactive Web Music Experiments</title>
+  <meta name="description" content="Explore music and its connections to science, math, art, and technology through hands-on interactive experiments built with Web Audio API.">
+  <meta name="theme-color" content="#0d1117">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-secondary: #121824;
+      --card-bg: rgba(22, 30, 46, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f0f4fc;
+      --text-muted: #94a3b8;
+      --accent-rainbow: linear-gradient(135deg, #ff4e50 0%, #f9d423 25%, #2bd2ff 60%, #a855f7 100%);
+      --accent-cyan: #38bdf8;
+      --accent-pink: #ec4899;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-purple: #a855f7;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-card: 0 12px 32px -8px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      --transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(236, 72, 153, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Ambient animated audio waves header canvas */
+    header {
+      padding: 2.5rem 1.5rem 1.5rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent-rainbow);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 16px rgba(249, 212, 35, 0.25);
+    }
+
+    .brand-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: #ffffff;
+    }
+
+    .brand-title {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-badge:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      margin: 1.5rem auto 1rem;
+      max-width: 800px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.825rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-cyan);
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .hero h1 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(2.1rem, 5vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* Controls Bar: Search & Category filters */
+    .controls-bar {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto 2.5rem;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 240px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem 1rem 0.5rem 2.25rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.875rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-box input:focus {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 15px;
+      height: 15px;
+      fill: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Experiments Grid */
+    main {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+      flex: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      backdrop-filter: blur(16px);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6), 0 0 24px -6px var(--accent-color, rgba(56, 189, 248, 0.3));
+    }
+
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 aspect */
+      overflow: hidden;
+      background: #000;
+    }
+
+    .card-thumb img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .card:hover .card-thumb img {
+      transform: scale(1.05);
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.725rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .card-content {
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-title {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.45rem;
+    }
+
+    .card-desc {
+      font-size: 0.925rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 0.9rem;
+    }
+
+    .btn-launch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      background: var(--accent-color, var(--accent-cyan));
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-launch:hover {
+      filter: brightness(1.15);
+      transform: scale(1.03);
+    }
+
+    .btn-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.05);
+      display: grid;
+      place-items: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .btn-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* Modal / Fullscreen in-portal Player */
+    .player-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .player-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .player-header {
+      height: 60px;
+      background: #0f141f;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      z-index: 10;
+    }
+
+    .player-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .player-title {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+
+    .player-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .player-iframe-wrap {
+      flex: 1;
+      width: 100%;
+      height: calc(100% - 60px);
+      position: relative;
+      background: #000;
+    }
+
+    .player-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Footer & Interactive Chime Piano */
+    footer {
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .chime-bar {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      max-width: 460px;
+      height: 38px;
+      margin: 0 auto;
+    }
+
+    .chime-key {
+      flex: 1;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .chime-key:active,
+    .chime-key.active {
+      transform: scaleY(0.9) translateY(4px);
+      filter: brightness(1.3);
+    }
+
+    .footer-copy {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .footer-copy a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+
+    .footer-copy a:hover {
+      text-decoration: underline;
+    }
+
+    /* About Modal */
+    .about-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      place-items: center;
+      padding: 1.5rem;
+    }
+
+    .about-modal-overlay.active {
+      display: grid;
+    }
+
+    .about-modal {
+      background: #131926;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-lg);
+      max-width: 580px;
+      width: 100%;
+      padding: 2rem;
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .about-modal h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .about-modal p {
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-bottom: 1rem;
+    }
+
+    .about-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        justify-content: center;
+      }
+      .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-pills {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="top-bar">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        </div>
+        <span class="brand-title">Chrome Music Lab</span>
+      </a>
+
+      <div class="top-actions">
+        <button id="audioUnlockBtn" class="btn-badge" title="Click to test & initialize Web Audio">
+          <div class="pulse-dot"></div>
+          <span id="audioStatusText">Audio Ready</span>
+        </button>
+        <button id="aboutBtn" class="btn-badge">
+          <span>About</span>
+        </button>
+        <a href="https://github.com/SREphoto/chrome-music-lab" target="_blank" rel="noopener" class="btn-badge" aria-label="GitHub Repository">
+          <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Source</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <span class="hero-tag">Open Source Experiments</span>
+      <h1>Making music learning accessible for everyone</h1>
+      <p>Explore the wonders of pitch, rhythm, harmonics, and sound waves through hands-on interactive tools built with the Web Audio API.</p>
+    </div>
+  </header>
+
+  <!-- Filter & Search Controls -->
+  <div class="controls-bar">
+    <div class="filter-pills" id="filterPills">
+      <button class="filter-pill active" data-filter="all">All (9)</button>
+      <button class="filter-pill" data-filter="harmony">Harmony & Pitch</button>
+      <button class="filter-pill" data-filter="waves">Waves & Sound</button>
+      <button class="filter-pill" data-filter="sequencer">Sequencers</button>
+    </div>
+
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="searchInput" placeholder="Search experiments...">
+    </div>
+  </div>
+
+  <!-- Experiments Grid -->
+  <main>
+    <div class="grid" id="experimentsGrid">
+
+      <!-- 1. Arpeggios -->
+      <div class="card" data-category="harmony" data-title="Arpeggios" style="--accent-color: #38bdf8;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/arpeggios.jpg" alt="Arpeggios preview" loading="lazy">
+          <span class="card-badge">Web Audio</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Arpeggios</h2>
+          <p class="card-desc">Play chords and arpeggios on harp and piano arranged around a dynamic wheel of fifths.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('arpeggios/', 'Arpeggios')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="arpeggios/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Arpeggios in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Chords -->
+      <div class="card" data-category="harmony" data-title="Chords" style="--accent-color: #f59e0b;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/chords.jpg" alt="Chords preview" loading="lazy">
+          <span class="card-badge">Tone.js</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Chords</h2>
+          <p class="card-desc">Explore major and minor triads on a vibrant colored keyboard. Toggle between major and minor.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('chords/', 'Chords')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="chords/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Chords in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Melody Maker -->
+      <div class="card" data-category="sequencer" data-title="Melody Maker" style="--accent-color: #ec4899;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/melodymaker.jpg" alt="Melody Maker preview" loading="lazy">
+          <span class="card-badge">Sequencer</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Melody Maker</h2>
+          <p class="card-desc">Grid-based melody sequencer. Click blocks to add notes, adjust tempo, and turn on harmony accompaniment.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('melodymaker/', 'Melody Maker')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="melodymaker/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Melody Maker in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Piano Roll -->
+      <div class="card" data-category="harmony" data-title="Piano Roll" style="--accent-color: #10b981;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/pianoroll.jpg" alt="Piano Roll preview" loading="lazy">
+          <span class="card-badge">Visualization</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Piano Roll</h2>
+          <p class="card-desc">Watch famous classical piano melodies scroll by in vibrant color blocks, inspired by 19th-century mechanical piano rolls.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('pianoroll/', 'Piano Roll')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="pianoroll/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Piano Roll in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Sound Spinner -->
+      <div class="card" data-category="waves" data-title="Sound Spinner" style="--accent-color: #a855f7;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/soundspinner.jpg" alt="Sound Spinner preview" loading="lazy">
+          <span class="card-badge">Sampler</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Sound Spinner</h2>
+          <p class="card-desc">Spin recorded sounds forward, backward, fast, or slow like a vinyl turntable or record your own voice.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('soundspinner/', 'Sound Spinner')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="soundspinner/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Sound Spinner in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Sound Waves -->
+      <div class="card" data-category="waves" data-title="Sound Waves" style="--accent-color: #2bd2ff;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/soundwaves.jpg" alt="Sound Waves preview" loading="lazy">
+          <span class="card-badge">3D WebGL</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Sound Waves</h2>
+          <p class="card-desc">See how vibrating air particles transmit acoustic waves from sound sources to your eardrums in real time.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('soundwaves/', 'Sound Waves')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="soundwaves/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Sound Waves in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Spectrogram -->
+      <div class="card" data-category="waves" data-title="Spectrogram" style="--accent-color: #f43f5e;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/spectrogram.jpg" alt="Spectrogram preview" loading="lazy">
+          <span class="card-badge">3D Audio</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Spectrogram</h2>
+          <p class="card-desc">Transform live mic input or musical instruments into a 3D visual frequency waterfall graph.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('spectrogram/', 'Spectrogram')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="spectrogram/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Spectrogram in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Harmonics -->
+      <div class="card" data-category="waves" data-title="Harmonics" style="--accent-color: #6366f1;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/harmonics.jpg" alt="Harmonics preview" loading="lazy">
+          <span class="card-badge">Physics</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Harmonics</h2>
+          <p class="card-desc">Touch resonant standing waves to discover the harmonic series and how overtones produce musical pitch.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('harmonics/', 'Harmonics')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="harmonics/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Harmonics in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. Strings -->
+      <div class="card" data-category="harmony" data-title="Strings" style="--accent-color: #14b8a6;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/strings.jpg" alt="Strings preview" loading="lazy">
+          <span class="card-badge">Acoustics</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Strings</h2>
+          <p class="card-desc">Pluck vibrating strings of different lengths to hear and see how string tension and frequency relate to musical notes.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('strings/', 'Strings')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="strings/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Strings in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Fullscreen In-Portal Player Modal -->
+  <div class="player-overlay" id="playerOverlay">
+    <div class="player-header">
+      <div class="player-left">
+        <button class="btn-back" onclick="closePlayer()">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Back</span>
+        </button>
+        <span class="player-title" id="playerTitle">Experiment</span>
+      </div>
+      <div class="player-right">
+        <a id="playerExternalLink" href="#" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open in new tab">
+          <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="player-iframe-wrap">
+      <iframe id="playerIframe" class="player-iframe" allow="camera *; microphone *; autoplay; fullscreen"></iframe>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="about-modal-overlay" id="aboutModal">
+    <div class="about-modal">
+      <button class="about-close" id="aboutCloseBtn" aria-label="Close modal">&times;</button>
+      <h2>What is Chrome Music Lab?</h2>
+      <p>Chrome Music Lab is a website that makes learning music more accessible through fun, hands-on web experiments.</p>
+      <p>Educators use these experiments in classrooms across the globe to explore music and its connections to <strong>science, math, physics, art, and technology</strong>.</p>
+      <p>All experiments are built with open web standards including <strong>Web Audio API</strong>, <strong>WebRTC</strong>, <strong>Tone.js</strong>, and <strong>WebGL</strong>. No signups or installation required.</p>
+      <p style="font-size:0.825rem; color:#64748b; margin-top:1.5rem;">Originally created by Google Creative Lab and collaborators under Apache 2.0 open source license.</p>
+    </div>
+  </div>
+
+  <!-- Footer with Playable Chime Piano -->
+  <footer>
+    <div class="chime-bar" id="chimeBar" title="Click or tap to play chimes!">
+      <div class="chime-key" data-freq="261.63" style="background:#ff5252;"></div>
+      <div class="chime-key" data-freq="293.66" style="background:#ff793f;"></div>
+      <div class="chime-key" data-freq="329.63" style="background:#ffb142;"></div>
+      <div class="chime-key" data-freq="349.23" style="background:#33d9b2;"></div>
+      <div class="chime-key" data-freq="392.00" style="background:#34ace0;"></div>
+      <div class="chime-key" data-freq="440.00" style="background:#706fd3;"></div>
+      <div class="chime-key" data-freq="493.88" style="background:#a55eea;"></div>
+      <div class="chime-key" data-freq="523.25" style="background:#ff5252;"></div>
+    </div>
+    <p class="footer-copy">
+      Play the chimes above! Built with open-source Web Audio API & Tone.js.<br>
+      Deployed seamlessly on <a href="https://github.com/SREphoto/chrome-music-lab" target="_blank">GitHub Pages</a>.
+    </p>
+  </footer>
+
+  <script>
+    // -------------------------------------------------------------
+    // Web Audio Chimes & Audio Context Unlocker
+    // -------------------------------------------------------------
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtx = new AudioContextClass();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq) {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 1.2);
+    }
+
+    // Chime bar click events
+    document.querySelectorAll('.chime-key').forEach(key => {
+      const freq = parseFloat(key.getAttribute('data-freq'));
+      const trigger = (e) => {
+        e.preventDefault();
+        key.classList.add('active');
+        setTimeout(() => key.classList.remove('active'), 150);
+        playTone(freq);
+      };
+      key.addEventListener('mousedown', trigger);
+      key.addEventListener('touchstart', trigger, { passive: false });
+    });
+
+    // Audio unlock button
+    const audioUnlockBtn = document.getElementById('audioUnlockBtn');
+    const audioStatusText = document.getElementById('audioStatusText');
+    audioUnlockBtn.addEventListener('click', () => {
+      const ctx = getAudioContext();
+      if (ctx) {
+        audioStatusText.textContent = 'Audio Active';
+        playTone(440); // play A4
+      }
+    });
+
+    // -------------------------------------------------------------
+    // In-Portal Experiment Player
+    // -------------------------------------------------------------
+    const overlay = document.getElementById('playerOverlay');
+    const iframe = document.getElementById('playerIframe');
+    const titleEl = document.getElementById('playerTitle');
+    const extLink = document.getElementById('playerExternalLink');
+
+    window.openPlayer = function(url, title) {
+      getAudioContext(); // unlock audio on user gesture
+      titleEl.textContent = title;
+      extLink.href = url;
+      iframe.src = url;
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closePlayer = function() {
+      overlay.classList.remove('active');
+      iframe.src = 'about:blank'; // unload to stop audio
+      document.body.style.overflow = '';
+    };
+
+    // ESC key closes player
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (overlay.classList.contains('active')) closePlayer();
+        if (aboutModal.classList.contains('active')) closeAboutModal();
+      }
+    });
+
+    // -------------------------------------------------------------
+    // About Modal
+    // -------------------------------------------------------------
+    const aboutBtn = document.getElementById('aboutBtn');
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutCloseBtn = document.getElementById('aboutCloseBtn');
+
+    aboutBtn.addEventListener('click', () => aboutModal.classList.add('active'));
+    aboutCloseBtn.addEventListener('click', closeAboutModal);
+    aboutModal.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+    });
+
+    function closeAboutModal() {
+      aboutModal.classList.remove('active');
+    }
+
+    // -------------------------------------------------------------
+    // Filter & Search Functionality
+    // -------------------------------------------------------------
+    const searchInput = document.getElementById('searchInput');
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const cards = document.querySelectorAll('.card');
+
+    let currentFilter = 'all';
+    let searchQuery = '';
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentFilter = pill.getAttribute('data-filter');
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+
+    function applyFilters() {
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-category');
+        const title = card.getAttribute('data-title').toLowerCase();
+        const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+
+        const matchesCat = (currentFilter === 'all' || cat === currentFilter);
+        const matchesSearch = (searchQuery === '' || title.includes(searchQuery) || desc.includes(searchQuery));
+
+        if (matchesCat && matchesSearch) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
