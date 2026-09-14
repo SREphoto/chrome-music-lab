@@ -2,6 +2,7 @@ var carousel;
 
 var domType = document.getElementById( 'type-value' );
 var domFreq = document.getElementById( 'freq-value' );
+var caption = document.getElementById( 'caption' );
 
 var ua = navigator.userAgent;
 var ios = ua.match(/iPhone|iPad|iPod/i);
@@ -193,7 +194,7 @@ af.main( {
 
         var start = document.querySelector('#start');
 
-        if (isTouch && !ios) {
+        if (start && isTouch && !ios) {
             start.addEventListener('touchend', init, false);
         } else {
             init();

@@ -621,7 +621,9 @@ Character2.prototype.start = function() {
     this.vibrato.amplitude.value = 0;
     this.vibrato.amplitude.rampTo( 1, 0.7 );
 
-    this.osc.start( 0 );
+    if (this.osc.state !== "started") {
+        this.osc.start( 0 );
+    }
 
     this.stretchNode.set( {
         k: 2.0,
