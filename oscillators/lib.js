@@ -611,18 +611,34 @@ Character2.prototype.start = function() {
 
     this.playing = true;
 
-    if (Tone.context.state !== "running") {
-      Tone.start();
-    }
+    try {
+        if (Tone.context && Tone.context.state !== "running") {
+            Tone.start();
+        }
+    } catch(e) {}
 
-    this.osc.volume.value = -Infinity;
-    this.osc.volume.rampTo( this.volume, 0.01 );
+    try {
+        if (this.osc.volume.cancelScheduledValues) {
+            this.osc.volume.cancelScheduledValues();
+        }
+        this.osc.volume.value = -100;
+        this.osc.volume.rampTo( this.volume, 0.05 );
+    } catch(e) {}
 
-    this.vibrato.amplitude.value = 0;
-    this.vibrato.amplitude.rampTo( 1, 0.7 );
+    try {
+        if (this.vibrato && this.vibrato.amplitude) {
+            if (this.vibrato.amplitude.cancelScheduledValues) {
+                this.vibrato.amplitude.cancelScheduledValues();
+            }
+            this.vibrato.amplitude.value = 0;
+            this.vibrato.amplitude.rampTo( 1, 0.5 );
+        }
+    } catch(e) {}
 
     if (this.osc.state !== "started") {
-        this.osc.start( 0 );
+        try {
+            this.osc.start();
+        } catch(e) {}
     }
 
     this.stretchNode.set( {
@@ -645,7 +661,12 @@ Character2.prototype.stop = function() {
 
     this.playing = false;
 
-    this.osc.volume.exponentialRampToValueAtTime( -Infinity, "+0.5" );
+    try {
+        if (this.osc.volume.cancelScheduledValues) {
+            this.osc.volume.cancelScheduledValues();
+        }
+        this.osc.volume.rampTo( -100, 0.25 );
+    } catch(e) {}
 
     this.stretchNode.set( {
         in: 0,
@@ -661,7 +682,7 @@ Character2.prototype.stop = function() {
 
     this.debounceBlink();
 
-}
+};
 
 Character2.prototype.stretch = function( t ) {
 

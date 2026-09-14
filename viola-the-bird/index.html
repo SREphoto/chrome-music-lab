@@ -1,15 +1,1043 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Viola the Bird - Laura's Music App</title>
-    <style>
-        body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-        iframe { width:100%; height:100%; border:none; display:block; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Viola the Bird - Laura's Music App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #080d1a;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #fff;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .viola-studio {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at 50% 30%, #152238 0%, #0a1120 60%, #050811 100%);
+      overflow: hidden;
+    }
+
+    /* Ambient lighting & stage atmosphere */
+    .stage-glow {
+      position: absolute;
+      top: 0;
+      left: 20%;
+      width: 60%;
+      height: 70%;
+      background: radial-gradient(ellipse at 50% 40%, rgba(56, 189, 248, 0.12), rgba(14, 165, 233, 0.05) 50%, transparent 80%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(180deg, rgba(8, 13, 26, 0.95) 0%, rgba(8, 13, 26, 0) 100%);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #38bdf8, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .title-group p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .control-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .control-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .control-pill.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border-color: #7dd3fc;
+      color: #031427;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-ext {
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.35);
+      background: rgba(56, 189, 248, 0.08);
+      text-decoration: none;
+    }
+    .btn-ext:hover {
+      background: rgba(56, 189, 248, 0.2);
+      color: #bae6fd;
+    }
+
+    /* Canvas Stage */
+    .stage-wrap {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    #violaCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+    }
+
+    /* Drag Hint Overlay */
+    .drag-hint {
+      position: absolute;
+      top: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px);
+      padding: 0.65rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      pointer-events: none;
+      z-index: 20;
+      animation: floatHint 3s infinite ease-in-out;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+    @keyframes floatHint {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -6px); }
+    }
+
+    /* Note Display HUD */
+    .note-hud {
+      position: absolute;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-md, 12px);
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      pointer-events: none;
+      z-index: 15;
+    }
+    .hud-note {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #38bdf8;
+    }
+    .hud-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Bottom Control Bar */
+    .bottom-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(0deg, rgba(8, 13, 26, 0.95) 0%, rgba(8, 13, 26, 0) 100%);
+    }
+
+    .song-list {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .piece-btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .piece-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+    .piece-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border-color: #7dd3fc;
+      color: #031427;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+
+    .string-legend {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .str-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .str-c { color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+    .str-g { color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+    .str-d { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+    .str-a { color: #ec4899; border-color: rgba(236, 72, 153, 0.3); }
+
+    @media (max-width: 768px) {
+      .top-bar { padding: 0.75rem 1rem; }
+      .bottom-bar { padding: 0.75rem 1rem; }
+      .drag-hint { font-size: 0.78rem; width: 90%; }
+      .btn-ext span { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <iframe src="https://gacembed.withgoogle.com/viola-the-bird?axl=1" allow="autoplay *; microphone *; midi *; camera *; accelerometer; gyroscope; fullscreen"></iframe>
+  <div class="viola-studio">
+    <div class="stage-glow"></div>
+
+    <!-- Header -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <a href="../" class="btn-back" title="Back to Laura's Music App">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Exit Stage</span>
+        </a>
+        <div class="title-group">
+          <h1>Viola the Bird</h1>
+          <p>Glide your bow across strings to play classical melodies</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="control-pill active" id="modeToggle" title="Toggle between Song Play-Along and Freestyle Viola">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <span id="modeText">Mode: Song Play-Along</span>
+        </button>
+
+        <a href="https://artsandculture.google.com/experiment/viola-the-bird/nAEJVwNkp-FnrQ" target="_blank" class="control-pill btn-ext" title="Launch Original Google Arts & Culture Machine Learning Model">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          <span>Google AI Version</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Canvas Stage -->
+    <div class="stage-wrap">
+      <div class="drag-hint" id="dragHint">
+        🎻 Drag and draw your bow LEFT &amp; RIGHT across the strings to play the melody!
+      </div>
+      <div class="note-hud" id="noteHud">
+        <span class="hud-note" id="hudNote">C3</span>
+        <span class="hud-desc" id="hudDesc">Draw bow to begin</span>
+      </div>
+      <canvas id="violaCanvas"></canvas>
+    </div>
+
+    <!-- Bottom Controls -->
+    <footer class="bottom-bar">
+      <div class="song-list">
+        <span style="font-size:0.8rem; font-weight:800; color:#94a3b8; text-transform:uppercase;">Classical Repertoire:</span>
+        <button class="piece-btn active" onclick="selectSong('spring', this)">Vivaldi: Spring</button>
+        <button class="piece-btn" onclick="selectSong('ode', this)">Beethoven: Ode to Joy</button>
+        <button class="piece-btn" onclick="selectSong('swan', this)">Saint-Saëns: The Swan</button>
+        <button class="piece-btn" onclick="selectSong('canon', this)">Pachelbel: Canon in D</button>
+        <button class="piece-btn" onclick="selectSong('freestyle', this)">Freestyle Bowing</button>
+      </div>
+
+      <div class="string-legend">
+        <div class="str-tag str-c">● C3 (130Hz)</div>
+        <div class="str-tag str-g">● G3 (196Hz)</div>
+        <div class="str-tag str-d">● D4 (293Hz)</div>
+        <div class="str-tag str-a">● A4 (440Hz)</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ============================================================
+    // PHYSICAL BOWED STRING SYNTHESIS MODEL
+    // ============================================================
+    let audioCtx = null;
+    let masterCompressor = null;
+
+    function initAudio() {
+      if (audioCtx) return audioCtx;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+
+      masterCompressor = audioCtx.createDynamicsCompressor();
+      masterCompressor.threshold.setValueAtTime(-16, audioCtx.currentTime);
+      masterCompressor.knee.setValueAtTime(12, audioCtx.currentTime);
+      masterCompressor.ratio.setValueAtTime(6, audioCtx.currentTime);
+      masterCompressor.attack.setValueAtTime(0.005, audioCtx.currentTime);
+      masterCompressor.release.setValueAtTime(0.18, audioCtx.currentTime);
+
+      masterCompressor.connect(audioCtx.destination);
+      return audioCtx;
+    }
+
+    class ViolaSynth {
+      constructor() {
+        this.osc1 = null;
+        this.osc2 = null;
+        this.noise = null;
+        this.noiseGain = null;
+        this.bodyFilter = null;
+        this.brightnessFilter = null;
+        this.gain = null;
+        this.vibratoOsc = null;
+        this.vibratoGain = null;
+        this.isPlaying = false;
+        this.currentFreq = 220;
+      }
+
+      start(freq, velocity = 0.5) {
+        const actx = initAudio();
+        if (actx.state === 'suspended') actx.resume();
+        this.currentFreq = freq;
+
+        // Primary bowed string: sawtooth
+        this.osc1 = actx.createOscillator();
+        this.osc1.type = 'sawtooth';
+        this.osc1.frequency.setValueAtTime(freq, actx.currentTime);
+
+        // Warm harmonic overtone: triangle
+        this.osc2 = actx.createOscillator();
+        this.osc2.type = 'triangle';
+        this.osc2.frequency.setValueAtTime(freq * 2, actx.currentTime);
+
+        // Subtle expressive vibrato (5.6 Hz)
+        this.vibratoOsc = actx.createOscillator();
+        this.vibratoOsc.frequency.setValueAtTime(5.6, actx.currentTime);
+        this.vibratoGain = actx.createGain();
+        this.vibratoGain.gain.setValueAtTime(freq * 0.012, actx.currentTime);
+        this.vibratoOsc.connect(this.vibratoGain);
+        this.vibratoGain.connect(this.osc1.frequency);
+        this.vibratoGain.connect(this.osc2.frequency);
+        this.vibratoOsc.start();
+
+        // Resonant wood body filter (spruce top / viola chamber)
+        this.bodyFilter = actx.createBiquadFilter();
+        this.bodyFilter.type = 'peaking';
+        this.bodyFilter.frequency.setValueAtTime(480, actx.currentTime);
+        this.bodyFilter.Q.setValueAtTime(3.2, actx.currentTime);
+        this.bodyFilter.gain.setValueAtTime(6.0, actx.currentTime);
+
+        // Lowpass filter driven by bow velocity
+        this.brightnessFilter = actx.createBiquadFilter();
+        this.brightnessFilter.type = 'lowpass';
+        const cutoff = Math.min(freq * 4.5, 6000);
+        this.brightnessFilter.frequency.setValueAtTime(cutoff, actx.currentTime);
+
+        // Gain Envelope
+        this.gain = actx.createGain();
+        this.gain.gain.setValueAtTime(0.001, actx.currentTime);
+        const targetGain = Math.min(0.42, 0.15 + velocity * 0.35);
+        this.gain.gain.linearRampToValueAtTime(targetGain, actx.currentTime + 0.04);
+
+        // Connect graph
+        this.osc1.connect(this.bodyFilter);
+        this.osc2.connect(this.bodyFilter);
+        this.bodyFilter.connect(this.brightnessFilter);
+        this.brightnessFilter.connect(this.gain);
+        this.gain.connect(masterCompressor);
+
+        this.osc1.start();
+        this.osc2.start();
+        this.isPlaying = true;
+      }
+
+      update(freq, velocity = 0.5) {
+        if (!this.isPlaying) {
+          this.start(freq, velocity);
+          return;
+        }
+        const actx = audioCtx;
+        if (!actx) return;
+
+        this.currentFreq = freq;
+        this.osc1.frequency.setTargetAtTime(freq, actx.currentTime, 0.03);
+        this.osc2.frequency.setTargetAtTime(freq * 2, actx.currentTime, 0.03);
+        this.vibratoGain.gain.setTargetAtTime(freq * 0.012, actx.currentTime, 0.03);
+
+        const cutoff = Math.min(freq * (3.0 + velocity * 3.0), 6500);
+        this.brightnessFilter.frequency.setTargetAtTime(cutoff, actx.currentTime, 0.03);
+
+        const targetGain = Math.min(0.42, 0.15 + velocity * 0.35);
+        this.gain.gain.setTargetAtTime(targetGain, actx.currentTime, 0.03);
+      }
+
+      stop() {
+        if (!this.isPlaying) return;
+        const actx = audioCtx;
+        if (actx && this.gain) {
+          this.gain.gain.linearRampToValueAtTime(0.0001, actx.currentTime + 0.08);
+          setTimeout(() => {
+            if (this.osc1) {
+              try { this.osc1.stop(); } catch(e){}
+              try { this.osc2.stop(); } catch(e){}
+              try { this.vibratoOsc.stop(); } catch(e){}
+            }
+            this.isPlaying = false;
+          }, 90);
+        } else {
+          this.isPlaying = false;
+        }
+      }
+    }
+
+    const viola = new ViolaSynth();
+
+    // 4 Standard Viola Strings
+    const STRINGS = [
+      { name: 'C', octave: 3, freq: 130.81, color: '#f59e0b', colorDark: '#b45309' },
+      { name: 'G', octave: 3, freq: 196.00, color: '#10b981', colorDark: '#047857' },
+      { name: 'D', octave: 4, freq: 293.66, color: '#38bdf8', colorDark: '#0284c7' },
+      { name: 'A', octave: 4, freq: 440.00, color: '#ec4899', colorDark: '#be185d' }
+    ];
+
+    // Classical Repertoire Songs
+    const SONGS = {
+      'spring': {
+        title: "Vivaldi: Spring",
+        notes: [
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "G#4", freq: 415.30, string: 3 },
+          { name: "G#4", freq: 415.30, string: 3 },
+          { name: "G#4", freq: 415.30, string: 3 },
+          { name: "F#4", freq: 369.99, string: 3 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "B4", freq: 493.88, string: 3 },
+          { name: "G#4", freq: 415.30, string: 3 },
+          { name: "F#4", freq: 369.99, string: 3 },
+          { name: "E4", freq: 329.63, string: 2 }
+        ]
+      },
+      'ode': {
+        title: "Beethoven: Ode to Joy",
+        notes: [
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "F4", freq: 349.23, string: 2 },
+          { name: "G4", freq: 392.00, string: 2 },
+          { name: "G4", freq: 392.00, string: 2 },
+          { name: "F4", freq: 349.23, string: 2 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "D4", freq: 293.66, string: 2 },
+          { name: "C4", freq: 261.63, string: 1 },
+          { name: "C4", freq: 261.63, string: 1 },
+          { name: "D4", freq: 293.66, string: 2 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "D4", freq: 293.66, string: 2 },
+          { name: "D4", freq: 293.66, string: 2 }
+        ]
+      },
+      'swan': {
+        title: "Saint-Saëns: The Swan",
+        notes: [
+          { name: "G4", freq: 392.00, string: 2 },
+          { name: "D4", freq: 293.66, string: 2 },
+          { name: "G4", freq: 392.00, string: 2 },
+          { name: "A4", freq: 440.00, string: 3 },
+          { name: "B4", freq: 493.88, string: 3 },
+          { name: "D5", freq: 587.33, string: 3 },
+          { name: "C5", freq: 523.25, string: 3 },
+          { name: "B4", freq: 493.88, string: 3 },
+          { name: "A4", freq: 440.00, string: 3 },
+          { name: "G4", freq: 392.00, string: 2 }
+        ]
+      },
+      'canon': {
+        title: "Pachelbel: Canon in D",
+        notes: [
+          { name: "F#4", freq: 369.99, string: 3 },
+          { name: "E4", freq: 329.63, string: 2 },
+          { name: "D4", freq: 293.66, string: 2 },
+          { name: "C#4", freq: 277.18, string: 1 },
+          { name: "B3", freq: 246.94, string: 1 },
+          { name: "A3", freq: 220.00, string: 1 },
+          { name: "B3", freq: 246.94, string: 1 },
+          { name: "C#4", freq: 277.18, string: 1 }
+        ]
+      }
+    };
+
+    // Canvas Setup
+    const canvas = document.getElementById('violaCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    let isFreestyle = false;
+    let currentSongKey = 'spring';
+    let currentSongStep = 0;
+
+    // Bow & String Physics
+    let bowX = 0;
+    let bowY = 0;
+    let prevBowX = 0;
+    let prevBowY = 0;
+    let bowVelocity = 0;
+    let isBowing = false;
+    let activeStringIdx = 1;
+    let rosinParticles = [];
+
+    // Bird Animation State
+    const bird = {
+      x: 0,
+      y: 0,
+      blinkTimer: 180,
+      isBlinking: false,
+      headTilt: 0,
+      wingAngle: 0,
+      eyeLookX: 0,
+      eyeLookY: 0
+    };
+
+    function resize() {
+      width = canvas.parentElement.clientWidth;
+      height = canvas.parentElement.clientHeight;
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      bird.x = width * 0.32;
+      bird.y = height * 0.48;
+
+      if (!isBowing) {
+        bowX = width * 0.65;
+        bowY = height * 0.58;
+      }
+    }
+    window.addEventListener('resize', resize);
+
+    // ============================================================
+    // DRAWING: VIOLA BIRD & INSTRUMENT GRAPHICS
+    // ============================================================
+    function drawViolaBird() {
+      ctx.save();
+      ctx.translate(bird.x, bird.y);
+
+      // 1. Bird Body (Soft feathery blue-jay plumage)
+      ctx.fillStyle = '#1e3a8a';
+      ctx.beginPath();
+      ctx.ellipse(0, 40, 75, 95, -0.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Belly plumage (Soft cream/cyan)
+      ctx.fillStyle = '#e0f2fe';
+      ctx.beginPath();
+      ctx.ellipse(15, 48, 48, 68, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Bird Head (Tilts expressively with bowing)
+      ctx.save();
+      ctx.translate(0, -65);
+      ctx.rotate(bird.headTilt);
+
+      // Head feathers
+      ctx.fillStyle = '#2563eb';
+      ctx.beginPath();
+      ctx.arc(0, 0, 52, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Feather Crest (Crown tuft)
+      ctx.fillStyle = '#38bdf8';
+      ctx.beginPath();
+      ctx.moveTo(-15, -45);
+      ctx.quadraticCurveTo(-5, -80, 10, -55);
+      ctx.quadraticCurveTo(20, -75, 25, -45);
+      ctx.closePath();
+      ctx.fill();
+
+      // Eye
+      const eyeX = 18;
+      const eyeY = -6;
+      const eyeRadius = 14;
+
+      if (bird.isBlinking) {
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(eyeX - 10, eyeY);
+        ctx.quadraticCurveTo(eyeX, eyeY + 4, eyeX + 10, eyeY);
+        ctx.stroke();
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(eyeX, eyeY, eyeRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pupil follows the bow
+        const pX = eyeX + bird.eyeLookX * 4;
+        const pY = eyeY + bird.eyeLookY * 4;
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(pX, pY, 6.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Eye highlight
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(pX - 2, pY - 2, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Beak (Golden musical beak)
+      ctx.fillStyle = '#f59e0b';
+      ctx.beginPath();
+      ctx.moveTo(38, -10);
+      ctx.lineTo(68, 2);
+      ctx.lineTo(36, 12);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.restore(); // end head tilt
+
+      ctx.restore(); // end bird base
+    }
+
+    function drawViolaInstrument() {
+      // Instrument sits diagonally across the stage
+      const instX = width * 0.58;
+      const instY = height * 0.55;
+
+      ctx.save();
+      ctx.translate(instX, instY);
+      ctx.rotate(-0.25); // Viola angled posture
+
+      // 1. Viola Body (Acoustic Spruce & Maple)
+      const bodyW = 140;
+      const bodyH = 260;
+
+      // Body shadow
+      ctx.beginPath();
+      ctx.ellipse(10, 20, bodyW * 0.75, bodyH * 0.55, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.fill();
+
+      // Lower Bout
+      ctx.beginPath();
+      ctx.fillStyle = '#78350f';
+      ctx.ellipse(0, 60, 75, 75, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Upper Bout
+      ctx.beginPath();
+      ctx.ellipse(0, -60, 60, 60, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // C-Bouts (Waist)
+      ctx.fillStyle = '#92400e';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 48, 55, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Flamed maple top varnish gradient
+      const topGrad = ctx.createLinearGradient(-60, 0, 60, 0);
+      topGrad.addColorStop(0, '#78350f');
+      topGrad.addColorStop(0.3, '#b45309');
+      topGrad.addColorStop(0.5, '#d97706');
+      topGrad.addColorStop(0.7, '#b45309');
+      topGrad.addColorStop(1, '#78350f');
+      ctx.fillStyle = topGrad;
+      ctx.fill();
+
+      // Golden purfling border line
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // F-Holes
+      ctx.fillStyle = '#1e1108';
+      [-32, 32].forEach(fx => {
+        ctx.beginPath();
+        ctx.ellipse(fx, 10, 5, 26, fx > 0 ? 0.2 : -0.2, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Ebony Fingerboard (extends upward)
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(-18, -190, 36, 175);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(-18, -190, 36, 175);
+
+      // Wooden Bridge
+      ctx.fillStyle = '#fde68a';
+      ctx.beginPath();
+      ctx.ellipse(0, 24, 28, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // 4 Viola Strings (C, G, D, A)
+      const stringOffsets = [-12, -4, 4, 12];
+      stringOffsets.forEach((sx, sIdx) => {
+        const s = STRINGS[sIdx];
+        const isActive = (isBowing && activeStringIdx === sIdx);
+
+        ctx.beginPath();
+        ctx.moveTo(sx * 0.7, -190);
+
+        if (isActive) {
+          // Vibrating standing wave
+          const waveAmp = Math.sin(Date.now() * 0.08) * (2.5 + bowVelocity * 2);
+          ctx.quadraticCurveTo(sx + waveAmp, -40, sx, 80);
+          ctx.strokeStyle = s.color;
+          ctx.lineWidth = 3;
+          ctx.shadowColor = s.color;
+          ctx.shadowBlur = 14;
+        } else {
+          ctx.lineTo(sx, 80);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+          ctx.lineWidth = (sIdx === 0) ? 2.5 : ((sIdx === 1) ? 2.0 : 1.5);
+          ctx.shadowBlur = 0;
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      });
+
+      ctx.restore();
+    }
+
+    function drawBow() {
+      ctx.save();
+
+      // Horsehair ribbon & stick
+      const bowLength = 280;
+      const angle = 0.15;
+
+      ctx.translate(bowX, bowY);
+      ctx.rotate(angle);
+
+      // Rosin Dust Particles
+      rosinParticles.forEach(p => {
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x - bowX, p.y - bowY, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Wooden Bow Stick (Brazilwood/Pernambuco)
+      ctx.strokeStyle = '#7c2d12';
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-bowLength * 0.5, -8);
+      ctx.lineTo(bowLength * 0.5, -8);
+      ctx.stroke();
+
+      // White Horsehair
+      ctx.strokeStyle = isBowing ? '#38bdf8' : '#ffffff';
+      ctx.lineWidth = 3.5;
+      if (isBowing) {
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 12;
+      }
+      ctx.beginPath();
+      ctx.moveTo(-bowLength * 0.5, 0);
+      ctx.lineTo(bowLength * 0.5, 0);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Bow Frog (Ebony grip on right)
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(bowLength * 0.38, -12, 28, 16);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bowLength * 0.38, -12, 28, 16);
+
+      ctx.restore();
+    }
+
+    function update() {
+      // Calculate bow velocity
+      const dx = bowX - prevBowX;
+      const dy = bowY - prevBowY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      bowVelocity = Math.min(1.5, dist / 12);
+      prevBowX = bowX;
+      prevBowY = bowY;
+
+      // Bird animations
+      bird.blinkTimer--;
+      if (bird.blinkTimer <= 0) {
+        bird.isBlinking = true;
+        if (bird.blinkTimer <= -8) {
+          bird.isBlinking = false;
+          bird.blinkTimer = Math.random() * 200 + 120;
+        }
+      }
+
+      // Eye follows bow position
+      bird.eyeLookX = Math.max(-1, Math.min(1, (bowX - bird.x) / (width * 0.4)));
+      bird.eyeLookY = Math.max(-1, Math.min(1, (bowY - bird.y) / (height * 0.4)));
+
+      // Head tilts when bowing actively
+      if (isBowing) {
+        bird.headTilt += (0.12 - bird.headTilt) * 0.1;
+      } else {
+        bird.headTilt += (0 - bird.headTilt) * 0.1;
+      }
+
+      // Rosin particles when actively drawing bow
+      if (isBowing && bowVelocity > 0.1 && Math.random() < 0.45) {
+        rosinParticles.push({
+          x: bowX + (Math.random() - 0.5) * 40,
+          y: bowY + (Math.random() - 0.5) * 15,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: -1 - Math.random() * 1.5,
+          size: Math.random() * 2.5 + 1,
+          alpha: 0.9
+        });
+      }
+
+      for (let i = rosinParticles.length - 1; i >= 0; i--) {
+        const p = rosinParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.03;
+        if (p.alpha <= 0) rosinParticles.splice(i, 1);
+      }
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      update();
+      drawViolaBird();
+      drawViolaInstrument();
+      drawBow();
+
+      requestAnimationFrame(render);
+    }
+
+    // ============================================================
+    // INTERACTION & BOW PLAYBACK LOGIC
+    // ============================================================
+    function handlePointerDown(e) {
+      initAudio();
+      document.getElementById('dragHint').style.display = 'none';
+
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      bowX = clientX - rect.left;
+      bowY = clientY - rect.top;
+      prevBowX = bowX;
+      prevBowY = bowY;
+      isBowing = true;
+
+      triggerBowStroke();
+    }
+
+    function handlePointerMove(e) {
+      if (!isBowing) return;
+
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      bowX = clientX - rect.left;
+      bowY = clientY - rect.top;
+
+      triggerBowStroke();
+    }
+
+    function handlePointerUp() {
+      isBowing = false;
+      viola.stop();
+      document.getElementById('hudDesc').textContent = 'Bow lifted';
+    }
+
+    canvas.addEventListener('mousedown', handlePointerDown);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
+
+    canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+    window.addEventListener('touchmove', handlePointerMove, { passive: false });
+    window.addEventListener('touchend', handlePointerUp);
+
+    function triggerBowStroke() {
+      if (!isFreestyle) {
+        // Song Play-Along Mode: Each bow stroke plays the next melody note
+        const song = SONGS[currentSongKey];
+        if (!song) return;
+
+        const note = song.notes[currentSongStep];
+        activeStringIdx = note.string;
+
+        viola.update(note.freq, Math.max(0.4, bowVelocity));
+
+        document.getElementById('hudNote').textContent = note.name;
+        document.getElementById('hudDesc').textContent = `${song.title} • Note ${currentSongStep + 1}/${song.notes.length}`;
+
+        // Advance note when bow changes direction or moves significantly
+        if (Math.abs(bowX - prevBowX) > 18) {
+          currentSongStep = (currentSongStep + 1) % song.notes.length;
+        }
+      } else {
+        // Freestyle Mode: Determine string and pitch from Y/X position
+        const relY = bowY / height;
+        if (relY < 0.42) activeStringIdx = 3;      // A4 string
+        else if (relY < 0.55) activeStringIdx = 2; // D4 string
+        else if (relY < 0.68) activeStringIdx = 1; // G3 string
+        else activeStringIdx = 0;                  // C3 string
+
+        const base = STRINGS[activeStringIdx];
+        // Finger position across horizontal axis (fingerboard glissando)
+        const pitchGliss = Math.pow(2, ((bowX / width) - 0.5) * 0.8);
+        const freq = base.freq * pitchGliss;
+
+        viola.update(freq, Math.max(0.3, bowVelocity));
+
+        document.getElementById('hudNote').textContent = `${base.name}${base.octave}`;
+        document.getElementById('hudDesc').textContent = `Freestyle Bowing • String ${base.name} (${Math.round(freq)} Hz)`;
+      }
+    }
+
+    // Select Repertoire Song
+    window.selectSong = function(songKey, btn) {
+      document.querySelectorAll('.piece-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (songKey === 'freestyle') {
+        isFreestyle = true;
+        document.getElementById('modeText').textContent = 'Mode: Freestyle Viola';
+        document.getElementById('modeToggle').classList.remove('active');
+        document.getElementById('hudNote').textContent = 'Freestyle';
+        document.getElementById('hudDesc').textContent = 'Glide bow across 4 strings freely';
+      } else {
+        isFreestyle = false;
+        currentSongKey = songKey;
+        currentSongStep = 0;
+        document.getElementById('modeText').textContent = 'Mode: Song Play-Along';
+        document.getElementById('modeToggle').classList.add('active');
+        document.getElementById('hudNote').textContent = SONGS[songKey].notes[0].name;
+        document.getElementById('hudDesc').textContent = `${SONGS[songKey].title} • Ready to bow`;
+      }
+    };
+
+    // Mode Toggle Button
+    document.getElementById('modeToggle').addEventListener('click', () => {
+      isFreestyle = !isFreestyle;
+      const toggleBtn = document.getElementById('modeToggle');
+      const text = document.getElementById('modeText');
+
+      if (isFreestyle) {
+        toggleBtn.classList.remove('active');
+        text.textContent = 'Mode: Freestyle Viola';
+        document.querySelectorAll('.piece-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.piece-btn:last-child').classList.add('active');
+      } else {
+        toggleBtn.classList.add('active');
+        text.textContent = 'Mode: Song Play-Along';
+        selectSong('spring', document.querySelector('.piece-btn:first-child'));
+      }
+    });
+
+    // Start
+    resize();
+    render();
+  </script>
 </body>
 </html>

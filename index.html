@@ -429,17 +429,17 @@
     }
 
     .card:hover {
-      transform: translateY(-7px);
-      border-color: rgba(255, 255, 255, 0.22);
-      box-shadow: 0 24px 44px -12px rgba(0, 0, 0, 0.7), 0 0 28px -6px var(--accent-color, rgba(56, 189, 248, 0.35));
+      transform: translateY(-8px) scale(1.015);
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75), 0 0 35px -6px var(--accent-color, rgba(56, 189, 248, 0.4));
     }
 
     .card-thumb {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 aspect */
+      aspect-ratio: 1 / 1;
       overflow: hidden;
-      background: #060910;
+      background: #080d18;
     }
 
     .card-thumb img {
@@ -449,11 +449,11 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.45s ease;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card:hover .card-thumb img {
-      transform: scale(1.06);
+      transform: scale(1.05);
     }
 
     .card-badge {

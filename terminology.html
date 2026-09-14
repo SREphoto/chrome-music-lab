@@ -1158,6 +1158,657 @@
         width: 100%;
       }
     }
+  
+    /* ============================================================
+       UPGRADED 60FPS CANVASES & NEON GLOWS
+       ============================================================ */
+    .term-canvas {
+      width: 100%;
+      height: 180px !important;
+      background: radial-gradient(circle at 50% 50%, rgba(30, 41, 59, 0.45) 0%, rgba(10, 15, 26, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5), 0 8px 24px -6px rgba(0, 0, 0, 0.4);
+      display: block;
+      margin: 0.85rem 0 0.5rem;
+    }
+
+    /* ============================================================
+       MOVEABLE / DRAGGABLE LIGHT-UP PLAYABLE PIANO KEYBOARD DOCK
+       ============================================================ */
+    .floating-keyboard-dock {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 9999;
+      background: rgba(13, 19, 33, 0.95);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.25);
+      padding: 0.9rem 1.25rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 95vw;
+      width: 760px;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .floating-keyboard-dock:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      box-shadow: 0 24px 60px -10px rgba(0, 0, 0, 0.85), 0 0 45px rgba(56, 189, 248, 0.35);
+    }
+
+    .floating-keyboard-dock.minimized {
+      width: auto !important;
+      padding: 0.6rem 1.1rem;
+    }
+
+    .floating-keyboard-dock.minimized .dock-body {
+      display: none !important;
+    }
+
+    .dock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      cursor: grab;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .dock-header:active {
+      cursor: grabbing;
+    }
+
+    .dock-drag-handle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .dock-drag-icon {
+      width: 20px;
+      height: 20px;
+      fill: var(--accent-cyan);
+      opacity: 0.85;
+    }
+
+    .dock-chord-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.825rem;
+      font-weight: 800;
+      background: rgba(56, 189, 248, 0.16);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .dock-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .dock-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .dock-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: #fff;
+    }
+
+    .dock-btn.active {
+      background: var(--accent-cyan);
+      color: #000;
+      border-color: var(--accent-cyan);
+    }
+
+    .dock-piano-wrap {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      display: flex;
+      background: #080b12;
+      border-radius: 12px;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.8);
+    }
+
+    .dock-white-key {
+      flex: 1;
+      height: 100%;
+      background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 85%, #cbd5e1 100%);
+      border: 1px solid #94a3b8;
+      border-radius: 0 0 6px 6px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 6px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #475569;
+      transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+      z-index: 1;
+    }
+
+    .dock-white-key:active,
+    .dock-white-key.active {
+      transform: translateY(3px);
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+    }
+
+    .dock-white-key.lit-gold {
+      background: linear-gradient(180deg, #fef08a 0%, #facc15 60%, #eab308 100%) !important;
+      color: #713f12 !important;
+      box-shadow: 0 0 20px #eab308, inset 0 0 10px #fde047 !important;
+      border-color: #ca8a04 !important;
+    }
+
+    .dock-white-key.lit-cyan {
+      background: linear-gradient(180deg, #bae6fd 0%, #38bdf8 60%, #0284c7 100%) !important;
+      color: #082f49 !important;
+      box-shadow: 0 0 20px #38bdf8, inset 0 0 10px #7dd3fc !important;
+      border-color: #0284c7 !important;
+    }
+
+    .dock-white-key.lit-pink {
+      background: linear-gradient(180deg, #fbcfe8 0%, #f472b6 60%, #db2777 100%) !important;
+      color: #500724 !important;
+      box-shadow: 0 0 20px #ec4899, inset 0 0 10px #f472b6 !important;
+      border-color: #be185d !important;
+    }
+
+    .dock-white-key.lit-emerald {
+      background: linear-gradient(180deg, #a7f3d0 0%, #34d399 60%, #059669 100%) !important;
+      color: #064e3b !important;
+      box-shadow: 0 0 20px #10b981, inset 0 0 10px #6ee7b7 !important;
+      border-color: #047857 !important;
+    }
+
+    .dock-black-key {
+      position: absolute;
+      width: 4.8%;
+      height: 64%;
+      background: linear-gradient(180deg, #262626 0%, #0f172a 100%);
+      border: 1px solid #475569;
+      border-radius: 0 0 5px 5px;
+      cursor: pointer;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .dock-black-key:active,
+    .dock-black-key.active {
+      transform: translateY(3px);
+      background: #000;
+    }
+
+    .dock-black-key.lit-gold {
+      background: linear-gradient(180deg, #ca8a04 0%, #eab308 100%) !important;
+      box-shadow: 0 0 22px #eab308 !important;
+      border-color: #fef08a !important;
+    }
+
+    .dock-black-key.lit-cyan {
+      background: linear-gradient(180deg, #0284c7 0%, #38bdf8 100%) !important;
+      box-shadow: 0 0 22px #38bdf8 !important;
+      border-color: #bae6fd !important;
+    }
+
+    .dock-black-key.lit-pink {
+      background: linear-gradient(180deg, #db2777 0%, #ec4899 100%) !important;
+      box-shadow: 0 0 22px #ec4899 !important;
+      border-color: #fbcfe8 !important;
+    }
+
+    .dock-black-key.lit-emerald {
+      background: linear-gradient(180deg, #059669 0%, #10b981 100%) !important;
+      box-shadow: 0 0 22px #10b981 !important;
+      border-color: #a7f3d0 !important;
+    }
+
+    /* ============================================================
+       TEMPO CONTROL SUITE STYLING (PROGRESSIONS)
+       ============================================================ */
+    .tempo-control-deck {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .deck-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+    }
+
+    .deck-label-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .metronome-led {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #334155;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+      transition: background 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .metronome-led.flash {
+      background: #ec4899 !important;
+      box-shadow: 0 0 18px #ec4899, 0 0 30px #ec4899 !important;
+    }
+
+    .deck-title {
+      display: block;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #fff;
+    }
+
+    .deck-sub {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .deck-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .deck-slider {
+      flex: 1;
+      accent-color: var(--accent-pink);
+      cursor: pointer;
+      height: 6px;
+    }
+
+    .deck-bpm-val {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .deck-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .deck-btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.07);
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .deck-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: #fff;
+      color: #fff;
+    }
+
+    .deck-btn.active {
+      background: var(--accent-pink);
+      border-color: var(--accent-pink);
+      color: #fff;
+      box-shadow: 0 0 14px rgba(236, 72, 153, 0.5);
+    }
+
+    /* ============================================================
+       TIME SIGNATURE & METER LABORATORY STYLING
+       ============================================================ */
+    .time-signature-lab {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    .ts-theory-hero {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: 0 14px 36px -10px rgba(245, 158, 11, 0.15);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .ts-theory-hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ts-big-fraction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid rgba(245, 158, 11, 0.5);
+      border-radius: 20px;
+      padding: 1.25rem 2rem;
+      min-width: 150px;
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+    }
+
+    .ts-num-big {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+      line-height: 1;
+      text-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+    }
+
+    .ts-bar-big {
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, #fff, transparent);
+      margin: 0.4rem 0;
+    }
+
+    .ts-den-big {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 3.6rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      line-height: 1;
+      text-shadow: 0 0 16px rgba(56, 189, 248, 0.6);
+    }
+
+    .ts-expl-text h3 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: #fff;
+    }
+
+    .ts-expl-text p {
+      color: var(--text-muted);
+      line-height: 1.65;
+      font-size: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .ts-rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .ts-rules-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ts-rule-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
+      padding: 0.85rem 1.15rem;
+    }
+
+    .ts-rule-card strong {
+      display: block;
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .ts-meter-selector-bar {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .ts-meter-btn {
+      padding: 0.6rem 1.3rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .ts-meter-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: #fff;
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .ts-meter-btn.active {
+      background: linear-gradient(135deg, var(--accent-amber), #ea580c);
+      border-color: #f59e0b;
+      color: #000;
+      box-shadow: 0 0 18px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Interactive Conductor & Subdivision Stage */
+    .conductor-stage-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    #conductorCanvas {
+      width: 100%;
+      height: 240px !important;
+      background: radial-gradient(circle at 50% 60%, rgba(245, 158, 11, 0.1) 0%, rgba(10, 15, 26, 0.95) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: var(--radius-lg);
+    }
+
+    .subdivision-bar {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
+    }
+
+    .beat-led {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-width: 54px;
+      transition: all 0.1s ease;
+    }
+
+    .beat-led.downbeat {
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .beat-led.active {
+      transform: scale(1.12);
+      background: rgba(245, 158, 11, 0.35);
+      border-color: #f59e0b;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+
+    .beat-led.active.downbeat {
+      background: #f59e0b;
+      color: #000;
+      box-shadow: 0 0 28px #f59e0b, 0 0 40px #ea580c;
+    }
+
+    .beat-led-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #475569;
+    }
+
+    .beat-led.active .beat-led-dot {
+      background: #fff;
+      box-shadow: 0 0 10px #fff;
+    }
+
+    .beat-led-num {
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    /* Real Song Grooves Grid */
+    .ts-songs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+      margin-top: 0.5rem;
+    }
+
+    .ts-song-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .ts-song-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
+    }
+
+    .ts-song-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .ts-song-title {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .ts-song-artist {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .ts-badge {
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      white-space: nowrap;
+    }
+
+    .ts-song-feel {
+      font-size: 0.875rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .ts-song-play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: var(--accent-cyan);
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: auto;
+    }
+
+    .ts-song-play-btn:hover {
+      filter: brightness(1.15);
+      transform: scale(1.02);
+    }
+
+    .ts-song-play-btn.playing {
+      background: #f43f5e !important;
+      color: #fff !important;
+      box-shadow: 0 0 18px rgba(244, 63, 94, 0.6);
+    }
+
   </style>
 </head>
 <body>
@@ -1508,6 +2159,33 @@
       </div>
 
       <!-- Real-Time Chord Progression Log & Inspector Console -->
+      
+      <!-- Tempo & Groove Control Deck -->
+      <div class="tempo-control-deck">
+        <div class="deck-row">
+          <div class="deck-label-wrap">
+            <div class="metronome-led" id="progMetronomeLed"></div>
+            <div>
+              <span class="deck-title">Chord Progression Tempo & Feel</span>
+              <span class="deck-sub" id="tempoMarking">Moderato (105 BPM)</span>
+            </div>
+          </div>
+          <div class="deck-slider-wrap">
+            <input type="range" id="progBpmSlider" class="deck-slider" min="40" max="220" value="105">
+            <span class="deck-bpm-val" id="progBpmVal">105 BPM</span>
+          </div>
+          <div class="deck-buttons">
+            <button class="deck-btn" id="tapTempoProgBtn" onclick="handleProgTapTempo()">Tap Tempo</button>
+            <button class="deck-btn" onclick="setProgTempo(70, 'Adagio / Ballad (70 BPM)')">Ballad (70)</button>
+            <button class="deck-btn active" id="btnPop105" onclick="setProgTempo(105, 'Moderato / Pop (105 BPM)')">Pop (105)</button>
+            <button class="deck-btn" onclick="setProgTempo(128, 'Allegro / Dance (128 BPM)')">Dance (128)</button>
+            <button class="deck-btn" onclick="setProgTempo(160, 'Vivace / Rock (160 BPM)')">Rock (160)</button>
+            <button class="deck-btn" id="halfTimeBtn" onclick="toggleHalfTime()">0.5x Half-Time</button>
+            <button class="deck-btn" id="doubleTimeBtn" onclick="toggleDoubleTime()">2x Double-Time</button>
+          </div>
+        </div>
+      </div>
+
       <div class="chord-log-console" id="chordLogConsole">
         <div class="chord-log-header">
           <div class="log-header-left">
@@ -2216,102 +2894,138 @@
          ============================================================ -->
     <section class="category-section" id="rhythm">
       <div class="category-header">
-        <div class="category-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">
+        <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
           <svg style="width:26px;height:26px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
         </div>
         <div>
-          <h2 class="category-title">Rhythm, Meter & Tempo</h2>
-          <p class="category-subtitle">The pulse, timing, and time signatures that give music life.</p>
+          <h2 class="category-title">Time Signatures, Meter & Conducting Laboratory</h2>
+          <p class="category-subtitle">Master how musical time works: simple meters, compound grooves, odd time, conductor baton patterns, and iconic real hit songs.</p>
         </div>
       </div>
 
-      <div class="term-grid">
-        <!-- Tempo Metronome with Animated Pendulum Canvas -->
-        <div class="term-card">
-          <div class="term-title-row">
-            <h3 class="term-name">Tempo (BPM)</h3>
-            <span class="term-phonetic">Beats Per Minute</span>
+      <div class="time-signature-lab">
+        <!-- 1. Master Time Signature Theory Breakdown Card -->
+        <div class="ts-theory-hero">
+          <div class="ts-big-fraction">
+            <div class="ts-num-big" id="tsDisplayTop">4</div>
+            <div class="ts-bar-big"></div>
+            <div class="ts-den-big" id="tsDisplayBottom">4</div>
           </div>
-          <p class="term-def">
-            <strong>Tempo</strong> is the speed of the underlying beat. Watch the mechanical pendulum arm swing in real time with acoustic pulse rings.
-          </p>
-
-          <!-- Pendulum Metronome Canvas -->
-          <canvas id="metronomeCanvas" class="term-canvas" style="height:100px;"></canvas>
-          <div class="canvas-caption">
-            <span>Swinging Pendulum Motion</span>
-            <span>Acoustic Beat Ripple</span>
-          </div>
-
-          <div class="experiment-box">
-            <span class="experiment-label">Interactive Metronome & Tap Tempo</span>
-            <div class="exp-slider-wrap">
-              <input type="range" id="tempoSlider" class="exp-slider" min="50" max="220" value="120">
-              <span id="tempoVal" class="exp-val">120 BPM</span>
-            </div>
-            <div class="exp-controls">
-              <button class="exp-btn exp-btn-lg" id="metronomeToggleBtn" style="flex:1;">Start Metronome</button>
-              <button class="exp-btn exp-btn-lg secondary" id="tapTempoBtn" style="flex:1;">Tap Tempo</button>
+          <div class="ts-expl-text">
+            <h3 id="tsTitle">4/4 Common Time</h3>
+            <p id="tsSubtitle">The foundation of modern pop, rock, funk, and electronic music. Four quarter-note beats per measure with strong accents on beat 1 and backbeat on 2 and 4.</p>
+            <div class="ts-rules-grid">
+              <div class="ts-rule-card">
+                <strong id="tsTopExpl">&bull; Top Number: 4 Beats Per Bar</strong>
+                <span id="tsTopDetail">Count 1 &ndash; 2 &ndash; 3 &ndash; 4 before the measure resets.</span>
+              </div>
+              <div class="ts-rule-card">
+                <strong id="tsBottomExpl">&bull; Bottom Number: 4 = Quarter Note</strong>
+                <span id="tsBottomDetail">Each beat equals one quarter note (♩). 8 = Eighth (♪), 2 = Half (𝅗𝅥).</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Meter Beat Machine with Radial Meter Dial Canvas -->
-        <div class="term-card">
+        <!-- 2. Interactive Meter Selector Pills -->
+        <div class="ts-meter-selector-bar" id="meterSelectorBar">
+          <button class="ts-meter-btn active" onclick="selectTimeSignature('4/4', this)">4/4 Common Time</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('3/4', this)">3/4 Waltz Time</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('2/4', this)">2/4 March / Polka</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('6/8', this)">6/8 Compound Duple</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('9/8', this)">9/8 Compound Triple</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('12/8', this)">12/8 Slow Blues Shuffle</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('5/4', this)">5/4 "Take Five" Asymmetric</button>
+          <button class="ts-meter-btn" onclick="selectTimeSignature('7/8', this)">7/8 "Money" Complex</button>
+        </div>
+
+        <!-- 3. Animated Orchestral Conductor & Subdivision Pulse Stage -->
+        <div class="conductor-stage-card">
           <div class="term-title-row">
-            <h3 class="term-name">Meter & Time Signatures</h3>
-            <span class="term-phonetic">4/4 &bull; 3/4 &bull; 5/4 &bull; 6/8</span>
-          </div>
-          <p class="term-def">
-            <strong>Meter</strong> groups pulses into repeating patterns. Watch the metric clock needle sweep and illuminate accented downbeats.
-          </p>
-
-          <!-- Metric Clock Dial Canvas -->
-          <canvas id="meterCanvas" class="term-canvas" style="height:100px;"></canvas>
-          <div class="canvas-caption">
-            <span>Metric Rotation Dial</span>
-            <span id="meterCanvasTag">Downbeat Flash</span>
-          </div>
-
-          <div class="experiment-box">
-            <span class="experiment-label">Meter Beat Machine with Downbeat Accents</span>
-            <div class="exp-controls" style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
-              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(4, this)">4/4 Pop & Rock</button>
-              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(3, this)">3/4 Waltz</button>
-              <button class="exp-btn exp-btn-sm secondary" onclick="startMeter(5, this)">5/4 "Take Five"</button>
-              <button class="exp-btn exp-btn-sm secondary" onclick="stopMeter()">Stop Meter</button>
+            <div>
+              <span class="term-name" style="font-size:1.3rem;" id="conductorStageTitle">Orchestral Conductor Baton & Pulse Grid (4/4)</span>
+              <p style="font-size:0.875rem; color:var(--text-muted); margin:0;">Watch the glowing conductor baton trace official orchestral conducting geometry with real-time motion blur.</p>
             </div>
-            <div id="meterStatus" style="font-size:0.95rem; font-weight:700; color:var(--accent-amber); min-height:24px;">Select a time signature above.</div>
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <button class="exp-btn exp-btn-sm" id="conductorPlayBtn" onclick="toggleConductorAudio()">Play Groove & Baton</button>
+            </div>
+          </div>
+
+          <!-- Conductor Baton Canvas -->
+          <canvas id="conductorCanvas"></canvas>
+
+          <!-- Beat Subdivision Pulse Strip -->
+          <div class="subdivision-bar" id="subdivisionPulseBar">
+            <!-- Dynamically populated by JS -->
           </div>
         </div>
 
-        <!-- Polyrhythm with Dual Orbital Gear Rings Canvas -->
-        <div class="term-card full-width-card">
+        <!-- 4. Real Song Hit Library for Time Signatures -->
+        <div class="term-card full-width-card" style="padding:1.5rem 2rem;">
           <div class="term-title-row">
-            <h3 class="term-name">Polyrhythm (3 against 2)</h3>
-            <span class="term-phonetic">Concentric Orbital Gears</span>
-          </div>
-          <p class="term-def">
-            A <strong>Polyrhythm</strong> is the simultaneous sounding of conflicting metric subdivisions. Watch the two rotating orbital rings align and flash as they strike!
-          </p>
-
-          <!-- Concentric Orbital Canvas -->
-          <canvas id="polyCanvas" class="term-canvas" style="height:120px;"></canvas>
-          <div class="canvas-caption">
-            <span>Outer Orbit: 3 Pulse Division</span>
-            <span>Inner Orbit: 2 Pulse Division</span>
-          </div>
-
-          <div class="experiment-box">
-            <span class="experiment-label">3:2 Polyrhythm Pulse Engine</span>
-            <div class="exp-controls">
-              <button class="exp-btn exp-btn-lg" id="polyrhythmBtn" style="flex:1;">
-                Play 3:2 Polyrhythm
-              </button>
+            <div>
+              <h3 class="term-name">Real-World Hit Songs in This Time Signature</h3>
+              <p style="font-size:0.9rem; color:var(--text-muted); margin:0;">Hear famous songs you know and recognize, demonstrating how master songwriters utilize meter.</p>
             </div>
-            <div id="polyStatus" style="font-size:0.95rem; color:var(--text-muted);">High-pitch click divides bar into 3; Low-pitch drum divides into 2.</div>
+            <span class="ts-badge" id="songCategoryTag">Pop / Rock Anthems</span>
+          </div>
+
+          <div class="ts-songs-grid" id="tsSongsGrid">
+            <!-- Dynamically populated by JS based on chosen time signature -->
           </div>
         </div>
+
+        <!-- 5. Metronome & Polyrhythm Labs -->
+        <div class="term-grid">
+          <!-- Tempo Metronome with Animated Pendulum Canvas -->
+          <div class="term-card">
+            <div class="term-title-row">
+              <h3 class="term-name">Tempo (BPM)</h3>
+              <span class="term-phonetic">Beats Per Minute</span>
+            </div>
+            <p class="term-def">
+              <strong>Tempo</strong> sets the speed of musical time. Watch the 60fps mechanical pendulum arm swing with acoustic pulse rings.
+            </p>
+
+            <canvas id="metronomeCanvas" class="term-canvas"></canvas>
+
+            <div class="experiment-box">
+              <span class="experiment-label">Interactive Metronome</span>
+              <div class="exp-slider-wrap">
+                <input type="range" id="tempoSlider" class="exp-slider" min="50" max="220" value="120">
+                <span id="tempoVal" class="exp-val">120 BPM</span>
+              </div>
+              <div class="exp-controls">
+                <button class="exp-btn exp-btn-lg" id="metronomeToggleBtn" style="flex:1;">Start Metronome</button>
+                <button class="exp-btn exp-btn-lg secondary" id="tapTempoBtn" style="flex:1;">Tap Tempo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Polyrhythm with Dual Orbital Gear Rings Canvas -->
+          <div class="term-card">
+            <div class="term-title-row">
+              <h3 class="term-name">Polyrhythm (3 against 2)</h3>
+              <span class="term-phonetic">Orbital Pulse Collision</span>
+            </div>
+            <p class="term-def">
+              A <strong>Polyrhythm</strong> sounds conflicting metric subdivisions simultaneously. Watch the 3-pulse and 2-pulse orbital satellites collide in real time!
+            </p>
+
+            <canvas id="polyCanvas" class="term-canvas"></canvas>
+
+            <div class="experiment-box">
+              <span class="experiment-label">3:2 Polyrhythm Pulse Engine</span>
+              <div class="exp-controls">
+                <button class="exp-btn exp-btn-lg" id="polyrhythmBtn" style="flex:1;">
+                  Play 3:2 Polyrhythm
+                </button>
+              </div>
+              <div id="polyStatus" style="font-size:0.95rem; color:var(--text-muted); margin-top:0.4rem;">High-pitch woodblock in 3; Low-pitch drum in 2.</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -2653,16 +3367,30 @@
       });
     });
 
-    function highlightKey(noteName, durationMs = 1200) {
+    function highlightKey(noteName, durationMs = 1200, colorClass = 'lit-gold') {
+      // 1. Highlight on main piano
       const keyEl = Array.from(allKeys).find(k => k.dataset.note === noteName);
       if (keyEl) {
         keyEl.classList.add('active');
         setTimeout(() => keyEl.classList.remove('active'), durationMs);
       }
+      // 2. Highlight on floating dock piano
+      const dockKeys = document.querySelectorAll('.dock-white-key, .dock-black-key');
+      dockKeys.forEach(k => {
+        const rawNote = noteName.replace(/\d/, '');
+        const dockRaw = k.dataset.note.replace(/\d/, '');
+        if (k.dataset.note === noteName || dockRaw === rawNote) {
+          k.classList.add('active', colorClass);
+          setTimeout(() => k.classList.remove('active', colorClass), durationMs);
+        }
+      });
     }
 
     function clearKeyHighlights() {
       allKeys.forEach(k => k.classList.remove('active'));
+      document.querySelectorAll('.dock-white-key, .dock-black-key').forEach(k => {
+        k.classList.remove('active', 'lit-gold', 'lit-cyan', 'lit-pink', 'lit-emerald');
+      });
     }
 
     // ============================================================
@@ -3179,7 +3907,9 @@
       }
 
       const isShort = (mode === 'short');
-      const stepDuration = isShort ? 1.2 : 2.7; // seconds per chord
+      const tempoMulti = (typeof getEffectiveProgTempoMultiplier === 'function') ? getEffectiveProgTempoMultiplier() : 1.0;
+      const beatSec = (60 / (progBPM || 105)) / tempoMulti;
+      const stepDuration = isShort ? (beatSec * 2) : (beatSec * 4); // 2 beats for short, 4 beats for long groove
 
       prog.chords.forEach((chord, i) => {
         const chordStartTime = i * stepDuration;
@@ -4558,6 +5288,1291 @@
 
     // Initial label refresh
     updateChordLabels();
+  // ============================================================
+    // MOVEABLE / DRAGGABLE LIGHT-UP PLAYABLE PIANO KEYBOARD ENGINE
+    // ============================================================
+    const dockEl = document.getElementById('floatingKeyboardDock');
+    const dockDragHeader = document.getElementById('dockDragHeader');
+    let isDraggingDock = false;
+    let dockStartX = 0, dockStartY = 0;
+    let dockInitLeft = 0, dockInitTop = 0;
+
+    dockDragHeader.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.dock-btn')) return;
+      isDraggingDock = true;
+      dockDragHeader.setPointerCapture(e.pointerId);
+      const rect = dockEl.getBoundingClientRect();
+      dockStartX = e.clientX;
+      dockStartY = e.clientY;
+      dockInitLeft = rect.left;
+      dockInitTop = rect.top;
+      dockEl.style.bottom = 'auto';
+      dockEl.style.right = 'auto';
+      dockEl.style.left = `${dockInitLeft}px`;
+      dockEl.style.top = `${dockInitTop}px`;
+    });
+
+    dockDragHeader.addEventListener('pointermove', (e) => {
+      if (!isDraggingDock) return;
+      const dx = e.clientX - dockStartX;
+      const dy = e.clientY - dockStartY;
+      let newLeft = Math.max(10, Math.min(window.innerWidth - dockEl.offsetWidth - 10, dockInitLeft + dx));
+      let newTop = Math.max(10, Math.min(window.innerHeight - dockEl.offsetHeight - 10, dockInitTop + dy));
+      dockEl.style.left = `${newLeft}px`;
+      dockEl.style.top = `${newTop}px`;
+    });
+
+    dockDragHeader.addEventListener('pointerup', (e) => {
+      isDraggingDock = false;
+      try { dockDragHeader.releasePointerCapture(e.pointerId); } catch(err) {}
+    });
+
+    let dockOctave = 0;
+    window.shiftDockOctave = function(delta) {
+      dockOctave = Math.max(-1, Math.min(1, dockOctave + delta));
+      const labels = { '-1': 'C3–B4', '0': 'C4–B5', '1': 'C5–B6' };
+      document.getElementById('dockOctaveLabel').textContent = labels[dockOctave.toString()] || 'C4–B5';
+    };
+
+    let dockSoundEnabled = true;
+    window.toggleDockSound = function(btn) {
+      dockSoundEnabled = !dockSoundEnabled;
+      btn.textContent = dockSoundEnabled ? 'Sound ON' : 'Sound OFF';
+      btn.classList.toggle('active', dockSoundEnabled);
+    };
+
+    window.toggleDockMinimize = function() {
+      dockEl.classList.toggle('minimized');
+      const btn = document.getElementById('dockMinBtn');
+      btn.textContent = dockEl.classList.contains('minimized') ? '+' : '−';
+    };
+
+    // Playable Keys on Floating Dock
+    document.querySelectorAll('.dock-white-key, .dock-black-key').forEach(key => {
+      const trigger = (e) => {
+        e.preventDefault();
+        const semitone = parseInt(key.dataset.semitone, 10);
+        const baseFreq = 261.63 * Math.pow(2, dockOctave); // C4 * octave
+        const freq = baseFreq * Math.pow(2, semitone / 12);
+        const note = key.dataset.note;
+        if (dockSoundEnabled) {
+          playPianoTone(freq, getCtx().currentTime, 1.4, 0.35);
+        }
+        key.classList.add('active', 'lit-cyan');
+        setTimeout(() => key.classList.remove('active', 'lit-cyan'), 600);
+        document.getElementById('dockChordDisplay').textContent = `${note} (${Math.round(freq)} Hz)`;
+        highlightKey(note, 600, 'lit-cyan');
+      };
+      key.addEventListener('mousedown', trigger);
+      key.addEventListener('touchstart', trigger, { passive: false });
+    });
+
+    // ============================================================
+    // PROGRESSION TEMPO & FEEL ENGINE
+    // ============================================================
+    let progBPM = 105;
+    let progHalfTime = false;
+    let progDoubleTime = false;
+    let progMetronomeTimer = null;
+
+    const progBpmSlider = document.getElementById('progBpmSlider');
+    const progBpmVal = document.getElementById('progBpmVal');
+    const progMetronomeLed = document.getElementById('progMetronomeLed');
+    const tempoMarking = document.getElementById('tempoMarking');
+
+    function getTempoMarkingName(bpm) {
+      if (bpm < 60) return `Largo / Grave (${bpm} BPM)`;
+      if (bpm < 76) return `Adagio / Ballad (${bpm} BPM)`;
+      if (bpm < 108) return `Andante / Moderato (${bpm} BPM)`;
+      if (bpm < 132) return `Allegro / Pop (${bpm} BPM)`;
+      if (bpm < 168) return `Vivace / Upbeat (${bpm} BPM)`;
+      return `Presto / Fast (${bpm} BPM)`;
+    }
+
+    if (progBpmSlider) {
+      progBpmSlider.addEventListener('input', (e) => {
+        progBPM = parseInt(e.target.value, 10);
+        progBpmVal.textContent = `${progBPM} BPM`;
+        tempoMarking.textContent = getTempoMarkingName(progBPM);
+        resetProgMetronome();
+      });
+    }
+
+    window.setProgTempo = function(bpm, label) {
+      progBPM = bpm;
+      if (progBpmSlider) progBpmSlider.value = bpm;
+      if (progBpmVal) progBpmVal.textContent = `${bpm} BPM`;
+      if (tempoMarking) tempoMarking.textContent = label;
+      document.querySelectorAll('.deck-btn').forEach(b => b.classList.remove('active'));
+      if (event && event.target) event.target.classList.add('active');
+      resetProgMetronome();
+    };
+
+    let progTapHistory = [];
+    window.handleProgTapTempo = function() {
+      const now = Date.now();
+      progTapHistory.push(now);
+      if (progTapHistory.length > 5) progTapHistory.shift();
+      if (progTapHistory.length > 1) {
+        const deltas = [];
+        for (let i = 1; i < progTapHistory.length; i++) deltas.push(progTapHistory[i] - progTapHistory[i-1]);
+        const avg = deltas.reduce((a,b) => a+b, 0) / deltas.length;
+        const calcBPM = Math.min(220, Math.max(40, Math.round(60000 / avg)));
+        setProgTempo(calcBPM, getTempoMarkingName(calcBPM));
+      }
+      flashMetronomeLed();
+    };
+
+    window.toggleHalfTime = function() {
+      progHalfTime = !progHalfTime;
+      progDoubleTime = false;
+      document.getElementById('halfTimeBtn').classList.toggle('active', progHalfTime);
+      document.getElementById('doubleTimeBtn').classList.remove('active');
+    };
+
+    window.toggleDoubleTime = function() {
+      progDoubleTime = !progDoubleTime;
+      progHalfTime = false;
+      document.getElementById('doubleTimeBtn').classList.toggle('active', progDoubleTime);
+      document.getElementById('halfTimeBtn').classList.remove('active');
+    };
+
+    function getEffectiveProgTempoMultiplier() {
+      if (progHalfTime) return 0.5;
+      if (progDoubleTime) return 2.0;
+      return 1.0;
+    }
+
+    function flashMetronomeLed() {
+      if (progMetronomeLed) {
+        progMetronomeLed.classList.add('flash');
+        setTimeout(() => progMetronomeLed.classList.remove('flash'), 90);
+      }
+    }
+
+    function resetProgMetronome() {
+      if (progMetronomeTimer) clearInterval(progMetronomeTimer);
+      const intervalMs = (60 / progBPM) * 1000;
+      progMetronomeTimer = setInterval(flashMetronomeLed, intervalMs);
+    }
+    resetProgMetronome();
+
+    // ============================================================
+    // COMPLETE TIME SIGNATURE & METER LABORATORY ENGINE
+    // ============================================================
+    const timeSignatureData = {
+      '4/4': {
+        top: 4, bottom: 4,
+        title: '4/4 Common Time',
+        subtitle: 'Four quarter-note beats per bar. Strong accent on beat 1, backbeat on beats 2 and 4. The pulse of modern pop, rock, funk, and R&B.',
+        topExpl: '• Top Number: 4 Beats Per Bar',
+        topDetail: 'Count 1 – 2 – 3 – 4 before the measure line resets.',
+        bottomExpl: '• Bottom Number: 4 = Quarter Note',
+        bottomDetail: 'Each beat equals one quarter note (♩). Subdivides into two 8th notes (1-and-2-and...).',
+        category: 'Pop, Rock, Funk & Disco Anthems',
+        batonType: 'four',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'medium' },
+          { num: 3, label: '3', accent: 'light' },
+          { num: 4, label: '4', accent: 'medium' }
+        ],
+        songs: [
+          { title: 'Billie Jean', artist: 'Michael Jackson', feel: 'Iconic 4/4 driving bassline and crisp 2 & 4 snare backbeat.', bpm: 117, root: 'F#', pattern: 'funk' },
+          { title: 'Stayin’ Alive', artist: 'Bee Gees', feel: 'Classic 104 BPM disco four-on-the-floor kick with driving hi-hat.', bpm: 104, root: 'F', pattern: 'disco' },
+          { title: 'Shape of You', artist: 'Ed Sheeran', feel: 'Modern syncopated 4/4 pop groove with acoustic percussive taps.', bpm: 96, root: 'C#', pattern: 'pop' }
+        ]
+      },
+      '3/4': {
+        top: 3, bottom: 4,
+        title: '3/4 Waltz Time',
+        subtitle: 'Three quarter-note beats per bar. ONE – two – three, ONE – two – three. Accented downbeat followed by two buoyant lifting beats.',
+        topExpl: '• Top Number: 3 Beats Per Bar',
+        topDetail: 'Count 1 – 2 – 3 in a circular, rolling triangular cycle.',
+        bottomExpl: '• Bottom Number: 4 = Quarter Note',
+        bottomDetail: 'Each beat equals a quarter note (♩). Classic Viennese waltzes and acoustic folk ballads.',
+        category: 'Waltz, Folk & Orchestral Masterworks',
+        batonType: 'three',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'light' },
+          { num: 3, label: '3', accent: 'light' }
+        ],
+        songs: [
+          { title: 'The Blue Danube', artist: 'Johann Strauss II', feel: 'The king of Viennese waltzes. Heavy downbeat with a graceful buoyant 2-3 lift.', bpm: 130, root: 'D', pattern: 'waltz' },
+          { title: 'Piano Man', artist: 'Billy Joel', feel: 'Iconic storytelling rock waltz with swinging piano arpeggios in 3/4.', bpm: 90, root: 'C', pattern: 'waltz' }
+        ]
+      },
+      '2/4': {
+        top: 2, bottom: 4,
+        title: '2/4 March & Polka',
+        subtitle: 'Two quarter-note beats per bar. ONE – two, ONE – two. Driving, military, high-stepping cadence with sharp alternating steps.',
+        topExpl: '• Top Number: 2 Beats Per Bar',
+        topDetail: 'Left-Right-Left-Right binary cadence. Swift and energetic.',
+        bottomExpl: '• Bottom Number: 4 = Quarter Note',
+        bottomDetail: 'Two quarter notes per bar. Used in military marches, country two-step, and fast polkas.',
+        category: 'Marches, Country Two-Step & Polkas',
+        batonType: 'two',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'medium' }
+        ],
+        songs: [
+          { title: 'Stars and Stripes Forever', artist: 'John Philip Sousa', feel: 'The ultimate patriotic march in crisp, resolute 2/4 brass meter.', bpm: 120, root: 'Bb', pattern: 'march' },
+          { title: 'Hey Ya! (Intro)', artist: 'Outkast', feel: 'High-energy infectious cadence featuring alternating 2/4 and 4/4 bars.', bpm: 155, root: 'G', pattern: 'march' }
+        ]
+      },
+      '6/8': {
+        top: 6, bottom: 8,
+        title: '6/8 Compound Duple',
+        subtitle: 'Six eighth-notes grouped into TWO big swinging beats (1-2-3, 4-5-6). Felt as a rolling, swaying triplet lilt.',
+        topExpl: '• Top Number: 6 Eighth Notes',
+        topDetail: 'Grouped 3 + 3. You count "ONE-and-a, TWO-and-a" with two primary pulses.',
+        bottomExpl: '• Bottom Number: 8 = Eighth Note',
+        bottomDetail: 'An eighth note (♪) receives one unit count. Dotted quarter gets the primary beat.',
+        category: 'Arena Rock Ballads & Swaying Hymns',
+        batonType: 'compound2',
+        beats: [
+          { num: 1, label: '1 (Strong)', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'sub' },
+          { num: 3, label: '3', accent: 'sub' },
+          { num: 4, label: '4 (Medium)', accent: 'medium' },
+          { num: 5, label: '5', accent: 'sub' },
+          { num: 6, label: '6', accent: 'sub' }
+        ],
+        songs: [
+          { title: 'Hallelujah', artist: 'Leonard Cohen / Jeff Buckley', feel: 'Haunting 6/8 folk hymn with undulating arpeggiated piano/guitar triplets.', bpm: 58, root: 'C', pattern: 'ballad' },
+          { title: 'We Are The Champions', artist: 'Queen', feel: 'Grand, dramatic stadium anthem with heavy 6/8 compound power pulses.', bpm: 64, root: 'F', pattern: 'ballad' }
+        ]
+      },
+      '9/8': {
+        top: 9, bottom: 8,
+        title: '9/8 Compound Triple',
+        subtitle: 'Nine eighth-notes grouped into THREE dotted-quarter beats (1-2-3, 4-5-6, 7-8-9). Flowing, majestic, and galloping.',
+        topExpl: '• Top Number: 9 Eighth Notes',
+        topDetail: 'Grouped 3 + 3 + 3. Count "ONE-and-a, TWO-and-a, THREE-and-a".',
+        bottomExpl: '• Bottom Number: 8 = Eighth Note',
+        bottomDetail: 'Eighth notes flow continuously beneath three broad conductor gestures.',
+        category: 'Classical Masterworks & Celtic Jigs',
+        batonType: 'compound3',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'sub' },
+          { num: 3, label: '3', accent: 'sub' },
+          { num: 4, label: '4', accent: 'medium' },
+          { num: 5, label: '5', accent: 'sub' },
+          { num: 6, label: '6', accent: 'sub' },
+          { num: 7, label: '7', accent: 'medium' },
+          { num: 8, label: '8', accent: 'sub' },
+          { num: 9, label: '9', accent: 'sub' }
+        ],
+        songs: [
+          { title: 'Ride of the Valkyries', artist: 'Richard Wagner', feel: 'Galloping 9/8 brass tour-de-force evoking soaring mythical battle steeds.', bpm: 78, root: 'B', pattern: 'gallop' }
+        ]
+      },
+      '12/8': {
+        top: 12, bottom: 8,
+        title: '12/8 Slow Blues & Soul',
+        subtitle: 'Twelve eighth-notes grouped into FOUR heavy blues shuffle beats. The foundation of classic soul, gospel, and doo-wop ballads.',
+        topExpl: '• Top Number: 12 Eighth Notes',
+        topDetail: 'Grouped 3 + 3 + 3 + 3. Four big beats subdivided into rich blues triplets.',
+        bottomExpl: '• Bottom Number: 8 = Eighth Note',
+        bottomDetail: 'Provides that unmistakable deep blues pocket and slow-dance swing feel.',
+        category: 'Vintage Soul, Blues & R&B Ballads',
+        batonType: 'compound4',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' }, { num: 2, label: '2', accent: 'sub' }, { num: 3, label: '3', accent: 'sub' },
+          { num: 4, label: '4', accent: 'medium' }, { num: 5, label: '5', accent: 'sub' }, { num: 6, label: '6', accent: 'sub' },
+          { num: 7, label: '7', accent: 'medium' }, { num: 8, label: '8', accent: 'sub' }, { num: 9, label: '9', accent: 'sub' },
+          { num: 10, label: '10', accent: 'medium' }, { num: 11, label: '11', accent: 'sub' }, { num: 12, label: '12', accent: 'sub' }
+        ],
+        songs: [
+          { title: 'At Last', artist: 'Etta James', feel: 'Rich, luscious orchestral soul ballad swaying in deep 12/8 blues shuffle.', bpm: 56, root: 'F', pattern: 'blues' },
+          { title: 'Redbone', artist: 'Childish Gambino', feel: 'Deep neo-soul funk groove in infectious 12/8 slow bounce.', bpm: 60, root: 'D', pattern: 'blues' }
+        ]
+      },
+      '5/4': {
+        top: 5, bottom: 4,
+        title: '5/4 Asymmetric Meter',
+        subtitle: 'Five quarter-note beats per measure, usually grouped as 3 + 2 or 2 + 3. Creates an infectious, skipping forward motion.',
+        topExpl: '• Top Number: 5 Beats Per Bar',
+        topDetail: 'Count ONE-two-three, FOUR-five (3+2) or ONE-two, THREE-four-five (2+3).',
+        bottomExpl: '• Bottom Number: 4 = Quarter Note',
+        bottomDetail: 'Five quarter notes per bar. Used in legendary jazz, movie themes, and progressive rock.',
+        category: 'Iconic Jazz & Spy Thriller Themes',
+        batonType: 'five',
+        beats: [
+          { num: 1, label: '1 (Strong)', accent: 'downbeat' },
+          { num: 2, label: '2', accent: 'light' },
+          { num: 3, label: '3', accent: 'light' },
+          { num: 4, label: '4 (Accent)', accent: 'medium' },
+          { num: 5, label: '5', accent: 'light' }
+        ],
+        songs: [
+          { title: 'Take Five', artist: 'Dave Brubeck Quartet', feel: 'The world’s most famous jazz piece in 5/4. Distinctive 3+2 piano vamp and drum solo.', bpm: 174, root: 'Eb', pattern: 'odd' },
+          { title: 'Mission: Impossible Theme', artist: 'Lalo Schifrin', feel: 'Iconic driving 5/4 spy rhythm (3+2 bongos and brass) creating suspense.', bpm: 168, root: 'G', pattern: 'odd' }
+        ]
+      },
+      '7/8': {
+        top: 7, bottom: 8,
+        title: '7/8 Complex Meter',
+        subtitle: 'Seven eighth-notes grouped as 2+2+3 or 3+2+2. Creates a signature limping, energetic drive that makes listeners lean in.',
+        topExpl: '• Top Number: 7 Eighth Notes',
+        topDetail: 'Count ONE-two, ONE-two, ONE-two-three. Asymmetric Balkan and prog-rock groove.',
+        bottomExpl: '• Bottom Number: 8 = Eighth Note',
+        bottomDetail: 'The uneven grouping creates unpredictable, captivating rhythmic forward momentum.',
+        category: 'Progressive Rock & Balkan Folk',
+        batonType: 'seven',
+        beats: [
+          { num: 1, label: '1', accent: 'downbeat' }, { num: 2, label: '2', accent: 'sub' },
+          { num: 3, label: '3', accent: 'medium' }, { num: 4, label: '4', accent: 'sub' },
+          { num: 5, label: '5', accent: 'medium' }, { num: 6, label: '6', accent: 'sub' }, { num: 7, label: '7', accent: 'sub' }
+        ],
+        songs: [
+          { title: 'Money', artist: 'Pink Floyd', feel: 'Classic rock history in 7/8. Iconic tape-loop cash register and bluesy bass riff in 7.', bpm: 120, root: 'B', pattern: 'odd' },
+          { title: 'Tom Sawyer (Synth Solo)', artist: 'Rush', feel: 'Neil Peart and Geddy Lee executing razor-sharp 7/8 drum and bass subdivisions.', bpm: 138, root: 'E', pattern: 'odd' }
+        ]
+      }
+    };
+
+    let activeTimeSigKey = '4/4';
+    let conductorAudioRunning = false;
+    let conductorLoopTimer = null;
+    let conductorBeatIndex = 0;
+    let activeSongAudioLoop = null;
+
+    window.selectTimeSignature = function(key, btn) {
+      activeTimeSigKey = key;
+      document.querySelectorAll('.ts-meter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const data = timeSignatureData[key];
+      if (!data) return;
+
+      document.getElementById('tsDisplayTop').textContent = data.top;
+      document.getElementById('tsDisplayBottom').textContent = data.bottom;
+      document.getElementById('tsTitle').textContent = data.title;
+      document.getElementById('tsSubtitle').textContent = data.subtitle;
+      document.getElementById('tsTopExpl').textContent = data.topExpl;
+      document.getElementById('tsTopDetail').textContent = data.topDetail;
+      document.getElementById('tsBottomExpl').textContent = data.bottomExpl;
+      document.getElementById('tsBottomDetail').textContent = data.bottomDetail;
+      document.getElementById('conductorStageTitle').textContent = `Orchestral Conductor Baton & Pulse Grid (${key})`;
+      document.getElementById('songCategoryTag').textContent = data.category;
+
+      renderSubdivisionLeds(data.beats);
+      renderSongCards(data.songs, key);
+
+      if (conductorAudioRunning) {
+        restartConductorGroove();
+      }
+    };
+
+    function renderSubdivisionLeds(beats) {
+      const bar = document.getElementById('subdivisionPulseBar');
+      if (!bar) return;
+      bar.innerHTML = '';
+      beats.forEach((b, idx) => {
+        const led = document.createElement('div');
+        led.className = `beat-led ${b.accent}`;
+        led.id = `beatLed_${idx}`;
+        led.innerHTML = `
+          <div class="beat-led-dot"></div>
+          <span class="beat-led-num">${b.label}</span>
+        `;
+        bar.appendChild(led);
+      });
+    }
+
+    function renderSongCards(songs, tsKey) {
+      const grid = document.getElementById('tsSongsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      songs.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'ts-song-card';
+        card.innerHTML = `
+          <div class="ts-song-header">
+            <div>
+              <div class="ts-song-title">${s.title}</div>
+              <div class="ts-song-artist">${s.artist}</div>
+            </div>
+            <span class="ts-badge">${tsKey} &bull; ${s.bpm} BPM</span>
+          </div>
+          <p class="ts-song-feel">${s.feel}</p>
+          <button class="ts-song-play-btn" id="btnSong_${i}" onclick="playSongGroove('${s.title}', '${tsKey}', ${s.bpm}, '${s.pattern}', '${s.root}', this)">
+            <svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <span>Play Song Groove</span>
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Synthesized Drum & Percussion Voices
+    function playDrumSound(type, time) {
+      const ctx = getCtx();
+      if (!ctx) return;
+
+      if (type === 'kick') {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(150, time);
+        osc.frequency.exponentialRampToValueAtTime(38, time + 0.12);
+        gain.gain.setValueAtTime(0.7, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.22);
+        osc.connect(gain);
+        gain.connect(masterCompressor || ctx.destination);
+        osc.start(time);
+        osc.stop(time + 0.22);
+      } else if (type === 'snare') {
+        // Noise buffer + tone
+        const osc = ctx.createOscillator();
+        const toneGain = ctx.createGain();
+        osc.frequency.setValueAtTime(220, time);
+        osc.frequency.exponentialRampToValueAtTime(80, time + 0.08);
+        toneGain.gain.setValueAtTime(0.4, time);
+        toneGain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+        osc.connect(toneGain);
+        toneGain.connect(masterCompressor || ctx.destination);
+        osc.start(time);
+        osc.stop(time + 0.1);
+
+        // Noise
+        const bufferSize = ctx.sampleRate * 0.14;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.value = 1000;
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.5, time);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.14);
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(masterCompressor || ctx.destination);
+        noise.start(time);
+        noise.stop(time + 0.14);
+      } else if (type === 'hihat') {
+        const bufferSize = ctx.sampleRate * 0.04;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        const noiseFilter = ctx.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.value = 7000;
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.3, time);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, time + 0.04);
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(masterCompressor || ctx.destination);
+        noise.start(time);
+        noise.stop(time + 0.04);
+      }
+    }
+
+    // Play Song Groove Handler
+    window.playSongGroove = function(title, tsKey, bpm, pattern, root, btn) {
+      getCtx();
+      if (activeSongAudioLoop) {
+        clearInterval(activeSongAudioLoop);
+        activeSongAudioLoop = null;
+        document.querySelectorAll('.ts-song-play-btn').forEach(b => {
+          b.classList.remove('playing');
+          b.innerHTML = `<svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Play Song Groove</span>`;
+        });
+        if (btn.classList.contains('playing')) return;
+      }
+
+      btn.classList.add('playing');
+      btn.innerHTML = `<svg style="width:16px;height:16px;fill:currentColor;" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg><span>Stop Groove</span>`;
+
+      // Select matching time signature tab if needed
+      selectTimeSignature(tsKey);
+
+      const data = timeSignatureData[tsKey];
+      const totalBeats = data.beats.length;
+      let curBeat = 0;
+      const beatIntervalMs = (60 / bpm) * 1000 * (tsKey.endsWith('/8') ? 0.5 : 1);
+
+      activeSongAudioLoop = setInterval(() => {
+        const ctx = getCtx();
+        const now = ctx.currentTime;
+        const isDownbeat = (curBeat === 0);
+
+        // Trigger Drum Sounds based on pattern
+        if (isDownbeat) {
+          playDrumSound('kick', now);
+          flashBeatLed(0);
+          highlightKey(`${root}4`, 350, 'lit-gold');
+        } else if (tsKey === '4/4' && (curBeat === 1 || curBeat === 3)) {
+          playDrumSound('snare', now);
+          flashBeatLed(curBeat);
+          highlightKey('G4', 250, 'lit-pink');
+        } else if (tsKey === '3/4') {
+          playDrumSound('hihat', now);
+          flashBeatLed(curBeat);
+          highlightKey(curBeat === 1 ? 'E4' : 'G4', 250, 'lit-cyan');
+        } else {
+          playDrumSound('hihat', now);
+          flashBeatLed(curBeat);
+        }
+
+        curBeat = (curBeat + 1) % totalBeats;
+      }, beatIntervalMs);
+    };
+
+    function flashBeatLed(index) {
+      const led = document.getElementById(`beatLed_${index}`);
+      if (led) {
+        led.classList.add('active');
+        setTimeout(() => led.classList.remove('active'), 180);
+      }
+    }
+
+    // Toggle General Conductor Audio
+    window.toggleConductorAudio = function() {
+      const btn = document.getElementById('conductorPlayBtn');
+      if (conductorAudioRunning) {
+        conductorAudioRunning = false;
+        if (conductorLoopTimer) clearInterval(conductorLoopTimer);
+        conductorLoopTimer = null;
+        btn.textContent = 'Play Groove & Baton';
+        btn.classList.remove('active');
+      } else {
+        getCtx();
+        conductorAudioRunning = true;
+        btn.textContent = 'Stop Groove';
+        btn.classList.add('active');
+        restartConductorGroove();
+      }
+    };
+
+    function restartConductorGroove() {
+      if (conductorLoopTimer) clearInterval(conductorLoopTimer);
+      const data = timeSignatureData[activeTimeSigKey];
+      const totalBeats = data.beats.length;
+      conductorBeatIndex = 0;
+      const bpm = 110;
+      const beatMs = (60 / bpm) * 1000 * (activeTimeSigKey.endsWith('/8') ? 0.5 : 1);
+
+      conductorLoopTimer = setInterval(() => {
+        const ctx = getCtx();
+        const now = ctx.currentTime;
+        const isDown = (conductorBeatIndex === 0);
+        if (isDown) {
+          playDrumSound('kick', now);
+          highlightKey('C4', 350, 'lit-gold');
+        } else {
+          playDrumSound('hihat', now);
+        }
+        flashBeatLed(conductorBeatIndex);
+        conductorBeatIndex = (conductorBeatIndex + 1) % totalBeats;
+      }, beatMs);
+    }
+
+    // ============================================================
+    // 60 FPS RETINA ANIMATED CANVASES ENGINE
+    // ============================================================
+    const cCanvas = document.getElementById('conductorCanvas');
+    const cCtx = cCanvas ? cCanvas.getContext('2d') : null;
+    let conductorPhase = 0;
+
+    function renderConductorStage() {
+      if (!cCanvas || !cCtx) return;
+      const dpr = window.devicePixelRatio || 1;
+      const w = cCanvas.clientWidth || 800;
+      const h = cCanvas.clientHeight || 240;
+      if (cCanvas.width !== Math.floor(w * dpr) || cCanvas.height !== Math.floor(h * dpr)) {
+        cCanvas.width = Math.floor(w * dpr);
+        cCanvas.height = Math.floor(h * dpr);
+      }
+      cCtx.save();
+      cCtx.scale(dpr, dpr);
+      cCtx.clearRect(0, 0, w, h);
+
+      conductorPhase += 0.035;
+      const cx = w / 2;
+      const cy = h / 2 + 15;
+      const scaleX = w * 0.35;
+      const scaleY = h * 0.32;
+
+      // Trajectory path based on active baton type
+      cCtx.beginPath();
+      cCtx.strokeStyle = 'rgba(245, 158, 11, 0.25)';
+      cCtx.lineWidth = 2;
+      cCtx.setLineDash([4, 4]);
+
+      let tx = cx, ty = cy;
+      const t = (conductorPhase % (Math.PI * 2));
+      const data = timeSignatureData[activeTimeSigKey] || timeSignatureData['4/4'];
+
+      if (data.batonType === 'three') {
+        // Triangle 3/4
+        cCtx.moveTo(cx, cy - scaleY);
+        cCtx.lineTo(cx, cy + scaleY);
+        cCtx.lineTo(cx + scaleX, cy + scaleY);
+        cCtx.closePath();
+        cCtx.stroke();
+        cCtx.setLineDash([]);
+        // Parametric triangle position
+        const p = (conductorPhase % 3) / 3;
+        if (p < 0.333) {
+          const u = p / 0.333;
+          tx = cx; ty = (cy - scaleY) + u * (scaleY * 2);
+        } else if (p < 0.666) {
+          const u = (p - 0.333) / 0.333;
+          tx = cx + u * scaleX; ty = cy + scaleY;
+        } else {
+          const u = (p - 0.666) / 0.334;
+          tx = (cx + scaleX) - u * scaleX;
+          ty = (cy + scaleY) - u * (scaleY * 2);
+        }
+      } else if (data.batonType === 'two') {
+        // Vertical bounce 2/4
+        cCtx.moveTo(cx, cy - scaleY);
+        cCtx.lineTo(cx, cy + scaleY);
+        cCtx.stroke();
+        cCtx.setLineDash([]);
+        tx = cx;
+        ty = cy + Math.sin(conductorPhase * 2) * scaleY;
+      } else {
+        // Standard 4/4 Orchestral Cross
+        cCtx.moveTo(cx, cy - scaleY);
+        cCtx.lineTo(cx, cy + scaleY);
+        cCtx.lineTo(cx - scaleX * 0.7, cy + scaleY * 0.3);
+        cCtx.lineTo(cx + scaleX * 0.9, cy + scaleY * 0.3);
+        cCtx.closePath();
+        cCtx.stroke();
+        cCtx.setLineDash([]);
+        // Position
+        tx = cx + Math.sin(conductorPhase) * (scaleX * 0.7) * Math.cos(conductorPhase * 0.5);
+        ty = cy + Math.cos(conductorPhase * 2) * scaleY;
+      }
+
+      // Glowing Motion Trail
+      cCtx.beginPath();
+      cCtx.arc(tx, ty, 14, 0, Math.PI * 2);
+      cCtx.fillStyle = 'rgba(245, 158, 11, 0.25)';
+      cCtx.fill();
+
+      // Baton Tip Orb
+      cCtx.beginPath();
+      cCtx.arc(tx, ty, 8, 0, Math.PI * 2);
+      cCtx.fillStyle = '#f59e0b';
+      cCtx.shadowColor = '#f59e0b';
+      cCtx.shadowBlur = 18;
+      cCtx.fill();
+      cCtx.strokeStyle = '#fff';
+      cCtx.lineWidth = 2.5;
+      cCtx.stroke();
+      cCtx.shadowBlur = 0;
+
+      cCtx.restore();
+    }
+
+
+    // ============================================================
+    // COMPREHENSIVE 60 FPS RETINA ANIMATED VISUAL ENGINES
+    // ============================================================
+    let animGlobalPhase = 0;
+
+    // Helper: Retina Canvas Scaler
+    function scaleCanvasDPR(canvas, ctx) {
+      if (!canvas || !ctx) return { w: 600, h: 180 };
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 600;
+      const h = canvas.clientHeight || 180;
+      if (canvas.width !== Math.floor(w * dpr) || canvas.height !== Math.floor(h * dpr)) {
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    // 1. Piano Audio Activity & Waveform Visualizer
+    function renderPianoAudioWave() {
+      if (!pAudioCanvas || !paCtx) return;
+      const { w, h } = scaleCanvasDPR(pAudioCanvas, paCtx);
+      paCtx.clearRect(0, 0, w, h);
+
+      // Background acoustic grid
+      paCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      paCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        paCtx.beginPath(); paCtx.moveTo(x, 0); paCtx.lineTo(x, h); paCtx.stroke();
+      }
+
+      // Animated traveling waveform
+      paCtx.beginPath();
+      const currentLevel = Math.max(0.12, audioActivityLevel);
+      const strokeColor = audioActivityLevel > 0.3 ? '#38bdf8' : 'rgba(56, 189, 248, 0.35)';
+      paCtx.strokeStyle = strokeColor;
+      paCtx.lineWidth = audioActivityLevel > 0.3 ? 3 : 1.5;
+      if (audioActivityLevel > 0.3) {
+        paCtx.shadowColor = '#38bdf8';
+        paCtx.shadowBlur = 12;
+      }
+
+      const cycles = Math.min(24, Math.max(4, audioActivityFreq / 40));
+      for (let x = 0; x < w; x++) {
+        const y = h / 2 + Math.sin((x / w) * cycles * Math.PI * 2 - animGlobalPhase * 3) * (h * 0.38 * currentLevel);
+        if (x === 0) paCtx.moveTo(x, y);
+        else paCtx.lineTo(x, y);
+      }
+      paCtx.stroke();
+      paCtx.shadowBlur = 0;
+
+      // Particle fountains on active audio
+      if (audioActivityLevel > 0.2) {
+        for (let i = 0; i < 4; i++) {
+          const px = (w / 2) + Math.cos(animGlobalPhase * 4 + i * 1.5) * (w * 0.35);
+          const py = (h / 2) + Math.sin(animGlobalPhase * 3 + i) * (h * 0.3);
+          paCtx.beginPath();
+          paCtx.arc(px, py, 3, 0, Math.PI * 2);
+          paCtx.fillStyle = '#ec4899';
+          paCtx.fill();
+        }
+        audioActivityLevel *= 0.96; // decay
+      }
+    }
+
+    // 2. Pitch Oscilloscope CRT Display
+    function renderPitchScope60fps() {
+      if (!pitchCanvas || !pCtx) return;
+      const { w, h } = scaleCanvasDPR(pitchCanvas, pCtx);
+      pCtx.clearRect(0, 0, w, h);
+
+      // CRT phosphor grid
+      pCtx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+      pCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 40) {
+        pCtx.beginPath(); pCtx.moveTo(x, 0); pCtx.lineTo(x, h); pCtx.stroke();
+      }
+      pCtx.beginPath(); pCtx.moveTo(0, h/2); pCtx.lineTo(w, h/2); pCtx.stroke();
+
+      const freq = pitchSlider ? parseFloat(pitchSlider.value) : 440;
+      const cycles = freq / 80;
+
+      // Wave with neon phosphor glow
+      pCtx.beginPath();
+      pCtx.strokeStyle = '#38bdf8';
+      pCtx.lineWidth = 2.5;
+      pCtx.shadowColor = '#38bdf8';
+      pCtx.shadowBlur = 10;
+      for (let x = 0; x < w; x++) {
+        const y = h / 2 + Math.sin((x / w) * cycles * 2 * Math.PI + animGlobalPhase * 4) * (h * 0.38);
+        if (x === 0) pCtx.moveTo(x, y);
+        else pCtx.lineTo(x, y);
+      }
+      pCtx.stroke();
+      pCtx.shadowBlur = 0;
+    }
+
+    // 3. Octave Peak Alignment Ladder
+    function renderOctaveLadder60fps() {
+      if (!octaveCanvas || !octCtx) return;
+      const { w, h } = scaleCanvasDPR(octaveCanvas, octCtx);
+      octCtx.clearRect(0, 0, w, h);
+
+      const freqs = [110, 220, 440, 880];
+      const trackH = h / 4;
+
+      freqs.forEach((f, i) => {
+        const yCenter = trackH * (i + 0.5);
+        const cycles = Math.pow(2, i + 1);
+
+        octCtx.beginPath();
+        octCtx.strokeStyle = (i === 2) ? '#38bdf8' : 'rgba(255, 255, 255, 0.3)';
+        octCtx.lineWidth = (i === 2) ? 2.5 : 1.2;
+
+        for (let x = 0; x < w; x++) {
+          const y = yCenter + Math.sin((x / w) * cycles * Math.PI * 2 - animGlobalPhase * 2) * (trackH * 0.35);
+          if (x === 0) octCtx.moveTo(x, y);
+          else octCtx.lineTo(x, y);
+        }
+        octCtx.stroke();
+
+        octCtx.fillStyle = (i === 2) ? '#fff' : '#64748b';
+        octCtx.font = 'bold 11px Outfit';
+        octCtx.fillText(`${f} Hz`, 12, yCenter + 4);
+      });
+
+      // Shimmering vertical phase alignment lines
+      octCtx.setLineDash([3, 3]);
+      octCtx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+      const phaseX = (w * 0.5 + Math.sin(animGlobalPhase) * 6);
+      octCtx.beginPath();
+      octCtx.moveTo(w * 0.25, 0); octCtx.lineTo(w * 0.25, h);
+      octCtx.moveTo(phaseX, 0); octCtx.lineTo(phaseX, h);
+      octCtx.moveTo(w * 0.75, 0); octCtx.lineTo(w * 0.75, h);
+      octCtx.stroke();
+      octCtx.setLineDash([]);
+    }
+
+    // 4. Kinetic Interval Leap Projectile
+    function renderIntervalRuler60fps() {
+      if (!intCanvas || !itCtx) return;
+      const { w, h } = scaleCanvasDPR(intCanvas, itCtx);
+      itCtx.clearRect(0, 0, w, h);
+
+      const margin = 40;
+      const stepW = (w - margin * 2) / 12;
+      const yLine = h * 0.75;
+      const semitones = currentIntervalSemitones || 7;
+
+      // Baseline
+      itCtx.beginPath();
+      itCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      itCtx.lineWidth = 2;
+      itCtx.moveTo(margin, yLine);
+      itCtx.lineTo(w - margin, yLine);
+      itCtx.stroke();
+
+      for (let i = 0; i <= 12; i++) {
+        const x = margin + i * stepW;
+        itCtx.beginPath();
+        itCtx.moveTo(x, yLine - 6);
+        itCtx.lineTo(x, yLine + 6);
+        itCtx.strokeStyle = (i === 0 || i === semitones) ? '#10b981' : 'rgba(255,255,255,0.3)';
+        itCtx.lineWidth = (i === 0 || i === semitones) ? 3 : 1;
+        itCtx.stroke();
+
+        itCtx.fillStyle = (i === 0 || i === semitones) ? '#fff' : '#64748b';
+        itCtx.font = (i === 0 || i === semitones) ? 'bold 11px Outfit' : '9px Outfit';
+        itCtx.textAlign = 'center';
+        itCtx.fillText(i.toString(), x, yLine + 22);
+      }
+
+      // Parabolic leap trajectory
+      const x0 = margin;
+      const x1 = margin + semitones * stepW;
+      itCtx.beginPath();
+      itCtx.moveTo(x0, yLine - 4);
+      itCtx.quadraticCurveTo((x0 + x1) / 2, yLine - (30 + semitones * 5), x1, yLine - 4);
+      itCtx.strokeStyle = '#10b981';
+      itCtx.lineWidth = 3;
+      itCtx.stroke();
+
+      // Animated traveling energy bead along the parabola
+      const p = (animGlobalPhase * 0.8) % 1;
+      const bx = (1 - p) * (1 - p) * x0 + 2 * (1 - p) * p * ((x0 + x1) / 2) + p * p * x1;
+      const by = (1 - p) * (1 - p) * (yLine - 4) + 2 * (1 - p) * p * (yLine - (30 + semitones * 5)) + p * p * (yLine - 4);
+
+      itCtx.beginPath();
+      itCtx.arc(bx, by, 6, 0, Math.PI * 2);
+      itCtx.fillStyle = '#fff';
+      itCtx.shadowColor = '#10b981';
+      itCtx.shadowBlur = 12;
+      itCtx.fill();
+      itCtx.shadowBlur = 0;
+
+      // End orbs
+      itCtx.beginPath(); itCtx.arc(x0, yLine - 4, 6, 0, Math.PI * 2); itCtx.fillStyle = '#38bdf8'; itCtx.fill();
+      itCtx.beginPath(); itCtx.arc(x1, yLine - 4, 8, 0, Math.PI * 2); itCtx.fillStyle = '#10b981'; itCtx.fill();
+    }
+
+    // 5. Metronome Pendulum Arm
+    function renderMetronome60fps() {
+      if (!metCanvas || !mtCtx) return;
+      const { w, h } = scaleCanvasDPR(metCanvas, mtCtx);
+      mtCtx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h - 25;
+      const armLength = h * 0.65;
+
+      const curBpm = tempoSlider ? parseInt(tempoSlider.value) : 120;
+      const swingSpeed = (curBpm / 60) * Math.PI;
+      const angle = Math.sin(animGlobalPhase * swingSpeed * 0.35) * 0.55;
+
+      // Arc guide
+      mtCtx.beginPath();
+      mtCtx.arc(cx, cy, armLength + 10, -Math.PI * 0.75, -Math.PI * 0.25);
+      mtCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      mtCtx.lineWidth = 2;
+      mtCtx.stroke();
+
+      // Pendulum arm with neon glow
+      const armX = cx + Math.sin(angle) * armLength;
+      const armY = cy - Math.cos(angle) * armLength;
+
+      mtCtx.beginPath();
+      mtCtx.moveTo(cx, cy);
+      mtCtx.lineTo(armX, armY);
+      mtCtx.strokeStyle = '#fff';
+      mtCtx.lineWidth = 3.5;
+      mtCtx.stroke();
+
+      // Bob weight
+      mtCtx.beginPath();
+      mtCtx.arc(armX, armY, 9, 0, Math.PI * 2);
+      mtCtx.fillStyle = '#ec4899';
+      mtCtx.shadowColor = '#ec4899';
+      mtCtx.shadowBlur = 14;
+      mtCtx.fill();
+      mtCtx.strokeStyle = '#fff';
+      mtCtx.lineWidth = 2;
+      mtCtx.stroke();
+      mtCtx.shadowBlur = 0;
+    }
+
+    // 6. Polyrhythm Concentric Gear Rings
+    function renderPolyrhythm60fps() {
+      if (!polyCanvas || !plCtx) return;
+      const { w, h } = scaleCanvasDPR(polyCanvas, plCtx);
+      plCtx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const rOuter = h * 0.38;
+      const rInner = h * 0.24;
+
+      // Outer ring (3 beats)
+      plCtx.beginPath();
+      plCtx.arc(cx, cy, rOuter, 0, Math.PI * 2);
+      plCtx.strokeStyle = 'rgba(236, 72, 153, 0.25)';
+      plCtx.lineWidth = 2;
+      plCtx.stroke();
+
+      // Inner ring (2 beats)
+      plCtx.beginPath();
+      plCtx.arc(cx, cy, rInner, 0, Math.PI * 2);
+      plCtx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+      plCtx.lineWidth = 2;
+      plCtx.stroke();
+
+      // 3 static nodes on outer ring
+      for (let i = 0; i < 3; i++) {
+        const a = (i / 3) * Math.PI * 2 - Math.PI / 2;
+        plCtx.beginPath();
+        plCtx.arc(cx + Math.cos(a) * rOuter, cy + Math.sin(a) * rOuter, 5, 0, Math.PI * 2);
+        plCtx.fillStyle = '#ec4899';
+        plCtx.fill();
+      }
+
+      // 2 static nodes on inner ring
+      for (let i = 0; i < 2; i++) {
+        const a = (i / 2) * Math.PI * 2 - Math.PI / 2;
+        plCtx.beginPath();
+        plCtx.arc(cx + Math.cos(a) * rInner, cy + Math.sin(a) * rInner, 5, 0, Math.PI * 2);
+        plCtx.fillStyle = '#38bdf8';
+        plCtx.fill();
+      }
+
+      // Rotating satellites
+      const angleOuter = (animGlobalPhase * 0.6) % (Math.PI * 2) - Math.PI / 2;
+      const angleInner = (animGlobalPhase * 0.4) % (Math.PI * 2) - Math.PI / 2;
+
+      // Outer satellite
+      plCtx.beginPath();
+      plCtx.arc(cx + Math.cos(angleOuter) * rOuter, cy + Math.sin(angleOuter) * rOuter, 7, 0, Math.PI * 2);
+      plCtx.fillStyle = '#fff';
+      plCtx.shadowColor = '#ec4899';
+      plCtx.shadowBlur = 12;
+      plCtx.fill();
+
+      // Inner satellite
+      plCtx.beginPath();
+      plCtx.arc(cx + Math.cos(angleInner) * rInner, cy + Math.sin(angleInner) * rInner, 7, 0, Math.PI * 2);
+      plCtx.fillStyle = '#fff';
+      plCtx.shadowColor = '#38bdf8';
+      plCtx.shadowBlur = 12;
+      plCtx.fill();
+      plCtx.shadowBlur = 0;
+    }
+
+    // 7. Vector Synthesizer Waveform & Fourier Harmonics
+    function renderOscScope60fps() {
+      if (!oscCanvas || !oCtx) return;
+      const { w, h } = scaleCanvasDPR(oscCanvas, oCtx);
+      oCtx.clearRect(0, 0, w, h);
+
+      const type = currentWaveform || 'sine';
+      oCtx.beginPath();
+      oCtx.strokeStyle = '#a855f7';
+      oCtx.lineWidth = 3;
+      oCtx.shadowColor = '#a855f7';
+      oCtx.shadowBlur = 10;
+
+      const waveWidth = w * 0.65;
+      for (let x = 0; x < waveWidth; x++) {
+        let y = h / 2;
+        const progress = (x / waveWidth) * 4 * Math.PI + animGlobalPhase * 2;
+        if (type === 'sine') y += Math.sin(progress) * (h * 0.36);
+        else if (type === 'triangle') y += (Math.asin(Math.sin(progress)) / (Math.PI / 2)) * (h * 0.36);
+        else if (type === 'sawtooth') y += (((progress % (2 * Math.PI)) / Math.PI) - 1) * (h * 0.36);
+        else if (type === 'square') y += (Math.sin(progress) >= 0 ? 1 : -1) * (h * 0.34);
+        if (x === 0) oCtx.moveTo(x, y);
+        else oCtx.lineTo(x, y);
+      }
+      oCtx.stroke();
+      oCtx.shadowBlur = 0;
+
+      // Harmonic spectrum bars (right side)
+      const specX = w * 0.72;
+      const barW = 14;
+      const harmonics = type === 'sine' ? [1, 0, 0, 0, 0] :
+                        type === 'triangle' ? [1, 0, 0.33, 0, 0.11] :
+                        type === 'square' ? [1, 0, 0.6, 0, 0.35] :
+                        [1, 0.75, 0.55, 0.4, 0.3];
+
+      harmonics.forEach((amp, idx) => {
+        const x = specX + idx * (barW + 10);
+        const barH = amp * (h * 0.65) * (0.95 + Math.sin(animGlobalPhase * 3 + idx) * 0.05);
+        oCtx.fillStyle = '#38bdf8';
+        oCtx.shadowColor = '#38bdf8';
+        oCtx.shadowBlur = 8;
+        oCtx.fillRect(x, h - 20 - barH, barW, barH);
+        oCtx.shadowBlur = 0;
+      });
+    }
+
+    // 8. Standing Wave Overtones
+    function renderHarmonicStrings60fps() {
+      if (!harmCanvas || !hmCtx) return;
+      const { w, h } = scaleCanvasDPR(harmCanvas, hmCtx);
+      hmCtx.clearRect(0, 0, w, h);
+
+      const sliders = document.querySelectorAll('.h-slider');
+      for (let i = 0; i < 4; i++) {
+        const amp = sliders[i] ? parseFloat(sliders[i].value) : 0.5;
+        const yCenter = (i + 0.5) * (h / 4);
+        const nodes = i + 1;
+
+        hmCtx.beginPath();
+        hmCtx.strokeStyle = amp > 0.05 ? '#f59e0b' : 'rgba(255, 255, 255, 0.15)';
+        hmCtx.lineWidth = amp > 0.05 ? 2.5 : 1;
+
+        for (let x = 0; x < w; x++) {
+          const envelope = Math.sin((x / w) * Math.PI * nodes);
+          const y = yCenter + envelope * Math.sin(animGlobalPhase * (i + 1) * 3) * (amp * (h * 0.1));
+          if (x === 0) hmCtx.moveTo(x, y);
+          else hmCtx.lineTo(x, y);
+        }
+        hmCtx.stroke();
+      }
+    }
+
+    // 9. Rotating Sacred Chord Geometry Mandala
+    function renderChordGeometry60fps() {
+      if (!geoCanvas || !gCtx) return;
+      const { w, h } = scaleCanvasDPR(geoCanvas, gCtx);
+      gCtx.clearRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = Math.min(w, h) * 0.38;
+
+      // Outer halo
+      gCtx.beginPath();
+      gCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+      gCtx.strokeStyle = 'rgba(255, 255, 255, 0.14)';
+      gCtx.lineWidth = 2;
+      gCtx.stroke();
+
+      const rootIdx = (typeof rootClockIndex !== 'undefined' && rootClockIndex[currentRoot]) || 0;
+      const formula = (typeof chordFormulas !== 'undefined' && chordFormulas[currentChordType]) ? chordFormulas[currentChordType].semitones : [0, 4, 7];
+      const activeIndices = formula.map(st => (rootIdx + st) % 12);
+
+      // Rotating subtle mandala rays
+      gCtx.save();
+      gCtx.translate(cx, cy);
+      gCtx.rotate(animGlobalPhase * 0.1);
+      gCtx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      gCtx.lineWidth = 1;
+      for (let r = 0; r < 12; r++) {
+        gCtx.beginPath();
+        gCtx.moveTo(0, 0);
+        gCtx.lineTo(radius, 0);
+        gCtx.stroke();
+        gCtx.rotate((Math.PI * 2) / 12);
+      }
+      gCtx.restore();
+
+      // Polygon connecting active chord notes
+      if (activeIndices.length > 1) {
+        gCtx.beginPath();
+        activeIndices.forEach((idx, i) => {
+          const angle = (idx / 12) * Math.PI * 2 - Math.PI / 2;
+          const x = cx + Math.cos(angle) * radius;
+          const y = cy + Math.sin(angle) * radius;
+          if (i === 0) gCtx.moveTo(x, y);
+          else gCtx.lineTo(x, y);
+        });
+        gCtx.closePath();
+        gCtx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+        gCtx.shadowColor = '#f59e0b';
+        gCtx.shadowBlur = 14;
+        gCtx.fill();
+        gCtx.strokeStyle = '#f59e0b';
+        gCtx.lineWidth = 3;
+        gCtx.stroke();
+        gCtx.shadowBlur = 0;
+      }
+
+      // 12 chromatic clock nodes
+      for (let i = 0; i < 12; i++) {
+        const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        const isActive = activeIndices.includes(i);
+        const isRoot = (i === rootIdx);
+
+        gCtx.beginPath();
+        gCtx.arc(x, y, isActive ? 9 : 4, 0, Math.PI * 2);
+        gCtx.fillStyle = isRoot ? '#f59e0b' : (isActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.25)');
+        gCtx.fill();
+        if (isActive) {
+          gCtx.strokeStyle = '#fff';
+          gCtx.lineWidth = 2.5;
+          gCtx.stroke();
+        }
+
+        const tx = cx + Math.cos(angle) * (radius + 18);
+        const ty = cy + Math.sin(angle) * (radius + 18) + 4;
+        gCtx.fillStyle = isActive ? '#fff' : '#64748b';
+        gCtx.font = isActive ? 'bold 12px Outfit' : '10px Outfit';
+        gCtx.textAlign = 'center';
+        gCtx.fillText((typeof pitchClassNames !== 'undefined' ? pitchClassNames[i] : i), tx, ty);
+      }
+    }
+
+    // 10. Constellation Circle of 5ths Highway
+    function renderProgressionRoute60fps() {
+      if (!progCanvas || !prCtx) return;
+      const { w, h } = scaleCanvasDPR(progCanvas, prCtx);
+      prCtx.clearRect(0, 0, w, h);
+
+      const circle5ths = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'Db', 'Ab', 'Eb', 'Bb', 'F'];
+      const spacing = (w - 60) / (circle5ths.length - 1);
+
+      // Baseline with glowing conduit
+      prCtx.beginPath();
+      prCtx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+      prCtx.lineWidth = 3;
+      prCtx.moveTo(30, h / 2);
+      prCtx.lineTo(w - 30, h / 2);
+      prCtx.stroke();
+
+      circle5ths.forEach((chord, i) => {
+        const x = 30 + i * spacing;
+        const y = h / 2;
+        const isCurrent = (activeProgChord && activeProgChord.startsWith(chord));
+
+        prCtx.beginPath();
+        prCtx.arc(x, y, isCurrent ? 14 : 7, 0, Math.PI * 2);
+        prCtx.fillStyle = isCurrent ? '#ec4899' : 'rgba(255, 255, 255, 0.2)';
+        if (isCurrent) {
+          prCtx.shadowColor = '#ec4899';
+          prCtx.shadowBlur = 16;
+        }
+        prCtx.fill();
+        prCtx.shadowBlur = 0;
+
+        if (isCurrent) {
+          prCtx.strokeStyle = '#fff';
+          prCtx.lineWidth = 3;
+          prCtx.stroke();
+          // Animated pulsating halo
+          prCtx.beginPath();
+          prCtx.arc(x, y, 22 + Math.sin(animGlobalPhase * 5) * 4, 0, Math.PI * 2);
+          prCtx.strokeStyle = 'rgba(236, 72, 153, 0.5)';
+          prCtx.lineWidth = 2;
+          prCtx.stroke();
+        }
+
+        prCtx.fillStyle = isCurrent ? '#fff' : '#94a3b8';
+        prCtx.font = isCurrent ? 'bold 13px Outfit' : '11px Outfit';
+        prCtx.textAlign = 'center';
+        prCtx.fillText(chord, x, y + 26);
+      });
+    }
+
+    // MAIN CONTINUOUS 60 FPS RENDER LOOP
+    function masterRenderLoop() {
+      animGlobalPhase += 0.025;
+      renderConductorStage();
+      renderPianoAudioWave();
+      renderPitchScope60fps();
+      renderOctaveLadder60fps();
+      renderIntervalRuler60fps();
+      renderMetronome60fps();
+      renderPolyrhythm60fps();
+      renderOscScope60fps();
+      renderHarmonicStrings60fps();
+      renderChordGeometry60fps();
+      renderProgressionRoute60fps();
+      requestAnimationFrame(masterRenderLoop);
+    }
+    masterRenderLoop();
+
+
+    // Initialize initial time signature selection
+    selectTimeSignature('4/4');
+
   </script>
+
+  <!-- Floating Draggable Light-Up Playable Piano Keyboard Dock -->
+  <div class="floating-keyboard-dock" id="floatingKeyboardDock">
+    <div class="dock-header" id="dockDragHeader">
+      <div class="dock-drag-handle">
+        <svg class="dock-drag-icon" viewBox="0 0 24 24"><path d="M10 9h4V5h-4v4zm0 6h4v-4h-4v4zm0 6h4v-4h-4v4zM4 9h4V5H4v4zm0 6h4v-4H4v4zm0 6h4v-4H4v4zm12-12v4h4V5h-4zm0 10h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+        <span>Light-Up Playable Piano</span>
+        <span class="dock-chord-badge" id="dockChordDisplay">C Major</span>
+      </div>
+      <div class="dock-controls">
+        <button class="dock-btn" onclick="shiftDockOctave(-1)" title="Lower Octave">&minus; Oct</button>
+        <span id="dockOctaveLabel" style="font-size:0.8rem; font-weight:800; color:var(--accent-cyan);">C4&ndash;B5</span>
+        <button class="dock-btn" onclick="shiftDockOctave(1)" title="Raise Octave">+ Oct</button>
+        <button class="dock-btn" onclick="toggleDockSound(this)" id="dockSoundToggleBtn" title="Toggle Sound">Sound ON</button>
+        <button class="dock-btn" onclick="toggleDockMinimize()" id="dockMinBtn" title="Minimize / Expand Dock">&minus;</button>
+      </div>
+    </div>
+    <div class="dock-body" id="dockBody">
+      <div class="dock-piano-wrap" id="dockPianoWrap">
+        <!-- Two Octaves: 14 White Keys + 10 Black Keys -->
+        <!-- Octave 1 White Keys -->
+        <div class="dock-white-key" data-note="C4" data-semitone="0">C4</div>
+        <div class="dock-white-key" data-note="D4" data-semitone="2">D</div>
+        <div class="dock-white-key" data-note="E4" data-semitone="4">E</div>
+        <div class="dock-white-key" data-note="F4" data-semitone="5">F</div>
+        <div class="dock-white-key" data-note="G4" data-semitone="7">G</div>
+        <div class="dock-white-key" data-note="A4" data-semitone="9">A</div>
+        <div class="dock-white-key" data-note="B4" data-semitone="11">B</div>
+
+        <!-- Octave 2 White Keys -->
+        <div class="dock-white-key" data-note="C5" data-semitone="12">C5</div>
+        <div class="dock-white-key" data-note="D5" data-semitone="14">D</div>
+        <div class="dock-white-key" data-note="E5" data-semitone="16">E</div>
+        <div class="dock-white-key" data-note="F5" data-semitone="17">F</div>
+        <div class="dock-white-key" data-note="G5" data-semitone="19">G</div>
+        <div class="dock-white-key" data-note="A5" data-semitone="21">A</div>
+        <div class="dock-white-key" data-note="B5" data-semitone="23">B</div>
+
+        <!-- Octave 1 Black Keys -->
+        <div class="dock-black-key" style="left: 5.1%;" data-note="C#4" data-semitone="1"></div>
+        <div class="dock-black-key" style="left: 12.2%;" data-note="D#4" data-semitone="3"></div>
+        <div class="dock-black-key" style="left: 26.5%;" data-note="F#4" data-semitone="6"></div>
+        <div class="dock-black-key" style="left: 33.6%;" data-note="G#4" data-semitone="8"></div>
+        <div class="dock-black-key" style="left: 40.7%;" data-note="A#4" data-semitone="10"></div>
+
+        <!-- Octave 2 Black Keys -->
+        <div class="dock-black-key" style="left: 55.1%;" data-note="C#5" data-semitone="13"></div>
+        <div class="dock-black-key" style="left: 62.2%;" data-note="D#5" data-semitone="15"></div>
+        <div class="dock-black-key" style="left: 76.5%;" data-note="F#5" data-semitone="18"></div>
+        <div class="dock-black-key" style="left: 83.6%;" data-note="G#5" data-semitone="20"></div>
+        <div class="dock-black-key" style="left: 90.7%;" data-note="A#5" data-semitone="22"></div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -221,14 +221,16 @@ af.main( {
 function init() {
     af.pointer
       .on('down', function() {
-        // for ( var i = 0, l = characters.length; i < l; i++ ) {
-        // var character = characters[ i ];
+        try {
+          if (Tone.context && Tone.context.state !== "running") {
+            Tone.start();
+          }
+        } catch(e) {}
         carousel.disableFeedback = false;
         dragged = false;
 
         dx = 0;
         if (af.pointer.nx > NEXT_PERCENT && af.pointer.nx < 1.0 - NEXT_PERCENT) {
-          // else {
           carousel.disableFeedback = true;
           var character = activeCharacter;
           var t = 1 - af.pointer.ny * 2;
