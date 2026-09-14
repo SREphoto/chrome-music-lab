@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Song Maker — Laura's Music App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0d14;
+      --bg-surface: #121826;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --accent-color: #38bdf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      height: 64px;
+      padding: 0 1.25rem;
+      background: rgba(18, 24, 38, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .brand-title {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #ff4e50, #f9d423, #2bd2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.35rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .control-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    select, input[type="range"] {
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .btn-action {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      padding: 0.45rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .btn-action:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Main Sequencer Matrix Scroll Area */
+    main {
+      flex: 1;
+      overflow: auto;
+      position: relative;
+      display: flex;
+      background: #080b11;
+      touch-action: none;
+    }
+
+    .matrix-wrapper {
+      position: relative;
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    /* Pitch Grid */
+    .grid-container {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .grid-row {
+      flex: 1;
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .grid-row:last-child {
+      border-bottom: none;
+    }
+
+    .grid-cell {
+      flex: 1;
+      min-width: 38px;
+      height: 100%;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      position: relative;
+      background-color: rgba(18, 24, 38, 0.5);
+      transition: background-color 0.12s ease, transform 0.1s ease;
+    }
+    .grid-cell.beat-bar {
+      background-color: rgba(26, 34, 52, 0.65);
+      border-right: 2px solid rgba(255, 255, 255, 0.15);
+    }
+    .grid-cell:hover {
+      filter: brightness(1.2);
+    }
+
+    /* Active Notes with Rainbow Colors */
+    .grid-cell.active {
+      transform: scale(0.96);
+      border-radius: 6px;
+      box-shadow: 0 0 14px currentColor;
+    }
+    .grid-cell.active::after {
+      content: '';
+      position: absolute;
+      inset: 2px;
+      border-radius: 4px;
+      background: currentColor;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Rhythm Section Divider */
+    .divider-row {
+      height: 14px;
+      background: rgba(255, 255, 255, 0.04);
+      border-top: 2px solid rgba(255, 255, 255, 0.15);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Percussion Grid (2 Rows) */
+    .percussion-container {
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      margin-top: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .perc-row {
+      flex: 1;
+      display: flex;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .perc-row:last-child {
+      border-bottom: none;
+    }
+
+    .perc-cell {
+      flex: 1;
+      min-width: 38px;
+      height: 100%;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      position: relative;
+      background-color: rgba(18, 24, 38, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s ease;
+    }
+    .perc-cell.beat-bar {
+      background-color: rgba(26, 34, 52, 0.55);
+      border-right: 2px solid rgba(255, 255, 255, 0.15);
+    }
+    .perc-cell::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .perc-cell.active::before {
+      display: none;
+    }
+
+    /* Snare / Triangle percussion marker */
+    .perc-row[data-row="0"] .perc-cell.active {
+      background: rgba(236, 72, 153, 0.25);
+    }
+    .perc-row[data-row="0"] .perc-cell.active::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 18px solid #ec4899;
+      filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.7));
+    }
+
+    /* Kick / Circle percussion marker */
+    .perc-row[data-row="1"] .perc-cell.active {
+      background: rgba(56, 189, 248, 0.25);
+    }
+    .perc-row[data-row="1"] .perc-cell.active::after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+    }
+
+    /* Sweeping Playhead Beam */
+    .playhead-beam {
+      position: absolute;
+      top: 16px;
+      bottom: 16px;
+      width: 38px;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+      pointer-events: none;
+      z-index: 10;
+      border-radius: 8px;
+      display: none;
+      transition: left 0.05s linear;
+    }
+
+    /* Bottom Dock Floating Toolbar */
+    footer {
+      height: 72px;
+      background: rgba(18, 24, 38, 0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .btn-play {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #059669);
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-play:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.55);
+    }
+    .btn-play:active {
+      transform: scale(0.94);
+    }
+    .btn-play.playing {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    .btn-play svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    .tempo-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.45rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .tempo-box span {
+      font-size: 0.85rem;
+      font-weight: 700;
+      min-width: 68px;
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Modal for Sharing */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-card {
+      background: #1e293b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 460px;
+      padding: 1.75rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .modal-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0 0.75rem; }
+      .brand-title { font-size: 1.05rem; }
+      .control-label { display: none; }
+      .top-controls { gap: 0.4rem; }
+      footer { padding: 0 0.75rem; height: 64px; }
+      .btn-play { width: 46px; height: 46px; }
+      .btn-play svg { width: 20px; height: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header>
+    <div class="nav-left">
+      <a href="../" class="btn-back">
+        <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Back to Music App</span>
+      </a>
+      <h1 class="brand-title">
+        <span>Song Maker</span>
+      </h1>
+    </div>
+
+    <div class="top-controls">
+      <!-- Instrument Selectors -->
+      <div class="control-group">
+        <span class="control-label">Melody</span>
+        <select id="selMelody">
+          <option value="marimba" selected>Marimba</option>
+          <option value="piano">Piano</option>
+          <option value="strings">Strings</option>
+          <option value="woodwind">Woodwind</option>
+          <option value="synth">Synth</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Percussion</span>
+        <select id="selPerc">
+          <option value="electronic" selected>Electronic</option>
+          <option value="blocks">Wood Blocks</option>
+          <option value="kit">Drum Kit</option>
+          <option value="conga">Conga</option>
+        </select>
+      </div>
+
+      <button class="btn-action" id="btnPreset" title="Load demo melody">
+        <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <span>Demo</span>
+      </button>
+
+      <button class="btn-action" id="btnShare" title="Save or share song">
+        <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/></svg>
+        <span>Share</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sequencer Work Area -->
+  <main id="mainContainer">
+    <div class="matrix-wrapper" id="matrixWrapper">
+      <div class="playhead-beam" id="playheadBeam"></div>
+
+      <!-- Pitch Grid (15 rows = 2 diatonic octaves C6 down to C4) -->
+      <div class="grid-container" id="melodyGrid"></div>
+
+      <!-- Percussion Grid (2 rows) -->
+      <div class="percussion-container" id="percGrid">
+        <div class="perc-row" data-row="0" id="percRow0"></div>
+        <div class="perc-row" data-row="1" id="percRow1"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Footer Toolbar -->
+  <footer>
+    <div class="footer-left">
+      <button class="btn-play" id="btnPlay" aria-label="Play or pause">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+
+      <div class="tempo-box">
+        <span id="tempoLabel">120 BPM</span>
+        <input type="range" id="tempoSlider" min="60" max="220" value="120" step="2">
+      </div>
+    </div>
+
+    <div class="footer-right">
+      <button class="btn-action" id="btnUndo">
+        <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+        <span>Undo</span>
+      </button>
+      <button class="btn-action" id="btnClear">
+        <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        <span>Clear</span>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Share Modal Dialog -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal-card">
+      <h3 class="modal-title">Share Your Song</h3>
+      <p style="color:#94a3b8;font-size:0.9rem;">Copy this link to share your melody or bookmark it for later:</p>
+      <input type="text" class="modal-input" id="shareInput" readonly>
+      <div style="display:flex;justify-content:flex-end;gap:0.75rem;">
+        <button class="btn-action" id="btnCloseModal">Close</button>
+        <button class="btn-action" id="btnCopyLink" style="background:#38bdf8;color:#080b11;font-weight:700;">Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio Context Setup
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Grid Specifications
+    const COLS = 16; // 4 measures x 4 beats (or 16 steps)
+    const ROWS = 15; // 2 octaves diatonic C4 to C6
+
+    // Note pitches & rainbow colors
+    const PITCH_DATA = [
+      { name: 'C6', freq: 1046.50, color: '#ef4444' }, // 0
+      { name: 'B5', freq: 987.77,  color: '#a855f7' }, // 1
+      { name: 'A5', freq: 880.00,  color: '#38bdf8' }, // 2
+      { name: 'G5', freq: 783.99,  color: '#10b981' }, // 3
+      { name: 'F5', freq: 698.46,  color: '#84cc16' }, // 4
+      { name: 'E5', freq: 659.25,  color: '#eab308' }, // 5
+      { name: 'D5', freq: 587.33,  color: '#f97316' }, // 6
+      { name: 'C5', freq: 523.25,  color: '#ef4444' }, // 7
+      { name: 'B4', freq: 493.88,  color: '#a855f7' }, // 8
+      { name: 'A4', freq: 440.00,  color: '#38bdf8' }, // 9
+      { name: 'G4', freq: 392.00,  color: '#10b981' }, // 10
+      { name: 'F4', freq: 349.23,  color: '#84cc16' }, // 11
+      { name: 'E4', freq: 329.63,  color: '#eab308' }, // 12
+      { name: 'D4', freq: 293.66,  color: '#f97316' }, // 13
+      { name: 'C4', freq: 261.63,  color: '#ef4444' }  // 14
+    ];
+
+    // Grid States: 2D array [row][col] (1 = on, 0 = off)
+    let melodyMatrix = Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
+    let percMatrix = Array.from({ length: 2 }, () => new Array(COLS).fill(0));
+    const historyStack = [];
+
+    // Playback state
+    let isPlaying = false;
+    let bpm = 120;
+    let currentStep = 0;
+    let nextNoteTime = 0;
+    let timerID = null;
+
+    // Instruments
+    let currentMelodyInst = 'marimba';
+    let currentPercInst = 'electronic';
+
+    // Build Melody & Percussion DOM
+    const melodyGridEl = document.getElementById('melodyGrid');
+    const percRow0El = document.getElementById('percRow0');
+    const percRow1El = document.getElementById('percRow1');
+
+    function buildGrid() {
+      melodyGridEl.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'grid-row';
+        rowEl.dataset.row = r;
+
+        for (let c = 0; c < COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'grid-cell' + (c % 4 === 3 ? ' beat-bar' : '');
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.style.color = PITCH_DATA[r].color;
+
+          if (melodyMatrix[r][c]) {
+            cell.classList.add('active');
+          }
+          rowEl.appendChild(cell);
+        }
+        melodyGridEl.appendChild(rowEl);
+      }
+
+      // Build Percussion
+      buildPercRow(percRow0El, 0);
+      buildPercRow(percRow1El, 1);
+    }
+
+    function buildPercRow(rowEl, rowIndex) {
+      rowEl.innerHTML = '';
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'perc-cell' + (c % 4 === 3 ? ' beat-bar' : '');
+        cell.dataset.row = rowIndex;
+        cell.dataset.col = c;
+
+        if (percMatrix[rowIndex][c]) {
+          cell.classList.add('active');
+        }
+        rowEl.appendChild(cell);
+      }
+    }
+
+    // Interactive Drag & Click Drawing
+    let isPointerDown = false;
+    let targetMode = 1; // 1 to turn on, 0 to turn off
+
+    function pushHistory() {
+      historyStack.push({
+        melody: melodyMatrix.map(row => [...row]),
+        perc: percMatrix.map(row => [...row])
+      });
+      if (historyStack.length > 30) historyStack.shift();
+    }
+
+    melodyGridEl.addEventListener('pointerdown', (e) => {
+      const cell = e.target.closest('.grid-cell');
+      if (!cell) return;
+      isPointerDown = true;
+      pushHistory();
+      const r = parseInt(cell.dataset.row);
+      const c = parseInt(cell.dataset.col);
+      targetMode = melodyMatrix[r][c] ? 0 : 1;
+      setMelodyCell(r, c, targetMode);
+    });
+
+    melodyGridEl.addEventListener('pointerover', (e) => {
+      if (!isPointerDown) return;
+      const cell = e.target.closest('.grid-cell');
+      if (!cell) return;
+      const r = parseInt(cell.dataset.row);
+      const c = parseInt(cell.dataset.col);
+      setMelodyCell(r, c, targetMode);
+    });
+
+    document.getElementById('percGrid').addEventListener('pointerdown', (e) => {
+      const cell = e.target.closest('.perc-cell');
+      if (!cell) return;
+      isPointerDown = true;
+      pushHistory();
+      const r = parseInt(cell.dataset.row);
+      const c = parseInt(cell.dataset.col);
+      targetMode = percMatrix[r][c] ? 0 : 1;
+      setPercCell(r, c, targetMode);
+    });
+
+    document.getElementById('percGrid').addEventListener('pointerover', (e) => {
+      if (!isPointerDown) return;
+      const cell = e.target.closest('.perc-cell');
+      if (!cell) return;
+      const r = parseInt(cell.dataset.row);
+      const c = parseInt(cell.dataset.col);
+      setPercCell(r, c, targetMode);
+    });
+
+    window.addEventListener('pointerup', () => {
+      isPointerDown = false;
+    });
+
+    function setMelodyCell(r, c, value) {
+      if (melodyMatrix[r][c] === value) return;
+      melodyMatrix[r][c] = value;
+      const rowEl = melodyGridEl.children[r];
+      if (rowEl) {
+        const cell = rowEl.children[c];
+        if (cell) cell.classList.toggle('active', !!value);
+      }
+      if (value === 1) {
+        playMelodyTone(PITCH_DATA[r].freq, currentMelodyInst, getAudioContext().currentTime);
+      }
+    }
+
+    function setPercCell(r, c, value) {
+      if (percMatrix[r][c] === value) return;
+      percMatrix[r][c] = value;
+      const container = r === 0 ? percRow0El : percRow1El;
+      const cell = container.children[c];
+      if (cell) cell.classList.toggle('active', !!value);
+      if (value === 1) {
+        playPercussion(r, currentPercInst, getAudioContext().currentTime);
+      }
+    }
+
+    // Audio Synthesis Engine
+    function playMelodyTone(freq, instrument, time) {
+      const ctx = getAudioContext();
+      const t = time || ctx.currentTime;
+
+      if (instrument === 'marimba') {
+        // Wood mallet attack: fundamental + rapid harmonic decay
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.7, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.45);
+      } else if (instrument === 'piano') {
+        // Multi-harmonic acoustic decay
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc1.type = 'triangle';
+        osc2.type = 'sine';
+        osc1.frequency.setValueAtTime(freq, t);
+        osc2.frequency.setValueAtTime(freq * 2, t);
+
+        gain.gain.setValueAtTime(0.6, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.85);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(ctx.destination);
+        osc1.start(t);
+        osc2.start(t);
+        osc1.stop(t + 0.85);
+        osc2.stop(t + 0.85);
+      } else if (instrument === 'strings') {
+        // Slow attack bowed sawtooth with filter
+        const osc = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, t);
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 2.5, t);
+
+        gain.gain.setValueAtTime(0.01, t);
+        gain.gain.linearRampToValueAtTime(0.4, t + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.9);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.9);
+      } else if (instrument === 'woodwind') {
+        // Warm triangle/sine breathy tone
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.01, t);
+        gain.gain.linearRampToValueAtTime(0.45, t + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.6);
+      } else { // Synth
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.3, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.5);
+      }
+    }
+
+    function playPercussion(row, kit, time) {
+      const ctx = getAudioContext();
+      const t = time || ctx.currentTime;
+
+      if (row === 1) {
+        // BASS / KICK
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const startFreq = kit === 'electronic' ? 150 : (kit === 'conga' ? 220 : 130);
+        const endFreq = kit === 'conga' ? 70 : 40;
+        osc.frequency.setValueAtTime(startFreq, t);
+        osc.frequency.exponentialRampToValueAtTime(endFreq, t + 0.15);
+
+        gain.gain.setValueAtTime(0.8, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+        osc.start(t);
+        osc.stop(t + 0.25);
+      } else {
+        // SNARE / HIGH PERCUSSION
+        if (kit === 'blocks') {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(900, t);
+          gain.gain.setValueAtTime(0.6, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.08);
+        } else {
+          // White noise burst for snare / clap
+          const bufferSize = ctx.sampleRate * 0.12;
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'highpass';
+          filter.frequency.setValueAtTime(1000, t);
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.45, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          noise.start(t);
+        }
+      }
+    }
+
+    // Step Sequencer Playback
+    function stepDuration() {
+      // 16 steps = 4 bars of 4 beats -> 1 beat = 4 steps -> 1 step = (60/BPM)/4
+      return (60 / bpm) / 4;
+    }
+
+    function scheduler() {
+      const ctx = getAudioContext();
+      while (nextNoteTime < ctx.currentTime + 0.1) {
+        scheduleStep(currentStep, nextNoteTime);
+        advanceStep();
+      }
+      if (isPlaying) {
+        timerID = setTimeout(scheduler, 25);
+      }
+    }
+
+    function scheduleStep(stepIndex, time) {
+      // Play melody notes active in this column
+      for (let r = 0; r < ROWS; r++) {
+        if (melodyMatrix[r][stepIndex]) {
+          playMelodyTone(PITCH_DATA[r].freq, currentMelodyInst, time);
+        }
+      }
+
+      // Play percussion active in this column
+      for (let pr = 0; pr < 2; pr++) {
+        if (percMatrix[pr][stepIndex]) {
+          playPercussion(pr, currentPercInst, time);
+        }
+      }
+
+      // Visual playhead movement
+      const delay = Math.max(0, (time - getAudioContext().currentTime) * 1000);
+      setTimeout(() => {
+        if (!isPlaying) return;
+        updatePlayhead(stepIndex);
+      }, delay);
+    }
+
+    function advanceStep() {
+      nextNoteTime += stepDuration();
+      currentStep = (currentStep + 1) % COLS;
+    }
+
+    function updatePlayhead(col) {
+      const row0 = melodyGridEl.children[0];
+      if (!row0) return;
+      const cell = row0.children[col];
+      if (!cell) return;
+      const rect = cell.getBoundingClientRect();
+      const parentRect = document.getElementById('matrixWrapper').getBoundingClientRect();
+      const beam = document.getElementById('playheadBeam');
+      beam.style.left = (rect.left - parentRect.left) + 'px';
+      beam.style.width = rect.width + 'px';
+      beam.style.display = 'block';
+    }
+
+    function startPlayback() {
+      getAudioContext();
+      isPlaying = true;
+      currentStep = 0;
+      nextNoteTime = audioCtx.currentTime + 0.05;
+      scheduler();
+      document.getElementById('btnPlay').classList.add('playing');
+      document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (timerID) clearTimeout(timerID);
+      document.getElementById('btnPlay').classList.remove('playing');
+      document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+      document.getElementById('playheadBeam').style.display = 'none';
+    }
+
+    function togglePlayback() {
+      if (isPlaying) stopPlayback();
+      else startPlayback();
+    }
+
+    // Demo Melody Preset (Twinkle Twinkle / Happy Melody)
+    function loadPreset() {
+      pushHistory();
+      // Clear
+      melodyMatrix = Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
+      percMatrix = Array.from({ length: 2 }, () => new Array(COLS).fill(0));
+
+      // Twinkle Twinkle: C C G G A A G - F F E E D D C
+      // Columns: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
+      const noteSteps = [
+        { col: 0, row: 14 }, { col: 1, row: 14 }, // C4 C4
+        { col: 2, row: 10 }, { col: 3, row: 10 }, // G4 G4
+        { col: 4, row: 9 },  { col: 5, row: 9 },  // A4 A4
+        { col: 6, row: 10 },                       // G4
+        { col: 8, row: 11 }, { col: 9, row: 11 }, // F4 F4
+        { col: 10, row: 12 }, { col: 11, row: 12 }, // E4 E4
+        { col: 12, row: 13 }, { col: 13, row: 13 }, // D4 D4
+        { col: 14, row: 14 }                       // C4
+      ];
+      noteSteps.forEach(n => { melodyMatrix[n.row][n.col] = 1; });
+
+      // Classic backbeat: kick on 0, 4, 8, 12; snare on 2, 6, 10, 14
+      for (let c = 0; c < COLS; c++) {
+        if (c % 4 === 0) percMatrix[1][c] = 1;
+        if (c % 4 === 2) percMatrix[0][c] = 1;
+      }
+
+      buildGrid();
+    }
+
+    // Undo action
+    function undo() {
+      if (historyStack.length === 0) return;
+      const prev = historyStack.pop();
+      melodyMatrix = prev.melody;
+      percMatrix = prev.perc;
+      buildGrid();
+    }
+
+    // Clear action
+    function clearGrid() {
+      pushHistory();
+      melodyMatrix = Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
+      percMatrix = Array.from({ length: 2 }, () => new Array(COLS).fill(0));
+      buildGrid();
+    }
+
+    // Share serialization
+    function exportSong() {
+      const data = {
+        m: melodyMatrix,
+        p: percMatrix,
+        b: bpm,
+        i: currentMelodyInst,
+        k: currentPercInst
+      };
+      const json = JSON.stringify(data);
+      const encoded = btoa(encodeURIComponent(json));
+      const url = window.location.origin + window.location.pathname + '#' + encoded;
+      document.getElementById('shareInput').value = url;
+      document.getElementById('shareModal').style.display = 'flex';
+    }
+
+    function importFromHash() {
+      if (!window.location.hash || window.location.hash.length <= 1) return;
+      try {
+        const hash = window.location.hash.substring(1);
+        const json = decodeURIComponent(atob(hash));
+        const data = JSON.parse(json);
+        if (data.m) melodyMatrix = data.m;
+        if (data.p) percMatrix = data.p;
+        if (data.b) {
+          bpm = data.b;
+          document.getElementById('tempoSlider').value = bpm;
+          document.getElementById('tempoLabel').textContent = bpm + ' BPM';
+        }
+        if (data.i) {
+          currentMelodyInst = data.i;
+          document.getElementById('selMelody').value = data.i;
+        }
+        if (data.k) {
+          currentPercInst = data.k;
+          document.getElementById('selPerc').value = data.k;
+        }
+      } catch (e) {
+        console.warn('Could not parse song hash:', e);
+      }
+    }
+
+    // Event Handlers
+    document.getElementById('btnPlay').addEventListener('click', togglePlayback);
+    document.getElementById('tempoSlider').addEventListener('input', (e) => {
+      bpm = parseInt(e.target.value);
+      document.getElementById('tempoLabel').textContent = bpm + ' BPM';
+    });
+    document.getElementById('selMelody').addEventListener('change', (e) => {
+      currentMelodyInst = e.target.value;
+    });
+    document.getElementById('selPerc').addEventListener('change', (e) => {
+      currentPercInst = e.target.value;
+    });
+    document.getElementById('btnPreset').addEventListener('click', loadPreset);
+    document.getElementById('btnUndo').addEventListener('click', undo);
+    document.getElementById('btnClear').addEventListener('click', clearGrid);
+    document.getElementById('btnShare').addEventListener('click', exportSong);
+    document.getElementById('btnCloseModal').addEventListener('click', () => {
+      document.getElementById('shareModal').style.display = 'none';
+    });
+    document.getElementById('btnCopyLink').addEventListener('click', () => {
+      const input = document.getElementById('shareInput');
+      input.select();
+      navigator.clipboard.writeText(input.value);
+      document.getElementById('btnCopyLink').textContent = 'Copied!';
+      setTimeout(() => {
+        document.getElementById('btnCopyLink').textContent = 'Copy Link';
+      }, 1500);
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayback();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        undo();
+      }
+    });
+
+    // Notify parent frame
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage('loaded', '*');
+      window.parent.postMessage('ready', '*');
+    }
+
+    // Initialize
+    importFromHash();
+    buildGrid();
+  </script>
+</body>
+</html>

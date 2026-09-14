@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Music Terminology Lab — Laura's Music App</title>
   <meta name="description" content="Master music terminology, chords, intervals, harmony, scales, and rhythm through big interactive tools, visual animated canvases for every concept, a playable piano, and Web Audio experiments.">
   <meta name="theme-color" content="#0a0d14">
@@ -87,6 +87,7 @@
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.14);
       transition: var(--transition);
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
@@ -110,6 +111,7 @@
       border: 1px solid rgba(255, 255, 255, 0.16);
       color: var(--text-main);
       cursor: pointer;
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
       transition: var(--transition);
     }
@@ -191,6 +193,7 @@
       cursor: pointer;
       text-decoration: none;
       transition: var(--transition);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
     }
 
@@ -271,6 +274,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.3rem;
+      -webkit-backdrop-filter: blur(18px);
       backdrop-filter: blur(18px);
       transition: var(--transition);
       position: relative;
@@ -405,6 +409,7 @@
       cursor: pointer;
       transition: var(--transition);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      -webkit-user-select: none;
       user-select: none;
     }
 
@@ -561,6 +566,7 @@
       max-width: 960px;
       margin: 0 auto;
       display: flex;
+      -webkit-user-select: none;
       user-select: none;
       border-radius: 8px;
       overflow: hidden;
@@ -874,6 +880,7 @@
       gap: 1.25rem;
       margin-bottom: 2rem;
       box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(14px);
       backdrop-filter: blur(14px);
     }
 
@@ -1197,8 +1204,8 @@
       right: 1.5rem;
       z-index: 9999;
       background: rgba(13, 19, 33, 0.95);
-      backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
       border: 1px solid rgba(56, 189, 248, 0.35);
       border-radius: 20px;
       box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), 0 0 35px rgba(56, 189, 248, 0.25);
@@ -1209,8 +1216,8 @@
       max-width: 95vw;
       width: 760px;
       transition: box-shadow 0.3s ease, border-color 0.3s ease;
-      user-select: none;
       -webkit-user-select: none;
+      user-select: none;
     }
 
     .floating-keyboard-dock:hover {
@@ -2196,7 +2203,7 @@
             </div>
           </div>
           <div class="deck-slider-wrap">
-            <input type="range" id="progBpmSlider" class="deck-slider" min="40" max="220" value="105">
+            <input type="range" id="progBpmSlider" class="deck-slider" min="40" max="220" value="105" title="Progression BPM Slider" aria-label="Progression BPM Slider">
             <span class="deck-bpm-val" id="progBpmVal">105 BPM</span>
           </div>
           <div class="deck-buttons">
@@ -2644,7 +2651,7 @@
           <div class="experiment-box">
             <span class="experiment-label">Interactive Frequency Sweeper & Oscilloscope</span>
             <div class="exp-slider-wrap">
-              <input type="range" id="pitchSlider" class="exp-slider" min="60" max="1200" value="440">
+              <input type="range" id="pitchSlider" class="exp-slider" min="60" max="1200" value="440" title="Pitch Frequency Slider" aria-label="Pitch Frequency Slider">
               <span id="pitchVal" class="exp-val">440 Hz</span>
             </div>
             <div class="exp-controls">
@@ -3017,7 +3024,7 @@
             <div class="experiment-box">
               <span class="experiment-label">Interactive Metronome</span>
               <div class="exp-slider-wrap">
-                <input type="range" id="tempoSlider" class="exp-slider" min="50" max="220" value="120">
+                <input type="range" id="tempoSlider" class="exp-slider" min="50" max="220" value="120" title="Metronome Tempo Slider" aria-label="Metronome Tempo Slider">
                 <span id="tempoVal" class="exp-val">120 BPM</span>
               </div>
               <div class="exp-controls">
@@ -3122,10 +3129,10 @@
           <div class="experiment-box">
             <span class="experiment-label">Additive Harmonics Blender</span>
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">1st (Fund.):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="1"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">2nd (Octave):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.5"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">3rd (5th):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.3"></div>
-              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">4th (2nd Oct):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.2"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">1st (Fund.):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="1" title="1st Harmonic Fundamental Slider" aria-label="1st Harmonic Fundamental"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">2nd (Octave):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.5" title="2nd Harmonic Octave Slider" aria-label="2nd Harmonic Octave"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">3rd (5th):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.3" title="3rd Harmonic Fifth Slider" aria-label="3rd Harmonic Fifth"></div>
+              <div class="exp-slider-wrap"><span style="font-size:0.9rem;font-weight:700;width:110px;">4th (2nd Oct):</span><input type="range" class="exp-slider h-slider" min="0" max="1" step="0.05" value="0.2" title="4th Harmonic Second Octave Slider" aria-label="4th Harmonic Second Octave"></div>
             </div>
             <div class="exp-controls">
               <button class="exp-btn exp-btn-lg" id="harmonicBlendBtn" style="flex:1;">Play Harmonic Blend</button>
@@ -3196,10 +3203,10 @@
           <div class="experiment-box">
             <span class="experiment-label">Interactive Sound Shaper</span>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-              <div><span style="font-size:0.85rem;font-weight:700;">Attack:</span><input type="range" id="adsrA" class="exp-slider" min="0.01" max="1.5" step="0.05" value="0.05"></div>
-              <div><span style="font-size:0.85rem;font-weight:700;">Decay:</span><input type="range" id="adsrD" class="exp-slider" min="0.05" max="1" step="0.05" value="0.2"></div>
-              <div><span style="font-size:0.85rem;font-weight:700;">Sustain:</span><input type="range" id="adsrS" class="exp-slider" min="0.05" max="1" step="0.05" value="0.6"></div>
-              <div><span style="font-size:0.85rem;font-weight:700;">Release:</span><input type="range" id="adsrR" class="exp-slider" min="0.05" max="2" step="0.1" value="0.6"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Attack:</span><input type="range" id="adsrA" class="exp-slider" min="0.01" max="1.5" step="0.05" value="0.05" title="ADSR Attack Time Slider" aria-label="ADSR Attack Time Slider"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Decay:</span><input type="range" id="adsrD" class="exp-slider" min="0.05" max="1" step="0.05" value="0.2" title="ADSR Decay Time Slider" aria-label="ADSR Decay Time Slider"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Sustain:</span><input type="range" id="adsrS" class="exp-slider" min="0.05" max="1" step="0.05" value="0.6" title="ADSR Sustain Level Slider" aria-label="ADSR Sustain Level Slider"></div>
+              <div><span style="font-size:0.85rem;font-weight:700;">Release:</span><input type="range" id="adsrR" class="exp-slider" min="0.05" max="2" step="0.1" value="0.6" title="ADSR Release Time Slider" aria-label="ADSR Release Time Slider"></div>
             </div>
             <div class="exp-controls">
               <button class="exp-btn exp-btn-lg" style="flex:1;" onmousedown="triggerADSR(true)" onmouseup="triggerADSR(false)" ontouchstart="triggerADSR(true)" ontouchend="triggerADSR(false)">
@@ -4860,83 +4867,6 @@
       }
       metronomeTick(true);
     });
-
-    // ============================================================
-    // VISUAL ASPECT: METER DIAL CLOCK CANVAS
-    // ============================================================
-    const meterCanvas = document.getElementById('meterCanvas');
-    const mrCtx = meterCanvas.getContext('2d');
-    meterCanvas.width = 600;
-    meterCanvas.height = 100;
-    let meterInterval = null;
-    let currentMeterBeats = 4;
-    let currentBeat = 0;
-    let meterAngle = 0;
-
-    function renderMeterDial() {
-      mrCtx.clearRect(0, 0, meterCanvas.width, meterCanvas.height);
-      const cx = meterCanvas.width / 2;
-      const cy = meterCanvas.height / 2;
-      const radius = 38;
-
-      // Draw beat dots
-      for (let i = 0; i < currentMeterBeats; i++) {
-        const angle = (i / currentMeterBeats) * Math.PI * 2 - Math.PI / 2;
-        const x = cx + Math.cos(angle) * radius;
-        const y = cy + Math.sin(angle) * radius;
-        const isCurrent = (currentBeat % currentMeterBeats === i);
-        const isDownbeat = (i === 0);
-
-        mrCtx.beginPath();
-        mrCtx.arc(x, y, isCurrent ? (isDownbeat ? 12 : 9) : 5, 0, Math.PI * 2);
-        mrCtx.fillStyle = isCurrent ? (isDownbeat ? '#f59e0b' : '#38bdf8') : 'rgba(255,255,255,0.2)';
-        mrCtx.fill();
-        if (isCurrent) {
-          mrCtx.strokeStyle = '#fff';
-          mrCtx.lineWidth = 2;
-          mrCtx.stroke();
-        }
-      }
-
-      // Dial pointer
-      const pointerAngle = ((currentBeat % currentMeterBeats) / currentMeterBeats) * Math.PI * 2 - Math.PI / 2;
-      mrCtx.beginPath();
-      mrCtx.moveTo(cx, cy);
-      mrCtx.lineTo(cx + Math.cos(pointerAngle) * (radius - 8), cy + Math.sin(pointerAngle) * (radius - 8));
-      mrCtx.strokeStyle = '#fff';
-      mrCtx.lineWidth = 3;
-      mrCtx.stroke();
-    }
-    renderMeterDial();
-
-    window.startMeter = function(beats, btn) {
-      stopMeter();
-      getCtx();
-      currentMeterBeats = beats;
-      currentBeat = 0;
-      const statusEl = document.getElementById('meterStatus');
-      const bpm = 120;
-
-      meterInterval = setInterval(() => {
-        const isDownbeat = (currentBeat % beats === 0);
-        metronomeTick(isDownbeat);
-        const beatNum = (currentBeat % beats) + 1;
-        statusEl.textContent = `Beat ${beatNum} of ${beats} ${isDownbeat ? '— [STRONG ACCENT]' : '— (weak pulse)'}`;
-        document.getElementById('meterCanvasTag').textContent = isDownbeat ? 'DOWNBEAT 1 ACCENT' : `Beat ${beatNum}`;
-        renderMeterDial();
-        currentBeat++;
-      }, (60 / bpm) * 1000);
-    };
-
-    window.stopMeter = function() {
-      if (meterInterval) {
-        clearInterval(meterInterval);
-        meterInterval = null;
-      }
-      document.getElementById('meterStatus').textContent = 'Meter stopped.';
-      document.getElementById('meterCanvasTag').textContent = 'Stopped';
-      renderMeterDial();
-    };
 
     // ============================================================
     // VISUAL ASPECT: CONCENTRIC POLYRHYTHM GEAR CANVAS

@@ -722,7 +722,7 @@
     <div class="hero">
       <span class="hero-tag">Interactive Music & Sound Lab</span>
       <h1>Making music learning fun, creative, and accessible</h1>
-      <p>Explore the magical intersections of melody, rhythm, acoustics, and science through 15 hands-on interactive experiments.</p>
+      <p>Explore the magical intersections of melody, rhythm, acoustics, and science through 17 hands-on interactive experiments.</p>
     </div>
   </header>
 
@@ -748,7 +748,7 @@
   <!-- Filter & Search Controls -->
   <div class="controls-bar">
     <div class="filter-pills" id="filterPills">
-      <button class="filter-pill active" data-filter="all">All Experiments (15)</button>
+      <button class="filter-pill active" data-filter="all">All Experiments (17)</button>
       <button class="filter-pill" data-filter="bows">Bows & Voices</button>
       <button class="filter-pill" data-filter="harmony">Melody & Harmony</button>
       <button class="filter-pill" data-filter="waves">Waves & Physics</button>
@@ -757,7 +757,7 @@
 
     <div class="search-box">
       <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-      <input type="text" id="searchInput" placeholder="Search 15 experiments...">
+      <input type="text" id="searchInput" placeholder="Search 17 experiments...">
     </div>
   </div>
 
@@ -849,6 +849,27 @@
         </div>
       </div>
 
+      <!-- Song Maker (NEW) -->
+      <div class="card" data-category="sequencer" data-title="Song Maker" style="--accent-color: #38bdf8;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/song_maker.jpg" alt="Song Maker preview" loading="lazy">
+          <span class="card-badge new">Flagship</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Song Maker</h2>
+          <p class="card-desc">Compose colorful tunes and beats on a full 2-octave rainbow matrix. Switch between marimba, piano, and strings with customizable percussion and tempo.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('song-maker/', 'Song Maker')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="song-maker/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Song Maker in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- 4. Rhythm (NEW) -->
       <div class="card" data-category="sequencer" data-title="Rhythm" style="--accent-color: #10b981;">
         <div class="card-thumb">
@@ -885,6 +906,27 @@
               <span>Play</span>
             </button>
             <a href="kandinsky/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Kandinsky in new tab">
+              <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shared Piano (NEW) -->
+      <div class="card" data-category="harmony" data-title="Shared Piano" style="--accent-color: #ec4899;">
+        <div class="card-thumb">
+          <img src="assets/thumbnails/shared_piano.jpg" alt="Shared Piano preview" loading="lazy">
+          <span class="card-badge new">Live Jam</span>
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">Shared Piano</h2>
+          <p class="card-desc">Play a responsive multi-octave acoustic piano with a cascading note waterfall visualizer. Jam solo or collaborate with virtual ensemble musicians in real time.</p>
+          <div class="card-footer">
+            <button class="btn-launch" onclick="openPlayer('shared-piano/', 'Shared Piano')">
+              <svg style="width:14px;height:14px;fill:currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Play</span>
+            </button>
+            <a href="shared-piano/" target="_blank" class="btn-icon" title="Open in new tab" aria-label="Open Shared Piano in new tab">
               <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
             </a>
           </div>

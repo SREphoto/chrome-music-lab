@@ -1,23 +1,977 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimal-ui" />
-    <title>Kandinsky - Laura's Music App</title>
-    <link href="assets/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Kandinsky - Laura's Music App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fdfbf7;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .kandinsky-app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #fbf9f4;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(240, 235, 225, 0.7) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(245, 238, 220, 0.6) 0%, transparent 40%);
+    }
+
+    /* Top Bar */
+    .top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      pointer-events: none;
+    }
+
+    .top-bar > * {
+      pointer-events: auto;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #334155;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover {
+      background: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .title-banner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .title-banner h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #1e293b;
+    }
+    .title-banner p {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Palette Switcher Button */
+    .palette-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+      transition: all 0.2s;
+    }
+    .palette-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    .color-dots {
+      display: flex;
+      gap: 3px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    /* Main Canvas */
+    #kandinskyCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: crosshair;
+      z-index: 1;
+    }
+
+    /* Interactive Instruction Hint */
+    .draw-hint {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(10px);
+      padding: 0.7rem 1.5rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #334155;
+      pointer-events: none;
+      z-index: 5;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      transition: opacity 0.5s ease-out;
+    }
+    .draw-hint.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Bottom Floating Action Bar */
+    .bottom-bar {
+      position: absolute;
+      bottom: 2rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .bottom-bar > * {
+      pointer-events: auto;
+    }
+
+    .action-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #475569;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .action-btn:hover {
+      transform: scale(1.08);
+      color: #0f172a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    .action-btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-play {
+      width: 72px;
+      height: 72px;
+      background: #0284c7;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 8px 25px rgba(2, 132, 199, 0.4);
+    }
+    .btn-play:hover {
+      background: #0369a1;
+      box-shadow: 0 10px 30px rgba(2, 132, 199, 0.5);
+    }
+    .btn-play.playing {
+      background: #ef4444;
+      box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+    }
+
+    .action-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+    .btn-play svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    @media (max-width: 640px) {
+      .title-banner { display: none; }
+      .bottom-bar { bottom: 1.5rem; gap: 1rem; }
+      .btn-play { width: 62px; height: 62px; }
+    }
+  </style>
 </head>
 <body>
-    <div id="experience"></div>
-    <div id="play-button" class="btn play">
-        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg>
+  <div class="kandinsky-app">
+    <!-- Top Navigation -->
+    <header class="top-bar">
+      <a href="../" class="btn-back" title="Back to Music Lab Portal">
+        <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Exit Lab</span>
+      </a>
+
+      <div class="title-banner">
+        <h1>Kandinsky</h1>
+        <p id="paletteName">Cyan Modern (Marimba & Vocal)</p>
+      </div>
+
+      <div class="top-actions">
+        <button class="palette-btn" id="paletteBtn" title="Change Color & Instrument Palette">
+          <span class="color-dots" id="paletteDots"></span>
+          <span>Theme</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Instructional Hint -->
+    <div class="draw-hint" id="drawHint">
+      🎨 Draw lines, circles, and triangles to make music!
     </div>
-    <div id="reset-button" class="btn reset">
-        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="#fff"/></svg>
-    </div>
-    <div id="undo-button" class="btn undo">
-        <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C20.94 11.13 17.11 8 12.5 8z" fill="#fff"/></svg>
-    </div>
-    <script type="text/javascript" src="assets/js/kandinsky.js"></script>
+
+    <!-- Drawing Surface -->
+    <canvas id="kandinskyCanvas"></canvas>
+
+    <!-- Bottom Controls -->
+    <footer class="bottom-bar">
+      <button class="action-btn" id="btnUndo" title="Undo Last Shape" aria-label="Undo">
+        <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C20.94 11.13 17.11 8 12.5 8z"/></svg>
+      </button>
+
+      <button class="action-btn btn-play" id="btnPlay" title="Play / Pause Melody" aria-label="Play">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+
+      <button class="action-btn" id="btnClear" title="Clear All Shapes" aria-label="Clear">
+        <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+      </button>
+    </footer>
+  </div>
+
+  <script>
+    // ============================================================
+    // KANDINSKY WEB AUDIO SYNTHESIZER ENGINE
+    // ============================================================
+    let audioCtx = null;
+    let masterGain = null;
+    let masterCompressor = null;
+
+    function initAudio() {
+      if (audioCtx) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+      }
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+
+      masterCompressor = audioCtx.createDynamicsCompressor();
+      masterCompressor.threshold.setValueAtTime(-14, audioCtx.currentTime);
+      masterCompressor.knee.setValueAtTime(10, audioCtx.currentTime);
+      masterCompressor.ratio.setValueAtTime(6, audioCtx.currentTime);
+      masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+      masterCompressor.release.setValueAtTime(0.2, audioCtx.currentTime);
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+
+      masterCompressor.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+      return audioCtx;
+    }
+
+    // Pentatonic Scale mapping for musical harmony (C major pentatonic across 2 octaves)
+    // C3, D3, E3, G3, A3, C4, D4, E4, G4, A4, C5, D5, E5, G5, A5
+    const SCALE_FREQS = [
+      130.81, 146.83, 164.81, 196.00, 220.00,
+      261.63, 293.66, 329.63, 392.00, 440.00,
+      523.25, 587.33, 659.25, 783.99, 880.00
+    ];
+
+    function freqFromY(y, height) {
+      const norm = 1 - Math.max(0, Math.min(1, y / height)); // 0 at bottom, 1 at top
+      const idx = Math.floor(norm * (SCALE_FREQS.length - 1));
+      return SCALE_FREQS[Math.max(0, Math.min(SCALE_FREQS.length - 1, idx))];
+    }
+
+    // Play synthesized line melody note
+    function playLineTone(freq, duration = 0.45, paletteIdx = 0) {
+      const actx = initAudio();
+      const now = actx.currentTime;
+
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+
+      if (paletteIdx === 0) {
+        // Marimba / Warm Glockenspiel
+        osc.type = 'triangle';
+        const filter = actx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 3.5, now);
+        filter.frequency.exponentialRampToValueAtTime(freq, now + duration);
+
+        osc.connect(filter);
+        filter.connect(gain);
+      } else if (paletteIdx === 1) {
+        // Music Box / Vibraphone
+        osc.type = 'sine';
+        const overtone = actx.createOscillator();
+        const overGain = actx.createGain();
+        overtone.type = 'sine';
+        overtone.frequency.setValueAtTime(freq * 3, now);
+        overGain.gain.setValueAtTime(0.2, now);
+        overGain.gain.exponentialRampToValueAtTime(0.001, now + duration * 0.4);
+        overtone.connect(overGain);
+        overGain.connect(gain);
+        overtone.start(now);
+        overtone.stop(now + duration);
+
+        osc.connect(gain);
+      } else {
+        // Strings / Flute
+        osc.type = 'sawtooth';
+        const filter = actx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(freq * 2.2, now);
+        osc.connect(filter);
+        filter.connect(gain);
+      }
+
+      osc.frequency.setValueAtTime(freq, now);
+
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.linearRampToValueAtTime(0.35, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+      gain.connect(masterCompressor);
+      osc.start(now);
+      osc.stop(now + duration + 0.05);
+    }
+
+    // Play singing circle voice
+    function playCircleVoice(freq, paletteIdx = 0) {
+      const actx = initAudio();
+      const now = actx.currentTime;
+
+      const osc = actx.createOscillator();
+      osc.type = paletteIdx === 1 ? 'sawtooth' : 'triangle';
+      osc.frequency.setValueAtTime(freq, now);
+
+      // Gentle pitch vibrato LFO
+      const lfo = actx.createOscillator();
+      const lfoGain = actx.createGain();
+      lfo.frequency.setValueAtTime(5.8, now);
+      lfoGain.gain.setValueAtTime(3.5, now);
+      lfo.connect(lfoGain);
+      lfoGain.connect(osc.frequency);
+      lfo.start(now);
+      lfo.stop(now + 0.6);
+
+      // Formant filters for human vowel "Ah"
+      const f1 = actx.createBiquadFilter();
+      f1.type = 'bandpass';
+      f1.Q.setValueAtTime(4.0, now);
+      f1.frequency.setValueAtTime(700, now);
+
+      const f2 = actx.createBiquadFilter();
+      f2.type = 'bandpass';
+      f2.Q.setValueAtTime(5.0, now);
+      f2.frequency.setValueAtTime(1250, now);
+
+      const voiceGain = actx.createGain();
+      voiceGain.gain.setValueAtTime(0.001, now);
+      voiceGain.gain.linearRampToValueAtTime(0.4, now + 0.05);
+      voiceGain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+
+      osc.connect(f1);
+      osc.connect(f2);
+      f1.connect(voiceGain);
+      f2.connect(voiceGain);
+      voiceGain.connect(masterCompressor);
+
+      osc.start(now);
+      osc.stop(now + 0.6);
+    }
+
+    // Play percussion for triangles
+    function playTrianglePercussion(y, height, paletteIdx = 0) {
+      const actx = initAudio();
+      const now = actx.currentTime;
+
+      const isHigh = (y / height) < 0.5;
+
+      if (paletteIdx === 0) {
+        // Snare / Rimshot
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(isHigh ? 280 : 160, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.15);
+
+        gain.gain.setValueAtTime(0.5, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+        osc.connect(gain);
+        gain.connect(masterCompressor);
+        osc.start(now);
+        osc.stop(now + 0.2);
+
+        // Noise snap
+        const bufferSize = actx.sampleRate * 0.1;
+        const buffer = actx.createBuffer(1, bufferSize, actx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+        const noise = actx.createBufferSource();
+        noise.buffer = buffer;
+        const noiseFilter = actx.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.setValueAtTime(1000, now);
+        const noiseGain = actx.createGain();
+        noiseGain.gain.setValueAtTime(0.3, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(masterCompressor);
+        noise.start(now);
+      } else if (paletteIdx === 1) {
+        // Woodblock / Clave
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(isHigh ? 900 : 520, now);
+        gain.gain.setValueAtTime(0.6, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(masterCompressor);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      } else {
+        // Metallic Triangle / Hi-Hat
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(isHigh ? 1800 : 1200, now);
+        const filter = actx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.Q.setValueAtTime(12, now);
+        filter.frequency.setValueAtTime(isHigh ? 2400 : 1600, now);
+        gain.gain.setValueAtTime(0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(masterCompressor);
+        osc.start(now);
+        osc.stop(now + 0.32);
+      }
+    }
+
+    // ============================================================
+    // PALETTES & VISUAL THEMES
+    // ============================================================
+    const PALETTES = [
+      {
+        name: 'Cyan Modern (Marimba & Vocal)',
+        primary: '#0284c7',
+        secondary: '#38bdf8',
+        accent: '#f43f5e',
+        triangle: '#f59e0b',
+        line: '#0ea5e9',
+        dots: ['#0284c7', '#38bdf8', '#f59e0b']
+      },
+      {
+        name: 'Amber Gold (Vibraphone & Woodblock)',
+        primary: '#d97706',
+        secondary: '#fbbf24',
+        accent: '#06b6d4',
+        triangle: '#ec4899',
+        line: '#f59e0b',
+        dots: ['#d97706', '#fbbf24', '#06b6d4']
+      },
+      {
+        name: 'Purple Velvet (Strings & Metallic Triangle)',
+        primary: '#7c3aed',
+        secondary: '#c084fc',
+        accent: '#10b981',
+        triangle: '#38bdf8',
+        line: '#8b5cf6',
+        dots: ['#7c3aed', '#c084fc', '#10b981']
+      }
+    ];
+
+    let currentPaletteIdx = 0;
+
+    // ============================================================
+    // SHAPE DETECTION & RECOGNITION
+    // ============================================================
+    function detectShape(points) {
+      if (points.length < 5) return { type: 'line', points };
+
+      const start = points[0];
+      const end = points[points.length - 1];
+      const distStartEnd = Math.hypot(end.x - start.x, end.y - start.y);
+
+      // Bounding box
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      let totalLen = 0;
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        if (p.x < minX) minX = p.x;
+        if (p.x > maxX) maxX = p.x;
+        if (p.y < minY) minY = p.y;
+        if (p.y > maxY) maxY = p.y;
+        if (i > 0) totalLen += Math.hypot(p.x - points[i - 1].x, p.y - points[i - 1].y);
+      }
+
+      const bboxWidth = maxX - minX;
+      const bboxHeight = maxY - minY;
+      const bboxDiag = Math.hypot(bboxWidth, bboxHeight);
+
+      // Check for closed loop: ends close together compared to path length & diagonal
+      const isClosed = (distStartEnd < bboxDiag * 0.35) && (totalLen > bboxDiag * 1.5);
+
+      if (isClosed && bboxDiag > 30) {
+        // Compute centroid
+        const cx = (minX + maxX) / 2;
+        const cy = (minY + maxY) / 2;
+
+        // Radii variance check
+        const radii = points.map(p => Math.hypot(p.x - cx, p.y - cy));
+        const avgR = radii.reduce((a, b) => a + b, 0) / radii.length;
+        const variance = radii.reduce((acc, r) => acc + Math.pow(r - avgR, 2), 0) / radii.length;
+        const stdDev = Math.sqrt(variance) / avgR;
+
+        // If fairly circular:
+        if (stdDev < 0.28 && Math.abs(bboxWidth - bboxHeight) < bboxDiag * 0.35) {
+          return {
+            type: 'circle',
+            cx, cy,
+            radius: Math.max(22, (bboxWidth + bboxHeight) / 4),
+            mouthOpen: 0,
+            blink: 0
+          };
+        }
+
+        // Check if 3 distinct corner turns (Triangle)
+        return {
+          type: 'triangle',
+          points: [
+            { x: cx, y: minY },
+            { x: minX, y: maxY },
+            { x: maxX, y: maxY }
+          ],
+          cx, cy,
+          rot: 0,
+          scale: 1
+        };
+      }
+
+      // Default: Line or artistic curve
+      return {
+        type: 'line',
+        points,
+        minX, maxX, minY, maxY,
+        midY: (minY + maxY) / 2
+      };
+    }
+
+    // ============================================================
+    // CANVAS & ANIMATION LOOP
+    // ============================================================
+    const canvas = document.getElementById('kandinskyCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    let shapes = [];
+    let currentStroke = [];
+    let isDrawing = false;
+
+    // Playhead Sequencer State
+    let isPlaying = false;
+    let playheadX = 0;
+    const PLAY_SPEED = 3.8; // px per frame
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Palette Dots UI
+    function updatePaletteUI() {
+      const p = PALETTES[currentPaletteIdx];
+      document.getElementById('paletteName').textContent = p.name;
+      const dotsEl = document.getElementById('paletteDots');
+      dotsEl.innerHTML = p.dots.map(c => `<span class="dot" style="background:${c}"></span>`).join('');
+    }
+    updatePaletteUI();
+
+    document.getElementById('paletteBtn').addEventListener('click', () => {
+      currentPaletteIdx = (currentPaletteIdx + 1) % PALETTES.length;
+      updatePaletteUI();
+    });
+
+    // Drawing Interaction
+    function startStroke(x, y) {
+      initAudio();
+      isDrawing = true;
+      currentStroke = [{ x, y }];
+      document.getElementById('drawHint').classList.add('hidden');
+    }
+
+    function moveStroke(x, y) {
+      if (!isDrawing) return;
+      const last = currentStroke[currentStroke.length - 1];
+      if (Math.hypot(x - last.x, y - last.y) > 4) {
+        currentStroke.push({ x, y });
+      }
+    }
+
+    function endStroke() {
+      if (!isDrawing) return;
+      isDrawing = false;
+      if (currentStroke.length > 2) {
+        const detected = detectShape(currentStroke);
+        detected.paletteIdx = currentPaletteIdx;
+        detected.id = Date.now() + Math.random();
+        detected.pulse = 1.0;
+        shapes.push(detected);
+
+        // Immediate feedback sound when drawn
+        if (detected.type === 'circle') {
+          playCircleVoice(freqFromY(detected.cy, height), detected.paletteIdx);
+          detected.mouthOpen = 1.0;
+        } else if (detected.type === 'triangle') {
+          playTrianglePercussion(detected.cy, height, detected.paletteIdx);
+          detected.scale = 1.35;
+        } else {
+          playLineTone(freqFromY(detected.midY, height), 0.4, detected.paletteIdx);
+          detected.pulse = 1.3;
+        }
+      }
+      currentStroke = [];
+    }
+
+    // Pointer Events (Mouse, Touch, Pen)
+    canvas.addEventListener('pointerdown', (e) => {
+      startStroke(e.clientX, e.clientY);
+    });
+    window.addEventListener('pointermove', (e) => {
+      moveStroke(e.clientX, e.clientY);
+    });
+    window.addEventListener('pointerup', endStroke);
+    window.addEventListener('pointercancel', endStroke);
+
+    // ============================================================
+    // DRAWING RENDER FUNCTIONS
+    // ============================================================
+    function drawCircle(s) {
+      const p = PALETTES[s.paletteIdx || 0];
+
+      ctx.save();
+      ctx.translate(s.cx, s.cy);
+
+      // Pulse ring on trigger
+      if (s.pulse > 1.02) {
+        ctx.beginPath();
+        ctx.arc(0, 0, s.radius * s.pulse, 0, Math.PI * 2);
+        ctx.strokeStyle = p.secondary;
+        ctx.lineWidth = 4 * (s.pulse - 1);
+        ctx.stroke();
+        s.pulse -= 0.03;
+      }
+
+      // Body
+      ctx.beginPath();
+      ctx.arc(0, 0, s.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.primary;
+      ctx.fill();
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Cheeks
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.beginPath();
+      ctx.arc(-s.radius * 0.5, s.radius * 0.15, s.radius * 0.16, 0, Math.PI * 2);
+      ctx.arc(s.radius * 0.5, s.radius * 0.15, s.radius * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Eyes
+      const eyeOffset = s.radius * 0.32;
+      const eyeY = -s.radius * 0.2;
+      const eyeR = s.radius * 0.18;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(-eyeOffset, eyeY, eyeR, 0, Math.PI * 2);
+      ctx.arc(eyeOffset, eyeY, eyeR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1e293b';
+      ctx.beginPath();
+      ctx.arc(-eyeOffset, eyeY, eyeR * 0.55, 0, Math.PI * 2);
+      ctx.arc(eyeOffset, eyeY, eyeR * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Mouth
+      ctx.fillStyle = '#1e293b';
+      const mOpen = s.mouthOpen || 0;
+      if (mOpen > 0.1) {
+        // Singing open oval mouth
+        ctx.beginPath();
+        ctx.ellipse(0, s.radius * 0.35, s.radius * 0.25, s.radius * 0.22 * mOpen, 0, 0, Math.PI * 2);
+        ctx.fill();
+        s.mouthOpen *= 0.92;
+      } else {
+        // Cute closed smile curve
+        ctx.beginPath();
+        ctx.arc(0, s.radius * 0.25, s.radius * 0.25, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#1e293b';
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    function drawTriangle(s) {
+      const p = PALETTES[s.paletteIdx || 0];
+
+      ctx.save();
+      ctx.translate(s.cx, s.cy);
+
+      if (s.scale > 1.01) {
+        ctx.scale(s.scale, s.scale);
+        s.scale -= 0.03;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(s.points[0].x - s.cx, s.points[0].y - s.cy);
+      ctx.lineTo(s.points[1].x - s.cx, s.points[1].y - s.cy);
+      ctx.lineTo(s.points[2].x - s.cx, s.points[2].y - s.cy);
+      ctx.closePath();
+
+      ctx.fillStyle = p.triangle;
+      ctx.fill();
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = '#1e293b';
+      ctx.stroke();
+
+      // Inner accent dot
+      ctx.beginPath();
+      ctx.arc(0, 4, 6, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawLineShape(s) {
+      const p = PALETTES[s.paletteIdx || 0];
+      const pts = s.points;
+      if (!pts || pts.length < 2) return;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i = 1; i < pts.length; i++) {
+        const xc = (pts[i].x + pts[i - 1].x) / 2;
+        const yc = (pts[i].y + pts[i - 1].y) / 2;
+        ctx.quadraticCurveTo(pts[i - 1].x, pts[i - 1].y, xc, yc);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = (s.pulse || 1) * 7;
+      ctx.strokeStyle = p.line;
+      ctx.stroke();
+
+      if (s.pulse > 1.02) s.pulse -= 0.02;
+
+      ctx.restore();
+    }
+
+    // ============================================================
+    // PLAYHEAD & MAIN RENDER TICK
+    // ============================================================
+    let triggeredMap = new Set();
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Draw static grid/texture lines (aesthetic parchment feel)
+      ctx.save();
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.03)';
+      ctx.lineWidth = 1;
+      const gridSize = 80;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 2. Draw saved shapes
+      shapes.forEach(s => {
+        if (s.type === 'circle') drawCircle(s);
+        else if (s.type === 'triangle') drawTriangle(s);
+        else drawLineShape(s);
+      });
+
+      // 3. Draw in-progress stroke
+      if (currentStroke.length > 1) {
+        const p = PALETTES[currentPaletteIdx];
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+        for (let i = 1; i < currentStroke.length; i++) {
+          ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+        }
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = p.primary;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 4. Update & Draw Playhead
+      if (isPlaying) {
+        playheadX += PLAY_SPEED;
+        if (playheadX > width) {
+          playheadX = 0;
+          triggeredMap.clear();
+        }
+
+        // Draw vertical sweep beam
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(playheadX, 0);
+        ctx.lineTo(playheadX, height);
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 12;
+        ctx.stroke();
+        ctx.restore();
+
+        // Check collisions with shapes
+        shapes.forEach(s => {
+          let checkX = 0;
+          if (s.type === 'circle' || s.type === 'triangle') {
+            checkX = s.cx;
+          } else {
+            checkX = (s.minX + s.maxX) / 2;
+          }
+
+          if (Math.abs(playheadX - checkX) < PLAY_SPEED * 1.5 && !triggeredMap.has(s.id)) {
+            triggeredMap.add(s.id);
+            if (s.type === 'circle') {
+              playCircleVoice(freqFromY(s.cy, height), s.paletteIdx);
+              s.mouthOpen = 1.0;
+              s.pulse = 1.35;
+            } else if (s.type === 'triangle') {
+              playTrianglePercussion(s.cy, height, s.paletteIdx);
+              s.scale = 1.35;
+            } else {
+              playLineTone(freqFromY(s.midY, height), 0.45, s.paletteIdx);
+              s.pulse = 1.5;
+            }
+          }
+        });
+      }
+
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    // ============================================================
+    // UI BUTTON CONTROLS
+    // ============================================================
+    const btnPlay = document.getElementById('btnPlay');
+    const playIcon = document.getElementById('playIcon');
+
+    btnPlay.addEventListener('click', () => {
+      initAudio();
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        btnPlay.classList.add('playing');
+        playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+        playheadX = 0;
+        triggeredMap.clear();
+      } else {
+        btnPlay.classList.remove('playing');
+        playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+      }
+    });
+
+    document.getElementById('btnUndo').addEventListener('click', () => {
+      if (shapes.length > 0) {
+        shapes.pop();
+        if (shapes.length === 0) {
+          document.getElementById('drawHint').classList.remove('hidden');
+        }
+      }
+    });
+
+    document.getElementById('btnClear').addEventListener('click', () => {
+      shapes = [];
+      triggeredMap.clear();
+      document.getElementById('drawHint').classList.remove('hidden');
+    });
+  </script>
 </body>
 </html>

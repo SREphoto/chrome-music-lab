@@ -1,20 +1,1353 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Rhythm - Laura's Music App</title>
-    <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
-    <link href="build.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <title>Rhythm — Laura's Music App</title>
+  <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1,maximum-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #eef2f7;
+    }
+    #appContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #fdfdfd;
+    }
+    
+    /* Top Navigation Header */
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .btn-back {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      color: #1e293b;
+      padding: 9px 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-back:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      color: #0f172a;
+    }
+    .scene-indicator {
+      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 7px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #334155;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .meter-badge {
+      background: #10b981;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    /* Stage Canvas Viewport */
+    #stageWrap {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-height: 260px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    #characterCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Carousel Nav Arrows */
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .nav-arrow:hover {
+      transform: translateY(-50%) scale(1.1);
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    .nav-arrow:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    .nav-arrow.prev { left: 18px; }
+    .nav-arrow.next { right: 18px; }
+    .nav-arrow svg {
+      width: 26px;
+      height: 26px;
+      fill: #1e293b;
+    }
+
+    /* Floating Play/Pause Puck */
+    .puck-btn {
+      position: absolute;
+      left: 50%;
+      bottom: 248px;
+      transform: translateX(-50%);
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: #10b981;
+      border: 3px solid #ffffff;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4), 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease;
+    }
+    .puck-btn:hover {
+      transform: translateX(-50%) scale(1.08);
+      background: #059669;
+    }
+    .puck-btn:active {
+      transform: translateX(-50%) scale(0.92);
+    }
+    .puck-btn svg {
+      width: 30px;
+      height: 30px;
+      fill: #ffffff;
+      transition: transform 0.2s ease;
+    }
+    .puck-btn.playing {
+      background: #ef4444;
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4), 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Bottom Sequencer Panel */
+    #sequencerPanel {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      background: #f7f9fc;
+      border-top: 1px solid #e2e8f0;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 24px 14px;
+    }
+    .sequencer-grid-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    /* Smooth animated playhead line */
+    .playhead-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: rgba(16, 185, 129, 0.7);
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 4;
+      display: none;
+      transform: translateX(-50%);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    }
+
+    .seq-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      position: relative;
+    }
+    .seq-slot {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+    }
+    /* Subdivision vertical notch & resting dot */
+    .seq-slot::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      left: 50%;
+      width: 1px;
+      background: #cbd5e1;
+      transform: translateX(-50%);
+      z-index: 1;
+    }
+    .seq-slot.major-beat::before {
+      background: #94a3b8;
+      width: 2px;
+    }
+    .seq-slot::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #94a3b8;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+      transition: opacity 0.15s ease;
+    }
+    .seq-slot.active::after {
+      opacity: 0;
+    }
+
+    /* Active Symbol Icon */
+    .seq-symbol {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0);
+      transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+    .seq-slot.active .seq-symbol {
+      transform: scale(1);
+    }
+    .seq-symbol svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* Footer Utility Bar */
+    .seq-footer {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding: 0 4px;
+    }
+    .dots-indicator {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .dot-pill {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .dot-pill.active {
+      background: #10b981;
+      transform: scale(1.3);
+    }
+    .btn-clear {
+      background: none;
+      border: 1px solid #cbd5e1;
+      color: #64748b;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-clear:hover {
+      background: #ffffff;
+      color: #1e293b;
+      border-color: #94a3b8;
+    }
+
+    @media (max-width: 640px) {
+      .nav-arrow { width: 42px; height: 42px; }
+      .nav-arrow.prev { left: 8px; }
+      .nav-arrow.next { right: 8px; }
+      .puck-btn { bottom: 236px; width: 56px; height: 56px; }
+      #sequencerPanel { height: 240px; padding: 14px 12px 10px; }
+      .seq-row { height: 44px; }
+      .seq-symbol { width: 32px; height: 32px; }
+      .seq-symbol svg { width: 18px; height: 18px; }
+    }
+  </style>
 </head>
 <body>
-    <div id="container">
-        <div id="about"></div>
-        <div id="menu"></div>
+  <div id="appContainer">
+    <header>
+      <a href="../" class="btn-back">
+        <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Back to Music App</span>
+      </a>
+      <div class="scene-indicator">
+        <span id="sceneTitle">Drum Kit</span>
+        <span class="meter-badge" id="sceneMeter">4/4 Meter</span>
+      </div>
+    </header>
+
+    <!-- 2D Canvas Character Stage -->
+    <div id="stageWrap">
+      <canvas id="characterCanvas"></canvas>
+      <button class="nav-arrow prev" id="btnPrev" aria-label="Previous scene">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button class="nav-arrow next" id="btnNext" aria-label="Next scene">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
     </div>
-    <script type="text/javascript" src="https://gweb-musiclab-site.appspot.com/static/js/Tone.min.js"></script>
-    <script src="third-party.js"></script>
-    <script src="lib.js"></script>
-    <script src="main.js"></script>
+
+    <!-- Play/Pause Puck Button -->
+    <button class="puck-btn" id="btnPlayPause" aria-label="Play or pause rhythm">
+      <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+
+    <!-- Sequencer Grid Panel -->
+    <div id="sequencerPanel">
+      <div class="sequencer-grid-wrap" id="gridWrap">
+        <div class="playhead-line" id="playheadLine"></div>
+        <div class="seq-row" id="row0"></div>
+        <div class="seq-row" id="row1"></div>
+        <div class="seq-row" id="row2"></div>
+      </div>
+      <div class="seq-footer">
+        <div class="dots-indicator" id="dotsWrap"></div>
+        <button class="btn-clear" id="btnClear">Clear Pattern</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Audio context initialization
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // SCENE DEFINITIONS
+    const SCENES = [
+      {
+        id: 'kit',
+        title: 'Drum Kit (Dogs)',
+        meter: '4 Beats (8 Steps)',
+        steps: 8,
+        beats: 4,
+        bpm: 104,
+        samples: [
+          'assets/sample/kit-hat.mp3',
+          'assets/sample/kit-snare.mp3',
+          'assets/sample/kit-tom.mp3'
+        ],
+        symbols: [
+          { color: '#f59e0b', shape: 'diamond' },
+          { color: '#0ea5e9', shape: 'circle' },
+          { color: '#ef4444', shape: 'square' }
+        ],
+        defaultPattern: [
+          [1, 1, 1, 1, 1, 1, 1, 1], // Hi-hat
+          [0, 0, 1, 0, 0, 0, 1, 0], // Snare
+          [1, 0, 0, 1, 1, 0, 0, 0]  // Tom/Kick
+        ]
+      },
+      {
+        id: 'conga',
+        title: 'Congas (Monkeys)',
+        meter: '6 Beats (12 Steps)',
+        steps: 12,
+        beats: 6,
+        bpm: 160,
+        samples: [
+          'assets/sample/conga-cowbell.mp3',
+          'assets/sample/conga-high.mp3',
+          'assets/sample/conga-low.mp3'
+        ],
+        symbols: [
+          { color: '#334155', shape: 'trapezoid' },
+          { color: '#f97316', shape: 'circle' },
+          { color: '#06b6d4', shape: 'circle' }
+        ],
+        defaultPattern: [
+          [1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1], // Cowbell
+          [0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], // High conga
+          [1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0]  // Low conga
+        ]
+      },
+      {
+        id: 'timpani',
+        title: 'Timpani (Bears)',
+        meter: '3 Beats (6 Steps)',
+        steps: 6,
+        beats: 3,
+        bpm: 105,
+        samples: [
+          'assets/sample/timpani-triangle.mp3',
+          'assets/sample/timpani-high.mp3',
+          'assets/sample/timpani-low.mp3'
+        ],
+        symbols: [
+          { color: '#ec4899', shape: 'triangle' },
+          { color: '#8b5cf6', shape: 'circle' },
+          { color: '#10b981', shape: 'circle' }
+        ],
+        defaultPattern: [
+          [1, 0, 0, 0, 0, 0], // Triangle
+          [0, 1, 1, 0, 1, 1], // High Timpani
+          [1, 0, 0, 0, 1, 0]  // Low Timpani
+        ]
+      },
+      {
+        id: 'woodblock',
+        title: 'Woodblocks (Robots)',
+        meter: '5 Beats (10 Steps)',
+        steps: 10,
+        beats: 5,
+        bpm: 170,
+        samples: [
+          'assets/sample/robot-clave.mp3',
+          'assets/sample/robot-high.mp3',
+          'assets/sample/robot-low.mp3'
+        ],
+        symbols: [
+          { color: '#14b8a6', shape: 'rect' },
+          { color: '#6366f1', shape: 'square' },
+          { color: '#f43f5e', shape: 'circle' }
+        ],
+        defaultPattern: [
+          [1, 0, 0, 0, 0, 0, 1, 0, 1, 0], // Clave
+          [0, 0, 1, 0, 0, 1, 0, 0, 0, 0], // High block
+          [0, 0, 0, 0, 1, 0, 0, 1, 0, 0]  // Low block
+        ]
+      }
+    ];
+
+    // State
+    let currentSceneIndex = 0;
+    let isPlaying = false;
+    let currentStep = 0;
+    let nextStepTime = 0;
+    let schedulerTimer = null;
+    const audioBuffers = {}; // cache: [samplePath] -> AudioBuffer
+
+    // Patterns state: sceneId -> [[row0], [row1], [row2]]
+    const patterns = {};
+    SCENES.forEach(s => {
+      patterns[s.id] = s.defaultPattern.map(row => [...row]);
+    });
+
+    // Character strike state for visual animations
+    const hitAnimations = {
+      0: 0, // row 0 (e.g. small instrument/cowbell/hi-hat)
+      1: 0, // row 1 (left drum/arm)
+      2: 0  // row 2 (right drum/arm)
+    };
+
+    // Preload audio samples
+    async function loadSample(url) {
+      if (audioBuffers[url]) return audioBuffers[url];
+      try {
+        const res = await fetch(url);
+        const arrayBuf = await res.arrayBuffer();
+        const ctx = getAudioContext();
+        const audioBuf = await ctx.decodeAudioData(arrayBuf);
+        audioBuffers[url] = audioBuf;
+        return audioBuf;
+      } catch (err) {
+        console.warn('Could not load sample ' + url + ', using synthesized fallback:', err);
+        return null;
+      }
+    }
+
+    function preloadAllSamples() {
+      SCENES.forEach(scene => {
+        scene.samples.forEach(s => loadSample(s));
+      });
+    }
+
+    // Play a sample or synthesized fallback
+    function playTrigger(rowIndex, time) {
+      const scene = SCENES[currentSceneIndex];
+      const sampleUrl = scene.samples[rowIndex];
+      const ctx = getAudioContext();
+      const playTime = time || ctx.currentTime;
+
+      // Trigger character hit visual
+      hitAnimations[rowIndex] = 1.0;
+
+      const buf = audioBuffers[sampleUrl];
+      if (buf) {
+        const source = ctx.createBufferSource();
+        source.buffer = buf;
+        source.connect(ctx.destination);
+        source.start(playTime);
+      } else {
+        // High quality synthesized percussion fallback
+        synthesizeFallback(scene.id, rowIndex, playTime);
+      }
+    }
+
+    function synthesizeFallback(sceneId, rowIndex, time) {
+      const ctx = getAudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (rowIndex === 0) { // Hi-hat, Triangle, Cowbell, Clave (High Metallic/Wood)
+        osc.type = 'triangle';
+        const freq = sceneId === 'timpani' ? 1200 : (sceneId === 'kit' ? 800 : 920);
+        osc.frequency.setValueAtTime(freq, time);
+        gain.gain.setValueAtTime(0.35, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.12);
+        osc.start(time);
+        osc.stop(time + 0.12);
+      } else if (rowIndex === 1) { // Snare, High Conga, High Timpani, High Woodblock
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(320, time);
+        osc.frequency.exponentialRampToValueAtTime(140, time + 0.15);
+        gain.gain.setValueAtTime(0.5, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+        osc.start(time);
+        osc.stop(time + 0.2);
+      } else { // Tom, Low Conga, Low Timpani, Low Woodblock (Deep Bass)
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(160, time);
+        osc.frequency.exponentialRampToValueAtTime(45, time + 0.25);
+        gain.gain.setValueAtTime(0.7, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.3);
+        osc.start(time);
+        osc.stop(time + 0.3);
+      }
+    }
+
+    // Step Sequencer Scheduler
+    const LOOKAHEAD_MS = 25;
+    const SCHEDULE_AHEAD_SEC = 0.1;
+
+    function stepDuration() {
+      const scene = SCENES[currentSceneIndex];
+      const stepsPerBeat = scene.steps / scene.beats;
+      return (60 / scene.bpm) / stepsPerBeat;
+    }
+
+    function scheduler() {
+      const ctx = getAudioContext();
+      while (nextStepTime < ctx.currentTime + SCHEDULE_AHEAD_SEC) {
+        scheduleStep(currentStep, nextStepTime);
+        advanceStep();
+      }
+      if (isPlaying) {
+        schedulerTimer = setTimeout(scheduler, LOOKAHEAD_MS);
+      }
+    }
+
+    function scheduleStep(stepIndex, time) {
+      const scene = SCENES[currentSceneIndex];
+      const pattern = patterns[scene.id];
+
+      for (let r = 0; r < 3; r++) {
+        if (pattern[r][stepIndex]) {
+          playTrigger(r, time);
+        }
+      }
+
+      // Schedule visual playhead update
+      const delay = Math.max(0, (time - getAudioContext().currentTime) * 1000);
+      setTimeout(() => {
+        if (!isPlaying) return;
+        updatePlayheadUI(stepIndex);
+      }, delay);
+    }
+
+    function advanceStep() {
+      const scene = SCENES[currentSceneIndex];
+      nextStepTime += stepDuration();
+      currentStep = (currentStep + 1) % scene.steps;
+    }
+
+    function startPlayback() {
+      getAudioContext();
+      isPlaying = true;
+      currentStep = 0;
+      nextStepTime = audioCtx.currentTime + 0.05;
+      scheduler();
+      document.getElementById('btnPlayPause').classList.add('playing');
+      document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+      document.getElementById('playheadLine').style.display = 'block';
+    }
+
+    function stopPlayback() {
+      isPlaying = false;
+      if (schedulerTimer) clearTimeout(schedulerTimer);
+      document.getElementById('btnPlayPause').classList.remove('playing');
+      document.getElementById('playIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+      document.getElementById('playheadLine').style.display = 'none';
+      clearPlayheadVisuals();
+    }
+
+    function togglePlayback() {
+      if (isPlaying) {
+        stopPlayback();
+      } else {
+        startPlayback();
+      }
+    }
+
+    // UI RENDERING & INTERACTION
+    function renderSequencer() {
+      const scene = SCENES[currentSceneIndex];
+      const pattern = patterns[scene.id];
+      document.getElementById('sceneTitle').textContent = scene.title;
+      document.getElementById('sceneMeter').textContent = scene.meter;
+
+      for (let r = 0; r < 3; r++) {
+        const rowEl = document.getElementById('row' + r);
+        rowEl.innerHTML = '';
+        const symbolInfo = scene.symbols[r];
+
+        for (let s = 0; s < scene.steps; s++) {
+          const slot = document.createElement('div');
+          slot.className = 'seq-slot';
+          // Mark major beats
+          const stepsPerBeat = scene.steps / scene.beats;
+          if (s % stepsPerBeat === 0) {
+            slot.classList.add('major-beat');
+          }
+          if (pattern[r][s]) {
+            slot.classList.add('active');
+          }
+
+          // Inner shape SVG
+          const symWrap = document.createElement('div');
+          symWrap.className = 'seq-symbol';
+          symWrap.style.background = symbolInfo.color;
+          symWrap.innerHTML = getSvgForShape(symbolInfo.shape);
+          slot.appendChild(symWrap);
+
+          slot.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            pattern[r][s] = pattern[r][s] ? 0 : 1;
+            slot.classList.toggle('active', !!pattern[r][s]);
+            if (pattern[r][s]) {
+              playTrigger(r);
+            }
+          });
+
+          rowEl.appendChild(slot);
+        }
+      }
+
+      // Render carousel dots
+      const dotsWrap = document.getElementById('dotsWrap');
+      dotsWrap.innerHTML = '';
+      SCENES.forEach((sc, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot-pill' + (i === currentSceneIndex ? ' active' : '');
+        dot.title = sc.title;
+        dot.onclick = () => switchScene(i);
+        dotsWrap.appendChild(dot);
+      });
+
+      clearPlayheadVisuals();
+    }
+
+    function getSvgForShape(shape) {
+      if (shape === 'triangle') {
+        return '<svg viewBox="0 0 24 24" fill="#ffffff"><polygon points="12,4 22,20 2,20"/></svg>';
+      } else if (shape === 'diamond') {
+        return '<svg viewBox="0 0 24 24" fill="#ffffff"><polygon points="12,2 22,12 12,22 2,12"/></svg>';
+      } else if (shape === 'square') {
+        return '<svg viewBox="0 0 24 24" fill="#ffffff"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>';
+      } else if (shape === 'rect') {
+        return '<svg viewBox="0 0 24 24" fill="#ffffff"><rect x="2" y="6" width="20" height="12" rx="2"/></svg>';
+      } else if (shape === 'trapezoid') {
+        return '<svg viewBox="0 0 24 24" fill="#ffffff"><polygon points="6,5 18,5 22,19 2,19"/></svg>';
+      }
+      return '<svg viewBox="0 0 24 24" fill="#ffffff"><circle cx="12" cy="12" r="8"/></svg>';
+    }
+
+    function updatePlayheadUI(stepIndex) {
+      const scene = SCENES[currentSceneIndex];
+      const gridWrap = document.getElementById('gridWrap');
+      const row0 = document.getElementById('row0');
+      const slots = row0.querySelectorAll('.seq-slot');
+      if (!slots[stepIndex]) return;
+
+      const slot = slots[stepIndex];
+      const rect = slot.getBoundingClientRect();
+      const parentRect = gridWrap.getBoundingClientRect();
+      const x = rect.left - parentRect.left + rect.width / 2;
+
+      const line = document.getElementById('playheadLine');
+      line.style.left = x + 'px';
+    }
+
+    function clearPlayheadVisuals() {
+      const line = document.getElementById('playheadLine');
+      line.style.left = '0px';
+    }
+
+    function switchScene(index) {
+      const wasPlaying = isPlaying;
+      if (wasPlaying) stopPlayback();
+      currentSceneIndex = (index + SCENES.length) % SCENES.length;
+      renderSequencer();
+      if (wasPlaying) {
+        setTimeout(startPlayback, 60);
+      }
+    }
+
+    // CANVAS CHARACTER ANIMATION ENGINE
+    const canvas = document.getElementById('characterCanvas');
+    const ctx2d = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let dpr = window.devicePixelRatio || 1;
+
+    function resizeCanvas() {
+      const wrap = document.getElementById('stageWrap');
+      width = wrap.clientWidth;
+      height = wrap.clientHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx2d.setTransform(1, 0, 0, 1, 0, 0);
+      ctx2d.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    let animTime = 0;
+    function renderLoop() {
+      animTime += 0.04;
+      ctx2d.clearRect(0, 0, width, height);
+
+      // Fade out hit animations
+      for (let k in hitAnimations) {
+        if (hitAnimations[k] > 0) {
+          hitAnimations[k] = Math.max(0, hitAnimations[k] - 0.08);
+        }
+      }
+
+      // Draw background stage elements
+      drawStageBackground();
+
+      // Draw current character duo
+      const scene = SCENES[currentSceneIndex];
+      if (scene.id === 'kit') {
+        drawDogDuo();
+      } else if (scene.id === 'conga') {
+        drawMonkeyDuo();
+      } else if (scene.id === 'timpani') {
+        drawBearDuo();
+      } else if (scene.id === 'woodblock') {
+        drawRobotDuo();
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    function drawStageBackground() {
+      const grad = ctx2d.createLinearGradient(0, 0, 0, height);
+      grad.addColorStop(0, '#f8fafc');
+      grad.addColorStop(0.7, '#f1f5f9');
+      grad.addColorStop(1, '#e2e8f0');
+      ctx2d.fillStyle = grad;
+      ctx2d.fillRect(0, 0, width, height);
+
+      ctx2d.strokeStyle = '#cbd5e1';
+      ctx2d.lineWidth = 2;
+      ctx2d.beginPath();
+      ctx2d.moveTo(0, height - 30);
+      ctx2d.lineTo(width, height - 30);
+      ctx2d.stroke();
+    }
+
+    // SCENE 1: DRUM KIT (DOGS)
+    function drawDogDuo() {
+      const cx = width / 2;
+      const cy = height - 40;
+      const beatBob = isPlaying ? Math.sin(animTime * 8) * 6 : Math.sin(animTime * 2) * 2;
+
+      // 1. INSTRUMENTS
+      // Snare drum (Center)
+      const snareHit = hitAnimations[1];
+      const snareBounce = snareHit * 6;
+      ctx2d.fillStyle = '#0ea5e9';
+      ctx2d.fillRect(cx - 35, cy - 70 + snareBounce, 70, 45);
+      ctx2d.fillStyle = '#f8fafc';
+      ctx2d.beginPath();
+      ctx2d.ellipse(cx, cy - 70 + snareBounce, 35, 12, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.stroke();
+      // Snare stand
+      ctx2d.strokeStyle = '#64748b';
+      ctx2d.lineWidth = 3;
+      ctx2d.beginPath();
+      ctx2d.moveTo(cx, cy - 25);
+      ctx2d.lineTo(cx, cy);
+      ctx2d.moveTo(cx - 20, cy);
+      ctx2d.lineTo(cx + 20, cy);
+      ctx2d.stroke();
+
+      // Hi-hat cymbal (Right)
+      const hatHit = hitAnimations[0];
+      const hatTilt = hatHit * 0.15;
+      const hx = cx + 110;
+      const hy = cy - 90;
+      ctx2d.save();
+      ctx2d.translate(hx, hy);
+      ctx2d.rotate(hatTilt);
+      ctx2d.fillStyle = '#f59e0b';
+      ctx2d.beginPath();
+      ctx2d.ellipse(0, 0, 42, 8, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.stroke();
+      if (hatHit > 0.3) {
+        ctx2d.strokeStyle = '#fef08a';
+        ctx2d.lineWidth = 2;
+        ctx2d.beginPath();
+        ctx2d.arc(0, 0, 48 * (1.2 - hatHit * 0.4), 0, Math.PI * 2);
+        ctx2d.stroke();
+      }
+      ctx2d.restore();
+      // Hi-hat stand
+      ctx2d.strokeStyle = '#64748b';
+      ctx2d.lineWidth = 3;
+      ctx2d.beginPath();
+      ctx2d.moveTo(hx, hy);
+      ctx2d.lineTo(hx, cy);
+      ctx2d.stroke();
+
+      // Tom drum (Left)
+      const tomHit = hitAnimations[2];
+      const tx = cx - 110;
+      const ty = cy - 65 + tomHit * 8;
+      ctx2d.fillStyle = '#ef4444';
+      ctx2d.fillRect(tx - 32, ty, 64, 55);
+      ctx2d.fillStyle = '#f8fafc';
+      ctx2d.beginPath();
+      ctx2d.ellipse(tx, ty, 32, 11, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.stroke();
+
+      // 2. BIG DOG (Center-Left)
+      const dogX = cx - 30;
+      const dogY = cy - 130 + beatBob;
+      // Body
+      ctx2d.fillStyle = '#f59e0b';
+      ctx2d.beginPath();
+      ctx2d.ellipse(dogX, dogY + 40, 36, 50, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      // Head
+      ctx2d.beginPath();
+      ctx2d.arc(dogX, dogY, 34, 0, Math.PI * 2);
+      ctx2d.fill();
+      // Floppy ears
+      ctx2d.fillStyle = '#d97706';
+      ctx2d.beginPath();
+      ctx2d.ellipse(dogX - 32, dogY - 10, 14, 28, 0.4, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.beginPath();
+      ctx2d.ellipse(dogX + 32, dogY - 10, 14, 28, -0.4, 0, Math.PI * 2);
+      ctx2d.fill();
+      // Eyes & Muzzle
+      ctx2d.fillStyle = '#ffffff';
+      ctx2d.beginPath();
+      ctx2d.ellipse(dogX - 10, dogY - 5, 8, 11, 0, 0, Math.PI * 2);
+      ctx2d.ellipse(dogX + 10, dogY - 5, 8, 11, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#1e293b';
+      ctx2d.beginPath();
+      ctx2d.arc(dogX - 9, dogY - 5, 4, 0, Math.PI * 2);
+      ctx2d.arc(dogX + 9, dogY - 5, 4, 0, Math.PI * 2);
+      ctx2d.fill();
+      // Nose
+      ctx2d.fillStyle = '#1e293b';
+      ctx2d.beginPath();
+      ctx2d.ellipse(dogX, dogY + 8, 7, 5, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Big Dog Sticks & Arms
+      const leftStrike = snareHit * 25;
+      ctx2d.strokeStyle = '#d97706';
+      ctx2d.lineWidth = 9;
+      ctx2d.lineCap = 'round';
+      ctx2d.beginPath();
+      ctx2d.moveTo(dogX - 15, dogY + 30);
+      ctx2d.lineTo(cx - 15, cy - 85 + leftStrike);
+      ctx2d.stroke();
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 4;
+      ctx2d.beginPath();
+      ctx2d.moveTo(cx - 20, cy - 90 + leftStrike);
+      ctx2d.lineTo(cx - 5, cy - 70 + leftStrike);
+      ctx2d.stroke();
+
+      // Right Arm to Hi-Hat
+      const rightStrike = hatHit * 20;
+      ctx2d.strokeStyle = '#d97706';
+      ctx2d.lineWidth = 9;
+      ctx2d.beginPath();
+      ctx2d.moveTo(dogX + 25, dogY + 30);
+      ctx2d.lineTo(hx - 20, hy - 15 + rightStrike);
+      ctx2d.stroke();
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 4;
+      ctx2d.beginPath();
+      ctx2d.moveTo(hx - 25, hy - 25 + rightStrike);
+      ctx2d.lineTo(hx - 2, hy + rightStrike);
+      ctx2d.stroke();
+
+      // 3. PUPPY (Left side near Tom)
+      const pupX = tx - 30;
+      const pupY = cy - 90 + (isPlaying ? Math.sin(animTime * 8 + 1) * 5 : Math.sin(animTime * 2 + 1) * 2);
+      ctx2d.fillStyle = '#fbbf24';
+      ctx2d.beginPath();
+      ctx2d.arc(pupX, pupY, 24, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#b45309';
+      ctx2d.beginPath();
+      ctx2d.ellipse(pupX - 20, pupY - 6, 9, 18, 0.3, 0, Math.PI * 2);
+      ctx2d.ellipse(pupX + 18, pupY - 6, 9, 18, -0.3, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#1e293b';
+      ctx2d.beginPath();
+      ctx2d.arc(pupX - 6, pupY - 2, 3.5, 0, Math.PI * 2);
+      ctx2d.arc(pupX + 6, pupY - 2, 3.5, 0, Math.PI * 2);
+      ctx2d.fill();
+      // Puppy Arm striking tom
+      const tomStrike = tomHit * 18;
+      ctx2d.strokeStyle = '#d97706';
+      ctx2d.lineWidth = 7;
+      ctx2d.beginPath();
+      ctx2d.moveTo(pupX + 10, pupY + 14);
+      ctx2d.lineTo(tx - 5, ty - 10 + tomStrike);
+      ctx2d.stroke();
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 3;
+      ctx2d.beginPath();
+      ctx2d.moveTo(tx - 12, ty - 15 + tomStrike);
+      ctx2d.lineTo(tx, ty + tomStrike);
+      ctx2d.stroke();
+    }
+
+    // SCENE 2: CONGAS (MONKEYS)
+    function drawMonkeyDuo() {
+      const cx = width / 2;
+      const cy = height - 40;
+      const bob = isPlaying ? Math.sin(animTime * 10) * 7 : Math.sin(animTime * 2.5) * 3;
+
+      // High Conga
+      const hCongaHit = hitAnimations[1];
+      const hx = cx - 35;
+      const hy = cy - 80 + hCongaHit * 7;
+      ctx2d.fillStyle = '#ea580c';
+      ctx2d.fillRect(hx - 22, hy, 44, 75);
+      ctx2d.fillStyle = '#fed7aa';
+      ctx2d.beginPath();
+      ctx2d.ellipse(hx, hy, 22, 9, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.stroke();
+
+      // Low Conga
+      const lCongaHit = hitAnimations[2];
+      const lx = cx + 35;
+      const ly = cy - 80 + lCongaHit * 7;
+      ctx2d.fillStyle = '#0284c7';
+      ctx2d.fillRect(lx - 25, ly, 50, 75);
+      ctx2d.fillStyle = '#bae6fd';
+      ctx2d.beginPath();
+      ctx2d.ellipse(lx, ly, 25, 10, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.stroke();
+
+      // Cowbell
+      const cowHit = hitAnimations[0];
+      const cbx = cx + 120;
+      const cby = cy - 85 + cowHit * 6;
+      ctx2d.fillStyle = '#334155';
+      ctx2d.beginPath();
+      ctx2d.moveTo(cbx - 12, cby + 24);
+      ctx2d.lineTo(cbx + 12, cby + 24);
+      ctx2d.lineTo(cbx + 8, cby);
+      ctx2d.lineTo(cbx - 8, cby);
+      ctx2d.closePath();
+      ctx2d.fill();
+
+      // Big Ape
+      const apeX = cx;
+      const apeY = cy - 135 + bob;
+      ctx2d.fillStyle = '#57534e';
+      ctx2d.beginPath();
+      ctx2d.arc(apeX, apeY, 42, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#d6d3d1';
+      ctx2d.beginPath();
+      ctx2d.arc(apeX - 42, apeY, 14, 0, Math.PI * 2);
+      ctx2d.arc(apeX + 42, apeY, 14, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#fed7aa';
+      ctx2d.beginPath();
+      ctx2d.ellipse(apeX, apeY + 8, 28, 24, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#1c1917';
+      ctx2d.beginPath();
+      ctx2d.arc(apeX - 11, apeY + 2, 4.5, 0, Math.PI * 2);
+      ctx2d.arc(apeX + 11, apeY + 2, 4.5, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Big Ape Hands slapping congas
+      const slapL = hCongaHit * 18;
+      ctx2d.strokeStyle = '#57534e';
+      ctx2d.lineWidth = 10;
+      ctx2d.beginPath();
+      ctx2d.moveTo(apeX - 30, apeY + 25);
+      ctx2d.lineTo(hx, hy - 5 + slapL);
+      ctx2d.stroke();
+      ctx2d.fillStyle = '#fed7aa';
+      ctx2d.beginPath();
+      ctx2d.arc(hx, hy - 5 + slapL, 9, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      const slapR = lCongaHit * 18;
+      ctx2d.strokeStyle = '#57534e';
+      ctx2d.lineWidth = 10;
+      ctx2d.beginPath();
+      ctx2d.moveTo(apeX + 30, apeY + 25);
+      ctx2d.lineTo(lx, ly - 5 + slapR);
+      ctx2d.stroke();
+      ctx2d.fillStyle = '#fed7aa';
+      ctx2d.beginPath();
+      ctx2d.arc(lx, ly - 5 + slapR, 9, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Little Monkey
+      const monkX = cbx + 28;
+      const monkY = cy - 90 + (isPlaying ? Math.sin(animTime * 10 + 1) * 6 : 0);
+      ctx2d.fillStyle = '#78716c';
+      ctx2d.beginPath();
+      ctx2d.arc(monkX, monkY, 20, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#fbcfe8';
+      ctx2d.beginPath();
+      ctx2d.arc(monkX + 18, monkY - 4, 7, 0, Math.PI * 2);
+      ctx2d.fill();
+      const cowStrike = cowHit * 15;
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 3;
+      ctx2d.beginPath();
+      ctx2d.moveTo(monkX - 8, monkY + 8);
+      ctx2d.lineTo(cbx + 4, cby + 10 + cowStrike);
+      ctx2d.stroke();
+    }
+
+    // SCENE 3: TIMPANI (BEARS)
+    function drawBearDuo() {
+      const cx = width / 2;
+      const cy = height - 40;
+      const bob = isPlaying ? Math.sin(animTime * 7) * 5 : Math.sin(animTime * 2) * 2;
+
+      // High Timpani
+      const hHit = hitAnimations[1];
+      const hx = cx - 55;
+      const hy = cy - 75 + hHit * 7;
+      ctx2d.fillStyle = '#7c3aed';
+      ctx2d.beginPath();
+      ctx2d.ellipse(hx, hy + 20, 36, 40, 0, 0, Math.PI);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#ddd6fe';
+      ctx2d.beginPath();
+      ctx2d.ellipse(hx, hy + 20, 36, 12, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Low Timpani
+      const lHit = hitAnimations[2];
+      const lx = cx + 55;
+      const ly = cy - 75 + lHit * 7;
+      ctx2d.fillStyle = '#059669';
+      ctx2d.beginPath();
+      ctx2d.ellipse(lx, ly + 22, 42, 44, 0, 0, Math.PI);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#a7f3d0';
+      ctx2d.beginPath();
+      ctx2d.ellipse(lx, ly + 22, 42, 14, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Triangle
+      const triHit = hitAnimations[0];
+      const tx = cx - 120;
+      const ty = cy - 100 + triHit * 6;
+      ctx2d.strokeStyle = '#ec4899';
+      ctx2d.lineWidth = 4;
+      ctx2d.beginPath();
+      ctx2d.moveTo(tx, ty);
+      ctx2d.lineTo(tx + 22, ty + 36);
+      ctx2d.lineTo(tx - 22, ty + 36);
+      ctx2d.closePath();
+      ctx2d.stroke();
+
+      // Big Bear
+      const bearX = cx;
+      const bearY = cy - 145 + bob;
+      ctx2d.fillStyle = '#451a03';
+      ctx2d.beginPath();
+      ctx2d.arc(bearX, bearY, 44, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#78350f';
+      ctx2d.beginPath();
+      ctx2d.arc(bearX - 36, bearY - 32, 15, 0, Math.PI * 2);
+      ctx2d.arc(bearX + 36, bearY - 32, 15, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#fde68a';
+      ctx2d.beginPath();
+      ctx2d.ellipse(bearX, bearY + 12, 22, 16, 0, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#1c1917';
+      ctx2d.beginPath();
+      ctx2d.ellipse(bearX, bearY + 7, 7, 5, 0, 0, Math.PI * 2);
+      ctx2d.arc(bearX - 14, bearY - 4, 4, 0, Math.PI * 2);
+      ctx2d.arc(bearX + 14, bearY - 4, 4, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Bear Mallets
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 4;
+      const mLeft = hHit * 22;
+      ctx2d.beginPath();
+      ctx2d.moveTo(bearX - 35, bearY + 30);
+      ctx2d.lineTo(hx, hy + 16 + mLeft);
+      ctx2d.stroke();
+      ctx2d.fillStyle = '#f43f5e';
+      ctx2d.beginPath();
+      ctx2d.arc(hx, hy + 16 + mLeft, 7, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      const mRight = lHit * 22;
+      ctx2d.beginPath();
+      ctx2d.moveTo(bearX + 35, bearY + 30);
+      ctx2d.lineTo(lx, ly + 18 + mRight);
+      ctx2d.stroke();
+      ctx2d.beginPath();
+      ctx2d.arc(lx, ly + 18 + mRight, 7, 0, Math.PI * 2);
+      ctx2d.fill();
+
+      // Baby Bear
+      const babyX = tx - 30;
+      const babyY = cy - 80;
+      ctx2d.fillStyle = '#78350f';
+      ctx2d.beginPath();
+      ctx2d.arc(babyX, babyY, 22, 0, Math.PI * 2);
+      ctx2d.fill();
+      const triStrike = triHit * 14;
+      ctx2d.strokeStyle = '#e2e8f0';
+      ctx2d.lineWidth = 3;
+      ctx2d.beginPath();
+      ctx2d.moveTo(babyX + 10, babyY + 5);
+      ctx2d.lineTo(tx, ty + 18 + triStrike);
+      ctx2d.stroke();
+    }
+
+    // SCENE 4: WOODBLOCKS (ROBOTS)
+    function drawRobotDuo() {
+      const cx = width / 2;
+      const cy = height - 40;
+      const bob = isPlaying ? Math.sin(animTime * 11) * 5 : 0;
+
+      // Woodblocks
+      const bHighHit = hitAnimations[1];
+      const bLowHit = hitAnimations[2];
+      ctx2d.fillStyle = '#4f46e5';
+      ctx2d.fillRect(cx - 50, cy - 65 + bHighHit * 6, 42, 24);
+      ctx2d.fillStyle = '#e11d48';
+      ctx2d.fillRect(cx + 8, cy - 65 + bLowHit * 6, 52, 24);
+
+      // Claves
+      const clHit = hitAnimations[0];
+      const clX = cx + 115;
+      const clY = cy - 80 + clHit * 6;
+      ctx2d.fillStyle = '#0d9488';
+      ctx2d.fillRect(clX - 8, clY, 16, 40);
+
+      // Big Robot
+      const botX = cx;
+      const botY = cy - 130 + bob;
+      ctx2d.fillStyle = '#0ea5e9';
+      ctx2d.fillRect(botX - 35, botY - 35, 70, 60);
+      ctx2d.strokeStyle = '#64748b';
+      ctx2d.lineWidth = 4;
+      ctx2d.beginPath();
+      ctx2d.moveTo(botX, botY - 35);
+      ctx2d.lineTo(botX, botY - 55);
+      ctx2d.stroke();
+      ctx2d.fillStyle = isPlaying ? '#facc15' : '#94a3b8';
+      ctx2d.beginPath();
+      ctx2d.arc(botX, botY - 58, 8, 0, Math.PI * 2);
+      ctx2d.fill();
+      ctx2d.fillStyle = '#1e293b';
+      ctx2d.fillRect(botX - 26, botY - 18, 52, 16);
+      ctx2d.fillStyle = '#38bdf8';
+      ctx2d.fillRect(botX - 22, botY - 14, 18, 8);
+      ctx2d.fillRect(botX + 4, botY - 14, 18, 8);
+
+      // Robot arms
+      ctx2d.strokeStyle = '#64748b';
+      ctx2d.lineWidth = 5;
+      const armL = bHighHit * 16;
+      ctx2d.beginPath();
+      ctx2d.moveTo(botX - 35, botY + 15);
+      ctx2d.lineTo(cx - 30, cy - 65 + armL);
+      ctx2d.stroke();
+      const armR = bLowHit * 16;
+      ctx2d.beginPath();
+      ctx2d.moveTo(botX + 35, botY + 15);
+      ctx2d.lineTo(cx + 34, cy - 65 + armR);
+      ctx2d.stroke();
+
+      // Mini Robot
+      const miniX = clX + 25;
+      const miniY = cy - 85;
+      ctx2d.fillStyle = '#14b8a6';
+      ctx2d.fillRect(miniX - 16, miniY - 16, 32, 32);
+      ctx2d.fillStyle = '#1e293b';
+      ctx2d.fillRect(miniX - 10, miniY - 6, 20, 8);
+    }
+
+    // Tap on stage to play drums
+    document.getElementById('stageWrap').addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.nav-arrow')) return;
+      const rect = canvas.getBoundingClientRect();
+      const clickX = (e.clientX - rect.left) / rect.width;
+      if (clickX < 0.35) {
+        playTrigger(1);
+      } else if (clickX > 0.65) {
+        playTrigger(0);
+      } else {
+        playTrigger(2);
+      }
+    });
+
+    // EVENT LISTENERS
+    document.getElementById('btnPlayPause').addEventListener('click', togglePlayback);
+    document.getElementById('btnPrev').addEventListener('click', () => switchScene(currentSceneIndex - 1));
+    document.getElementById('btnNext').addEventListener('click', () => switchScene(currentSceneIndex + 1));
+    document.getElementById('btnClear').addEventListener('click', () => {
+      const scene = SCENES[currentSceneIndex];
+      patterns[scene.id] = [
+        new Array(scene.steps).fill(0),
+        new Array(scene.steps).fill(0),
+        new Array(scene.steps).fill(0)
+      ];
+      renderSequencer();
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        togglePlayback();
+      } else if (e.code === 'ArrowLeft') {
+        switchScene(currentSceneIndex - 1);
+      } else if (e.code === 'ArrowRight') {
+        switchScene(currentSceneIndex + 1);
+      }
+    });
+
+    // Notify parent if inside iframe
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage('loaded', '*');
+      window.parent.postMessage('ready', '*');
+    }
+
+    // Init
+    resizeCanvas();
+    preloadAllSamples();
+    renderSequencer();
+    requestAnimationFrame(renderLoop);
+  </script>
 </body>
 </html>
