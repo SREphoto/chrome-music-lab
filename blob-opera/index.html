@@ -1,15 +1,1112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Blob Opera - Laura's Music App</title>
-    <style>
-        body, html { margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000; }
-        iframe { width:100%; height:100%; border:none; display:block; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Blob Opera - Laura's Music App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #09090f;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #fff;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    /* Stage Background & Lighting */
+    .opera-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at 50% 35%, #1e1533 0%, #0d0a17 65%, #05040a 100%);
+      overflow: hidden;
+    }
+
+    /* Ambient Stage Lights */
+    .stage-glow {
+      position: absolute;
+      top: -20%;
+      left: 20%;
+      width: 60%;
+      height: 70%;
+      background: radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.15), rgba(139, 92, 246, 0.1) 50%, transparent 80%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .spotlight {
+      position: absolute;
+      top: 0;
+      width: 25%;
+      height: 85%;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: screen;
+      z-index: 1;
+      transition: opacity 0.3s;
+    }
+    .spot-0 { left: 5%; background: radial-gradient(ellipse at 50% 0%, #a855f7 0%, transparent 70%); }
+    .spot-1 { left: 28%; background: radial-gradient(ellipse at 50% 0%, #38bdf8 0%, transparent 70%); }
+    .spot-2 { left: 52%; background: radial-gradient(ellipse at 50% 0%, #fbbf24 0%, transparent 70%); }
+    .spot-3 { left: 75%; background: radial-gradient(ellipse at 50% 0%, #f43f5e 0%, transparent 70%); }
+
+    /* Top Navigation & Controls */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(180deg, rgba(9, 9, 15, 0.9) 0%, rgba(9, 9, 15, 0) 100%);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ec4899, #a855f7, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .title-group p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .control-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .control-pill:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .control-pill.active {
+      background: linear-gradient(135deg, #ec4899, #be185d);
+      border-color: #f472b6;
+      color: #fff;
+      box-shadow: 0 0 16px rgba(236, 72, 153, 0.5);
+    }
+
+    .btn-ext {
+      color: #a855f7;
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.1);
+      text-decoration: none;
+    }
+    .btn-ext:hover {
+      background: rgba(168, 85, 247, 0.25);
+      color: #e9d5ff;
+    }
+
+    /* Main Stage Canvas */
+    .stage-canvas-wrap {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    #blobCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+    #blobCanvas:active {
+      cursor: grabbing;
+    }
+
+    /* Tutorial Drag Tip */
+    .drag-hint {
+      position: absolute;
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      pointer-events: none;
+      z-index: 20;
+      animation: floatHint 3s infinite ease-in-out;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+    @keyframes floatHint {
+      0%, 100% { transform: translate(-50%, 0); }
+      50% { transform: translate(-50%, -6px); }
+    }
+
+    /* Bottom Control Bar */
+    .bottom-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(0deg, rgba(9, 9, 15, 0.95) 0%, rgba(9, 9, 15, 0) 100%);
+    }
+
+    .song-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .song-btn {
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .song-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+    }
+    .song-btn.active {
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      border-color: #7dd3fc;
+      color: #041b36;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.5);
+    }
+
+    .voice-cards {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .voice-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .voice-tag.v-bass { color: #c084fc; border-color: rgba(192, 132, 252, 0.3); }
+    .voice-tag.v-tenor { color: #38bdf8; border-color: rgba(56, 189, 248, 0.3); }
+    .voice-tag.v-mezzo { color: #fbbf24; border-color: rgba(251, 191, 36, 0.3); }
+    .voice-tag.v-soprano { color: #f472b6; border-color: rgba(244, 114, 182, 0.3); }
+    .voice-tag.muted { opacity: 0.4; text-decoration: line-through; }
+
+    @media (max-width: 768px) {
+      .top-bar { padding: 0.75rem 1rem; }
+      .bottom-bar { padding: 0.75rem 1rem; }
+      .drag-hint { font-size: 0.78rem; width: 90%; text-align: center; }
+      .btn-ext span { display: none; }
+    }
+  </style>
 </head>
 <body>
-    <iframe src="https://gacembed.withgoogle.com/blob-opera?axl=1" allow="autoplay *; microphone *; midi *; camera *; accelerometer; gyroscope; fullscreen"></iframe>
+  <div class="opera-stage">
+    <div class="stage-glow"></div>
+    <div class="spotlight spot-0"></div>
+    <div class="spotlight spot-1"></div>
+    <div class="spotlight spot-2"></div>
+    <div class="spotlight spot-3"></div>
+
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <a href="../" class="btn-back" title="Back to Laura's Music App">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Exit Stage</span>
+        </a>
+        <div class="title-group">
+          <h1>Blob Opera</h1>
+          <p>Direct your 4-part choir in real time</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="control-pill active" id="harmonizeToggle" title="Toggle automatic 4-part choir harmony">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          <span id="harmText">Harmonize: ON</span>
+        </button>
+
+        <a href="https://artsandculture.google.com/experiment/blob-opera/AAHWrq360NcGbw" target="_blank" class="control-pill btn-ext" title="Launch Original Google Arts & Culture Machine Learning Model">
+          <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          <span>Google AI Version</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Interactive Canvas -->
+    <div class="stage-canvas-wrap">
+      <div class="drag-hint" id="dragHint">
+        🎵 Drag any Blob UP/DOWN for pitch, LEFT/RIGHT for vowels ("Oo" • "Ah" • "Ee")
+      </div>
+      <canvas id="blobCanvas"></canvas>
+    </div>
+
+    <!-- Bottom Bar Controls -->
+    <footer class="bottom-bar">
+      <div class="song-selector">
+        <span style="font-size:0.8rem; font-weight:800; color:#94a3b8; text-transform:uppercase;">Opera Pieces:</span>
+        <button class="song-btn" onclick="playOperaSong('habanera', this)">Habanera (Carmen)</button>
+        <button class="song-btn" onclick="playOperaSong('solemio', this)">O Sole Mio</button>
+        <button class="song-btn" onclick="playOperaSong('ode', this)">Ode to Joy</button>
+        <button class="song-btn" onclick="playOperaSong('valkyrie', this)">Ride of Valkyries</button>
+        <button class="song-btn" id="stopSongBtn" onclick="stopOperaSong()" style="display:none; background:rgba(239, 68, 68, 0.2); border-color:#ef4444; color:#fca5a5;">■ Stop Song</button>
+      </div>
+
+      <div class="voice-cards">
+        <div class="voice-tag v-bass" onclick="toggleMute(0)" title="Click to mute/unmute Bass">● Bass</div>
+        <div class="voice-tag v-tenor" onclick="toggleMute(1)" title="Click to mute/unmute Tenor">● Tenor</div>
+        <div class="voice-tag v-mezzo" onclick="toggleMute(2)" title="Click to mute/unmute Mezzo">● Mezzo</div>
+        <div class="voice-tag v-soprano" onclick="toggleMute(3)" title="Click to mute/unmute Soprano">● Soprano</div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // ============================================================
+    // WEB AUDIO VOCAL SYNTHESIS ENGINE (FORMANT FILTER MODEL)
+    // ============================================================
+    let audioCtx = null;
+    let masterCompressor = null;
+    let masterGain = null;
+
+    function initAudio() {
+      if (audioCtx) return audioCtx;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AC();
+
+      masterCompressor = audioCtx.createDynamicsCompressor();
+      masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
+      masterCompressor.knee.setValueAtTime(14, audioCtx.currentTime);
+      masterCompressor.ratio.setValueAtTime(8, audioCtx.currentTime);
+      masterCompressor.attack.setValueAtTime(0.003, audioCtx.currentTime);
+      masterCompressor.release.setValueAtTime(0.25, audioCtx.currentTime);
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.85, audioCtx.currentTime);
+
+      masterCompressor.connect(masterGain);
+      masterGain.connect(audioCtx.destination);
+      return audioCtx;
+    }
+
+    // Singing Voice Model for a Blob
+    class BlobVoice {
+      constructor(type, baseFreq, minFreq, maxFreq, color) {
+        this.type = type;
+        this.baseFreq = baseFreq;
+        this.minFreq = minFreq;
+        this.maxFreq = maxFreq;
+        this.color = color;
+        this.muted = false;
+
+        // Audio Nodes
+        this.osc = null;
+        this.vibratoOsc = null;
+        this.vibratoGain = null;
+        this.f1 = null;
+        this.f2 = null;
+        this.gain = null;
+        this.isPlaying = false;
+      }
+
+      start() {
+        const actx = initAudio();
+        if (actx.state === 'suspended') actx.resume();
+
+        if (this.isPlaying) return;
+
+        // Pulse/Saw hybrid oscillator for rich vocal harmonics
+        this.osc = actx.createOscillator();
+        this.osc.type = (this.type === 'Bass') ? 'sawtooth' : 'triangle';
+        this.osc.frequency.setValueAtTime(this.baseFreq, actx.currentTime);
+
+        // Vocal vibrato LFO (5.4 Hz)
+        this.vibratoOsc = actx.createOscillator();
+        this.vibratoOsc.frequency.setValueAtTime(5.4, actx.currentTime);
+        this.vibratoGain = actx.createGain();
+        this.vibratoGain.gain.setValueAtTime(2.2, actx.currentTime);
+        this.vibratoOsc.connect(this.vibratoGain);
+        this.vibratoGain.connect(this.osc.frequency);
+        this.vibratoOsc.start();
+
+        // Formant Filters: F1 (Throat cavity) & F2 (Mouth cavity)
+        this.f1 = actx.createBiquadFilter();
+        this.f1.type = 'bandpass';
+        this.f1.Q.setValueAtTime(4.5, actx.currentTime);
+        this.f1.frequency.setValueAtTime(600, actx.currentTime);
+
+        this.f2 = actx.createBiquadFilter();
+        this.f2.type = 'bandpass';
+        this.f2.Q.setValueAtTime(5.5, actx.currentTime);
+        this.f2.frequency.setValueAtTime(1400, actx.currentTime);
+
+        this.gain = actx.createGain();
+        this.gain.gain.setValueAtTime(0.0001, actx.currentTime);
+        this.gain.gain.linearRampToValueAtTime(this.muted ? 0 : 0.28, actx.currentTime + 0.05);
+
+        this.osc.connect(this.f1);
+        this.osc.connect(this.f2);
+        this.f1.connect(this.gain);
+        this.f2.connect(this.gain);
+        this.gain.connect(masterCompressor);
+
+        this.osc.start();
+        this.isPlaying = true;
+      }
+
+      update(freq, vowelParam) { // vowelParam: 0 (Oo) to 0.5 (Ah) to 1.0 (Ee)
+        if (!this.isPlaying) this.start();
+        const actx = audioCtx;
+        if (!actx) return;
+
+        // Clamp frequency to vocal range
+        const clampedFreq = Math.max(this.minFreq, Math.min(this.maxFreq, freq));
+        this.osc.frequency.setTargetAtTime(clampedFreq, actx.currentTime, 0.04);
+
+        // Formant interpolation:
+        // Oo: F1 = 320Hz,  F2 = 800Hz
+        // Ah: F1 = 750Hz,  F2 = 1250Hz
+        // Ee: F1 = 360Hz,  F2 = 2400Hz
+        let targetF1, targetF2;
+        if (vowelParam < 0.5) {
+          const t = vowelParam / 0.5;
+          targetF1 = 320 + t * (750 - 320);
+          targetF2 = 800 + t * (1250 - 800);
+        } else {
+          const t = (vowelParam - 0.5) / 0.5;
+          targetF1 = 750 - t * (750 - 360);
+          targetF2 = 1250 + t * (2400 - 1250);
+        }
+
+        this.f1.frequency.setTargetAtTime(targetF1, actx.currentTime, 0.03);
+        this.f2.frequency.setTargetAtTime(targetF2, actx.currentTime, 0.03);
+
+        // Adjust gain dynamically
+        const targetGain = this.muted ? 0 : 0.26;
+        this.gain.gain.setTargetAtTime(targetGain, actx.currentTime, 0.03);
+      }
+
+      stop() {
+        if (!this.isPlaying) return;
+        const actx = audioCtx;
+        if (actx && this.gain) {
+          this.gain.gain.linearRampToValueAtTime(0.0001, actx.currentTime + 0.08);
+          setTimeout(() => {
+            if (this.osc) {
+              try { this.osc.stop(); } catch(e){}
+              try { this.vibratoOsc.stop(); } catch(e){}
+            }
+            this.isPlaying = false;
+          }, 90);
+        } else {
+          this.isPlaying = false;
+        }
+      }
+    }
+
+    // Define the 4 Blob Singers
+    const BLOBS = [
+      {
+        name: 'Bass',
+        color: '#8b5cf6',
+        colorDark: '#6d28d9',
+        minFreq: 75,
+        maxFreq: 175,
+        baseFreq: 98,   // G2
+        radius: 65,
+        scale: 1.15,
+        voice: new BlobVoice('Bass', 98, 70, 200, '#8b5cf6')
+      },
+      {
+        name: 'Tenor',
+        color: '#0ea5e9',
+        colorDark: '#0284c7',
+        minFreq: 130,
+        maxFreq: 330,
+        baseFreq: 196,  // G3
+        radius: 56,
+        scale: 1.0,
+        voice: new BlobVoice('Tenor', 196, 120, 350, '#0ea5e9')
+      },
+      {
+        name: 'Mezzo',
+        color: '#f59e0b',
+        colorDark: '#d97706',
+        minFreq: 196,
+        maxFreq: 494,
+        baseFreq: 293.66, // D4
+        radius: 50,
+        scale: 0.9,
+        voice: new BlobVoice('Mezzo', 293.66, 180, 520, '#f59e0b')
+      },
+      {
+        name: 'Soprano',
+        color: '#ec4899',
+        colorDark: '#db2777',
+        minFreq: 261,
+        maxFreq: 784,
+        baseFreq: 392,  // G4
+        radius: 46,
+        scale: 0.85,
+        voice: new BlobVoice('Soprano', 392, 240, 850, '#ec4899')
+      }
+    ];
+
+    // Canvas & State Setup
+    const canvas = document.getElementById('blobCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    let autoHarmonize = true;
+    let activeDragBlob = null;
+    let dragPointerId = null;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let songPlaying = false;
+    let songIntervals = [];
+
+    // Blob Physical Animation State
+    const blobStates = BLOBS.map((b, i) => ({
+      x: 0,
+      y: 0,
+      baseY: 0,
+      targetY: 0,
+      velocityY: 0,
+      stretchX: 1,
+      stretchY: 1,
+      mouthOpen: 0,
+      targetMouth: 0,
+      vowel: 0.5,      // 0 = Oo, 0.5 = Ah, 1.0 = Ee
+      pitch: b.baseFreq,
+      isSinging: false,
+      blinkTimer: Math.random() * 200 + 100,
+      isBlinking: false,
+      idleTimer: i * 1.5,
+      noteParticles: []
+    }));
+
+    function resize() {
+      width = canvas.parentElement.clientWidth;
+      height = canvas.parentElement.clientHeight;
+      canvas.width = width * window.devicePixelRatio;
+      canvas.height = height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      // Position blobs across stage
+      const spacing = width / 5;
+      blobStates.forEach((st, i) => {
+        st.x = spacing * (i + 1);
+        st.baseY = height * 0.72;
+        st.y = st.baseY;
+        st.targetY = st.baseY;
+      });
+    }
+    window.addEventListener('resize', resize);
+
+    // ============================================================
+    // CANVAS RENDERING & ELASTIC SPRING PHYSICS
+    // ============================================================
+    function updatePhysics() {
+      blobStates.forEach((st, i) => {
+        const b = BLOBS[i];
+
+        // Spring physics for vertical stretch / bob
+        const dy = st.targetY - st.y;
+        st.velocityY += dy * 0.18;
+        st.velocityY *= 0.75;
+        st.y += st.velocityY;
+
+        // Compute stretch factor based on displacement
+        const stretchAmount = (st.baseY - st.y) / (height * 0.35);
+        if (st.isSinging) {
+          st.stretchY = 1 + stretchAmount * 0.9;
+          st.stretchX = 1 / Math.sqrt(st.stretchY);
+          st.targetMouth = 0.85;
+        } else {
+          // Idle breathing bob
+          st.idleTimer += 0.04;
+          const idleBob = Math.sin(st.idleTimer) * 4;
+          st.stretchY = 1 + (idleBob / 80);
+          st.stretchX = 1 - (idleBob / 120);
+          st.targetMouth = 0;
+          st.targetY = st.baseY + idleBob;
+        }
+
+        // Smooth mouth interpolation
+        st.mouthOpen += (st.targetMouth - st.mouthOpen) * 0.2;
+
+        // Blinking
+        st.blinkTimer--;
+        if (st.blinkTimer <= 0) {
+          st.isBlinking = true;
+          if (st.blinkTimer <= -8) {
+            st.isBlinking = false;
+            st.blinkTimer = Math.random() * 250 + 120;
+          }
+        }
+
+        // Note particles when singing
+        if (st.isSinging && Math.random() < 0.25) {
+          st.noteParticles.push({
+            x: st.x + (Math.random() - 0.5) * 20,
+            y: st.y - b.radius * st.stretchY - 10,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: -2 - Math.random() * 2,
+            alpha: 1,
+            symbol: ['♪', '♫', '♬'][Math.floor(Math.random() * 3)]
+          });
+        }
+
+        // Update particles
+        for (let pIdx = st.noteParticles.length - 1; pIdx >= 0; pIdx--) {
+          const p = st.noteParticles[pIdx];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.02;
+          if (p.alpha <= 0) {
+            st.noteParticles.splice(pIdx, 1);
+          }
+        }
+      });
+    }
+
+    function drawStageFloor() {
+      // Warm stage perspective floor
+      ctx.save();
+      const grad = ctx.createLinearGradient(0, height * 0.65, 0, height);
+      grad.addColorStop(0, 'rgba(15, 12, 28, 0.4)');
+      grad.addColorStop(0.5, 'rgba(28, 20, 48, 0.7)');
+      grad.addColorStop(1, 'rgba(12, 8, 22, 0.95)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, height * 0.65, width, height * 0.35);
+
+      // Footlights glow line
+      ctx.beginPath();
+      ctx.moveTo(0, height * 0.65);
+      ctx.lineTo(width, height * 0.65);
+      ctx.strokeStyle = 'rgba(236, 72, 153, 0.25)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBlob(i) {
+      const b = BLOBS[i];
+      const st = blobStates[i];
+
+      const r = b.radius;
+      const rx = r * st.stretchX;
+      const ry = r * st.stretchY * 1.35;
+
+      ctx.save();
+      ctx.translate(st.x, st.y);
+
+      // 1. Shadow beneath blob on floor
+      const shadowScale = Math.max(0.3, 1 - (st.baseY - st.y) / (height * 0.5));
+      ctx.beginPath();
+      ctx.ellipse(0, st.baseY - st.y + 20, rx * 1.2 * shadowScale, 14 * shadowScale, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.fill();
+
+      // 2. Jelly Body
+      ctx.beginPath();
+      // Organic rounded egg-blob shape
+      ctx.moveTo(-rx, 0);
+      ctx.bezierCurveTo(-rx, -ry * 0.8, -rx * 0.65, -ry * 1.3, 0, -ry * 1.3);
+      ctx.bezierCurveTo(rx * 0.65, -ry * 1.3, rx, -ry * 0.8, rx, 0);
+      ctx.bezierCurveTo(rx, ry * 0.6, rx * 0.6, ry * 0.85, 0, ry * 0.85);
+      ctx.bezierCurveTo(-rx * 0.6, ry * 0.85, -rx, ry * 0.6, -rx, 0);
+      ctx.closePath();
+
+      // Vibrant Gradient Fill
+      const bodyGrad = ctx.createRadialGradient(-rx * 0.25, -ry * 0.5, r * 0.2, 0, 0, ry * 1.2);
+      bodyGrad.addColorStop(0, '#ffffff');
+      bodyGrad.addColorStop(0.2, b.color);
+      bodyGrad.addColorStop(0.85, b.colorDark);
+      bodyGrad.addColorStop(1, '#05030a');
+      ctx.fillStyle = bodyGrad;
+      ctx.fill();
+
+      // Glow outline when singing
+      if (st.isSinging) {
+        ctx.strokeStyle = b.color;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = b.color;
+        ctx.shadowBlur = 24;
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // 3. Cheeks (blush)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.beginPath();
+      ctx.ellipse(-rx * 0.55, -ry * 0.35, rx * 0.2, ry * 0.1, 0, 0, Math.PI * 2);
+      ctx.ellipse(rx * 0.55, -ry * 0.35, rx * 0.2, ry * 0.1, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 4. Cartoon Eyes
+      const eyeOffsetY = -ry * 0.7;
+      const eyeSpacing = rx * 0.38;
+      const eyeRadius = rx * 0.24;
+
+      if (st.isBlinking) {
+        // Closed eyelids
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-eyeSpacing - eyeRadius * 0.8, eyeOffsetY);
+        ctx.quadraticCurveTo(-eyeSpacing, eyeOffsetY + 5, -eyeSpacing + eyeRadius * 0.8, eyeOffsetY);
+        ctx.moveTo(eyeSpacing - eyeRadius * 0.8, eyeOffsetY);
+        ctx.quadraticCurveTo(eyeSpacing, eyeOffsetY + 5, eyeSpacing + eyeRadius * 0.8, eyeOffsetY);
+        ctx.stroke();
+      } else {
+        // Eye whites
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-eyeSpacing, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+        ctx.arc(eyeSpacing, eyeOffsetY, eyeRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Pupils look up when stretched high
+        const pupilLookY = st.isSinging ? -eyeRadius * 0.35 : 0;
+        const pupilLookX = (st.vowel - 0.5) * eyeRadius * 0.6;
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(-eyeSpacing + pupilLookX, eyeOffsetY + pupilLookY, eyeRadius * 0.45, 0, Math.PI * 2);
+        ctx.arc(eyeSpacing + pupilLookX, eyeOffsetY + pupilLookY, eyeRadius * 0.45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Eye highlights
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-eyeSpacing + pupilLookX - 2, eyeOffsetY + pupilLookY - 2, eyeRadius * 0.18, 0, Math.PI * 2);
+        ctx.arc(eyeSpacing + pupilLookX - 2, eyeOffsetY + pupilLookY - 2, eyeRadius * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 5. Singing Mouth
+      const mouthY = -ry * 0.35;
+      const mouthOpen = st.mouthOpen;
+
+      if (mouthOpen > 0.05) {
+        // Open singing mouth
+        // Width and height depend on vowel:
+        // Oo = narrow round (vowel=0), Ah = tall oval (vowel=0.5), Ee = wide slit (vowel=1.0)
+        let mw = rx * (0.35 + st.vowel * 0.45);
+        let mh = ry * (0.15 + (1 - Math.abs(st.vowel - 0.5) * 1.5) * 0.3) * mouthOpen;
+        mh = Math.max(8, mh);
+
+        ctx.fillStyle = '#1e1124';
+        ctx.beginPath();
+        ctx.ellipse(0, mouthY, mw, mh, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Little pink tongue
+        ctx.fillStyle = '#f43f5e';
+        ctx.beginPath();
+        ctx.ellipse(0, mouthY + mh * 0.45, mw * 0.55, mh * 0.4, 0, 0, Math.PI);
+        ctx.fill();
+
+        // Upper tooth (for wide Ee vowel)
+        if (st.vowel > 0.6) {
+          ctx.fillStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.rect(-mw * 0.35, mouthY - mh + 1, mw * 0.7, mh * 0.35);
+          ctx.fill();
+        }
+      } else {
+        // Resting smile
+        ctx.strokeStyle = '#1e1124';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, mouthY - 4, rx * 0.25, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+      }
+
+      // 6. Draw floating musical notes
+      st.noteParticles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.font = 'bold 20px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.symbol, p.x - st.x, p.y - st.y);
+        ctx.restore();
+      });
+
+      // 7. Voice Name Tag below
+      ctx.font = 'bold 13px Outfit, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = st.isSinging ? '#ffffff' : 'rgba(255, 255, 255, 0.6)';
+      ctx.fillText(b.name, 0, 32);
+
+      ctx.restore();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+      drawStageFloor();
+      updatePhysics();
+
+      // Draw all 4 blobs
+      for (let i = 0; i < 4; i++) {
+        drawBlob(i);
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    // ============================================================
+    // 4-PART CHOIR HARMONY & TOUCH / DRAG INTERACTION
+    // ============================================================
+    // Musical Chords for automatic harmony (in ratios to fundamental root):
+    // Major triad: 1.0 (Root), 1.25 (Major 3rd), 1.5 (Perfect 5th), 2.0 (Octave)
+    function applyHarmonization(leadIdx, leadFreq, vowelParam) {
+      if (!autoHarmonize) return;
+
+      // Pitch multipliers based on classical choir voice ranges
+      const harmonyRatios = [0.5, 0.75, 1.0, 1.5]; // Bass, Tenor, Mezzo, Soprano
+
+      BLOBS.forEach((b, i) => {
+        if (i === leadIdx) return;
+        const st = blobStates[i];
+
+        // Harmonized frequency clamped to voice range
+        let hFreq = leadFreq * (harmonyRatios[i] / harmonyRatios[leadIdx]);
+        while (hFreq < b.minFreq) hFreq *= 2;
+        while (hFreq > b.maxFreq) hFreq /= 2;
+
+        st.pitch = hFreq;
+        st.vowel = vowelParam;
+        st.isSinging = true;
+
+        // Visual stretch matches pitch height within its own range
+        const normPitch = (hFreq - b.minFreq) / (b.maxFreq - b.minFreq);
+        st.targetY = st.baseY - normPitch * (height * 0.35);
+
+        b.voice.update(hFreq, vowelParam);
+      });
+    }
+
+    function stopHarmonization(leadIdx) {
+      if (!autoHarmonize) return;
+      BLOBS.forEach((b, i) => {
+        if (i === leadIdx) return;
+        blobStates[i].isSinging = false;
+        b.voice.stop();
+      });
+    }
+
+    // Pointer Event Handlers (Mouse & Touch)
+    function getEventPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function findBlobAt(x, y) {
+      for (let i = 3; i >= 0; i--) {
+        const st = blobStates[i];
+        const b = BLOBS[i];
+        const dx = x - st.x;
+        const dy = y - st.y;
+        if (Math.sqrt(dx * dx + dy * dy) < b.radius * 1.6) {
+          return i;
+        }
+      }
+      return null;
+    }
+
+    function handlePointerDown(e) {
+      initAudio();
+      document.getElementById('dragHint').style.display = 'none';
+
+      const pos = getEventPos(e);
+      const hitIdx = findBlobAt(pos.x, pos.y);
+
+      if (hitIdx !== null) {
+        activeDragBlob = hitIdx;
+        dragStartX = pos.x;
+        dragStartY = pos.y;
+
+        const st = blobStates[hitIdx];
+        const b = BLOBS[hitIdx];
+        st.isSinging = true;
+
+        // Calculate initial pitch & vowel
+        handleDragMove(pos.x, pos.y);
+      }
+    }
+
+    function handleDragMove(posX, posY) {
+      if (activeDragBlob === null) return;
+
+      const st = blobStates[activeDragBlob];
+      const b = BLOBS[activeDragBlob];
+
+      // Vertical drag = Pitch
+      // Clamp target Y between floor and high ceiling
+      const minY = height * 0.15;
+      const maxY = st.baseY + 20;
+      st.targetY = Math.max(minY, Math.min(maxY, posY));
+
+      // Calculate pitch normalized between minFreq and maxFreq
+      const normY = (st.baseY - st.targetY) / (st.baseY - minY);
+      const freq = b.minFreq + normY * (b.maxFreq - b.minFreq);
+      st.pitch = freq;
+
+      // Horizontal drag = Vowel ("Oo" = 0, "Ah" = 0.5, "Ee" = 1.0)
+      const dx = (posX - st.x) / (b.radius * 2);
+      st.vowel = Math.max(0, Math.min(1, 0.5 + dx));
+
+      // Update sound
+      b.voice.update(st.pitch, st.vowel);
+
+      // Harmonize other 3 choir members
+      applyHarmonization(activeDragBlob, st.pitch, st.vowel);
+    }
+
+    function handlePointerMove(e) {
+      if (activeDragBlob === null) return;
+      const pos = getEventPos(e);
+      handleDragMove(pos.x, pos.y);
+    }
+
+    function handlePointerUp() {
+      if (activeDragBlob !== null) {
+        const b = BLOBS[activeDragBlob];
+        blobStates[activeDragBlob].isSinging = false;
+        b.voice.stop();
+
+        stopHarmonization(activeDragBlob);
+        activeDragBlob = null;
+      }
+    }
+
+    canvas.addEventListener('mousedown', handlePointerDown);
+    window.addEventListener('mousemove', handlePointerMove);
+    window.addEventListener('mouseup', handlePointerUp);
+
+    canvas.addEventListener('touchstart', handlePointerDown, { passive: false });
+    window.addEventListener('touchmove', handlePointerMove, { passive: false });
+    window.addEventListener('touchend', handlePointerUp);
+
+    // ============================================================
+    // PRE-PROGRAMMED OPERA SONG PERFORMANCES
+    // ============================================================
+    const OPERA_SONGS = {
+      'habanera': [
+        // Bizet's Carmen - Habanera
+        { chord: [146.8, 220.0, 293.7, 440.0], vowel: 0.5, dur: 450 },
+        { chord: [146.8, 207.6, 277.2, 415.3], vowel: 0.4, dur: 450 },
+        { chord: [146.8, 196.0, 261.6, 392.0], vowel: 0.3, dur: 450 },
+        { chord: [146.8, 185.0, 246.9, 370.0], vowel: 0.5, dur: 450 },
+        { chord: [146.8, 174.6, 233.1, 349.2], vowel: 0.6, dur: 450 },
+        { chord: [146.8, 196.0, 261.6, 392.0], vowel: 0.5, dur: 750 },
+        { chord: [146.8, 220.0, 293.7, 440.0], vowel: 0.8, dur: 900 }
+      ],
+      'solemio': [
+        // 'O Sole Mio
+        { chord: [130.8, 196.0, 261.6, 329.6], vowel: 0.2, dur: 500 },
+        { chord: [130.8, 196.0, 261.6, 392.0], vowel: 0.5, dur: 700 },
+        { chord: [130.8, 196.0, 246.9, 370.0], vowel: 0.5, dur: 400 },
+        { chord: [130.8, 196.0, 261.6, 329.6], vowel: 0.7, dur: 800 },
+        { chord: [110.0, 164.8, 220.0, 329.6], vowel: 0.5, dur: 500 },
+        { chord: [87.3, 174.6, 261.6, 349.2], vowel: 0.4, dur: 900 }
+      ],
+      'ode': [
+        // Ode to Joy (Beethoven)
+        { chord: [130.8, 196.0, 261.6, 329.6], vowel: 0.5, dur: 400 },
+        { chord: [130.8, 196.0, 261.6, 329.6], vowel: 0.5, dur: 400 },
+        { chord: [174.6, 220.0, 261.6, 349.2], vowel: 0.5, dur: 400 },
+        { chord: [196.0, 246.9, 293.7, 392.0], vowel: 0.6, dur: 400 },
+        { chord: [196.0, 246.9, 293.7, 392.0], vowel: 0.6, dur: 400 },
+        { chord: [174.6, 220.0, 261.6, 349.2], vowel: 0.5, dur: 400 },
+        { chord: [130.8, 196.0, 261.6, 329.6], vowel: 0.4, dur: 400 },
+        { chord: [98.0, 196.0, 246.9, 293.7], vowel: 0.3, dur: 600 }
+      ],
+      'valkyrie': [
+        // Wagner - Ride of the Valkyries
+        { chord: [82.4, 164.8, 246.9, 329.6], vowel: 0.5, dur: 350 },
+        { chord: [98.0, 196.0, 246.9, 392.0], vowel: 0.7, dur: 200 },
+        { chord: [82.4, 164.8, 246.9, 329.6], vowel: 0.5, dur: 400 },
+        { chord: [110.0, 164.8, 220.0, 329.6], vowel: 0.4, dur: 350 },
+        { chord: [123.5, 185.0, 246.9, 370.0], vowel: 0.6, dur: 200 },
+        { chord: [110.0, 164.8, 220.0, 329.6], vowel: 0.5, dur: 400 },
+        { chord: [130.8, 196.0, 261.6, 392.0], vowel: 0.8, dur: 700 }
+      ]
+    };
+
+    window.playOperaSong = function(songKey, btn) {
+      initAudio();
+      stopOperaSong();
+
+      document.querySelectorAll('.song-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('stopSongBtn').style.display = 'inline-block';
+      document.getElementById('dragHint').style.display = 'none';
+
+      songPlaying = true;
+      const notes = OPERA_SONGS[songKey];
+      let currentTime = 0;
+
+      notes.forEach((step, stepIdx) => {
+        const tid = setTimeout(() => {
+          if (!songPlaying) return;
+
+          step.chord.forEach((freq, blobIdx) => {
+            const b = BLOBS[blobIdx];
+            const st = blobStates[blobIdx];
+
+            st.isSinging = true;
+            st.pitch = freq;
+            st.vowel = step.vowel;
+
+            // Visual height
+            const normPitch = (freq - b.minFreq) / (b.maxFreq - b.minFreq);
+            st.targetY = st.baseY - normPitch * (height * 0.35);
+
+            b.voice.update(freq, step.vowel);
+          });
+        }, currentTime);
+        songIntervals.push(tid);
+
+        currentTime += step.dur;
+      });
+
+      // Song finish
+      const endTid = setTimeout(() => {
+        stopOperaSong();
+      }, currentTime + 200);
+      songIntervals.push(endTid);
+    };
+
+    window.stopOperaSong = function() {
+      songPlaying = false;
+      songIntervals.forEach(tid => clearTimeout(tid));
+      songIntervals = [];
+
+      document.querySelectorAll('.song-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('stopSongBtn').style.display = 'none';
+
+      BLOBS.forEach((b, i) => {
+        blobStates[i].isSinging = false;
+        b.voice.stop();
+      });
+    };
+
+    // Toggle Mute
+    window.toggleMute = function(blobIdx) {
+      const b = BLOBS[blobIdx];
+      b.muted = !b.muted;
+      const tag = document.querySelectorAll('.voice-tag')[blobIdx];
+      tag.classList.toggle('muted', b.muted);
+      if (b.voice.isPlaying && b.muted) {
+        b.voice.gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      }
+    };
+
+    // Harmonize Toggle
+    document.getElementById('harmonizeToggle').addEventListener('click', () => {
+      autoHarmonize = !autoHarmonize;
+      const toggleBtn = document.getElementById('harmonizeToggle');
+      const text = document.getElementById('harmText');
+      toggleBtn.classList.toggle('active', autoHarmonize);
+      text.textContent = autoHarmonize ? 'Harmonize: ON' : 'Harmonize: OFF';
+    });
+
+    // Start
+    resize();
+    render();
+  </script>
 </body>
 </html>

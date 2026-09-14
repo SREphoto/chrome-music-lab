@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Name That Tune — Laura's Music App</title>
-  <meta name="description" content="Test your musical ear and music trivia knowledge! Listen to synthesized melodies and name that tune across pop hits, movie soundtracks, video games, and classical masters.">
+  <meta name="description" content="Test your musical ear and trivia knowledge! Choose categories each round, guess tunes in as few notes as possible, and compete in the 2-Player 'Bid-A-Note' showdown across 70 iconic melodies.">
   <meta name="theme-color" content="#0a0d14">
 
   <!-- Typography -->
@@ -16,8 +16,8 @@
     :root {
       --bg-primary: #0a0d14;
       --bg-secondary: #121826;
-      --card-bg: rgba(22, 30, 48, 0.85);
-      --card-border: rgba(255, 255, 255, 0.1);
+      --card-bg: rgba(20, 27, 44, 0.88);
+      --card-border: rgba(255, 255, 255, 0.12);
       --text-main: #f0f4fc;
       --text-muted: #94a3b8;
       --accent-cyan: #38bdf8;
@@ -25,7 +25,10 @@
       --accent-amber: #f59e0b;
       --accent-emerald: #10b981;
       --accent-purple: #a855f7;
+      --accent-orange: #f97316;
       --accent-rose: #f43f5e;
+      --p1-color: #38bdf8;
+      --p2-color: #ec4899;
       --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
@@ -49,14 +52,14 @@
       background-image: 
         radial-gradient(circle at 15% 15%, rgba(236, 72, 153, 0.15) 0%, transparent 45%),
         radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 50% 80%, rgba(168, 85, 247, 0.12) 0%, transparent 55%);
+        radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.14) 0%, transparent 55%);
       background-attachment: fixed;
       overflow-x: hidden;
     }
 
     header {
-      padding: 1.5rem;
-      max-width: 1000px;
+      padding: 1.25rem 1.5rem;
+      max-width: 1080px;
       width: 100%;
       margin: 0 auto;
       display: flex;
@@ -75,7 +78,7 @@
       font-weight: 700;
       font-family: 'Quicksand', sans-serif;
       font-size: 1.15rem;
-      padding: 0.6rem 1.25rem;
+      padding: 0.55rem 1.25rem;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -89,6 +92,45 @@
       box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3);
     }
 
+    /* Mode Switcher */
+    .mode-switcher {
+      display: flex;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 4px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .mode-tab {
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+    }
+
+    .mode-tab.active {
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #030712;
+      box-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
+    }
+
+    .mode-tab.p2-mode.active {
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4);
+    }
+
+    /* Scoreboards */
     .header-stats {
       display: flex;
       align-items: center;
@@ -99,7 +141,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.55rem 1.15rem;
+      padding: 0.5rem 1.1rem;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -119,135 +161,412 @@
       background: rgba(236, 72, 153, 0.1);
     }
 
+    /* 2-Player Header Board */
+    .two-player-board {
+      display: none;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .p-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: 2px solid transparent;
+      transition: var(--transition);
+      opacity: 0.7;
+    }
+
+    .p-pill.active {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .p-pill.p1 {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: var(--p1-color);
+      color: var(--p1-color);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+    }
+
+    .p-pill.p2 {
+      background: rgba(236, 72, 153, 0.12);
+      border-color: var(--p2-color);
+      color: var(--p2-color);
+      box-shadow: 0 0 16px rgba(236, 72, 153, 0.3);
+    }
+
     main {
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       margin: 0 auto;
       padding: 1rem 1.5rem 4rem;
       display: flex;
       flex-direction: column;
-      gap: 2rem;
+      gap: 1.8rem;
       flex: 1;
     }
 
-    /* Game Card */
+    /* Card Container */
     .game-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: var(--radius-xl);
-      padding: 2.5rem 2rem;
-      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
+      padding: 2.2rem 2rem;
+      box-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(20px);
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-      text-align: center;
+      gap: 1.8rem;
       position: relative;
     }
 
-    .question-header {
+    /* Screen Views */
+    .screen-view {
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      width: 100%;
+    }
+
+    /* Category Selection Screen */
+    .category-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .category-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .category-subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .category-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.3rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .category-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.3);
+    }
+
+    .category-icon {
+      font-size: 2.2rem;
+      line-height: 1;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      flex-shrink: 0;
+    }
+
+    .cat-info h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 0.2rem;
+    }
+
+    .cat-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Active Round Info Bar */
+    .round-info-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 0.8rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 1.2rem;
+      gap: 0.75rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .round-indicator {
-      font-size: 1rem;
+    .round-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
       font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      color: var(--accent-cyan);
     }
 
-    .category-badge {
-      font-size: 0.85rem;
-      font-weight: 800;
+    .cat-pill-badge {
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
-      background: rgba(168, 85, 247, 0.18);
-      color: #c084fc;
-      border: 1px solid rgba(168, 85, 247, 0.35);
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* Turntable & Audio Canvas Stage */
-    .audio-stage {
-      position: relative;
+    .badge-movie { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+    .badge-game { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-classic { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-pop { background: rgba(236, 72, 153, 0.15); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.3); }
+    .badge-nostalgia { background: rgba(168, 85, 247, 0.15); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.3); }
+    .badge-tv { background: rgba(249, 115, 22, 0.15); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.3); }
+
+    /* Clue Banner */
+    .clue-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 67, 0.7), rgba(15, 23, 42, 0.8));
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .clue-icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+
+    .clue-text-box h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-amber);
+      margin-bottom: 0.2rem;
+    }
+
+    .clue-text-box p {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.4;
+    }
+
+    /* 2-Player Bidding War Section */
+    .bidding-arena {
+      background: rgba(10, 15, 26, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-xl);
+      padding: 1.8rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.4rem;
+      text-align: center;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .bidding-header-turn {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .bidding-dialogue {
+      font-size: 1.6rem;
+      font-weight: 900;
+      font-family: 'Quicksand', sans-serif;
+      padding: 0.8rem 1.6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .bid-note-count {
+      color: var(--accent-amber);
+      font-size: 2.1rem;
+    }
+
+    .bidding-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
       width: 100%;
+    }
+
+    .btn-bid-lower {
+      padding: 0.9rem 1.8rem;
+      border-radius: 999px;
+      border: 2px solid var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-cyan);
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .btn-bid-lower:hover {
+      background: var(--accent-cyan);
+      color: #030712;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-challenge {
+      padding: 0.9rem 2.2rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 900;
+      font-family: 'Quicksand', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: var(--transition);
+      box-shadow: 0 6px 24px rgba(236, 72, 153, 0.4);
+    }
+
+    .btn-challenge:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 8px 30px rgba(236, 72, 153, 0.6);
+    }
+
+    /* Audio Play Stage */
+    .audio-stage {
+      background: rgba(10, 15, 26, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.2rem;
+      position: relative;
     }
 
     .visualizer-canvas {
       width: 100%;
-      height: 140px;
-      background: #060912;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 4px 18px rgba(0, 0, 0, 0.7);
+      height: 90px;
+      border-radius: var(--radius-md);
+      background: rgba(0, 0, 0, 0.35);
     }
 
-    /* Big Play Button */
+    .note-indicator-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .note-pip {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: var(--transition);
+    }
+
+    .note-pip.played {
+      background: var(--accent-amber);
+      box-shadow: 0 0 12px var(--accent-amber);
+      transform: scale(1.15);
+    }
+
     .play-btn {
-      min-height: 68px;
-      padding: 1.1rem 2.8rem;
+      min-height: 58px;
+      padding: 0.9rem 2.4rem;
       border-radius: 999px;
-      font-size: 1.35rem;
-      font-weight: 800;
-      font-family: inherit;
-      background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #030712;
+      font-size: 1.15rem;
+      font-weight: 900;
+      font-family: 'Quicksand', sans-serif;
+      border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.8rem;
-      box-shadow: 0 8px 28px rgba(236, 72, 153, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      justify-content: center;
+      gap: 0.75rem;
       transition: var(--transition);
-      user-select: none;
+      box-shadow: 0 8px 24px -4px rgba(56, 189, 248, 0.4);
     }
 
     .play-btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      filter: brightness(1.15);
-      box-shadow: 0 12px 34px rgba(236, 72, 153, 0.65);
-    }
-
-    .play-btn:active {
-      transform: translateY(1px) scale(0.97);
+      filter: brightness(1.12);
+      transform: translateY(-2px);
     }
 
     .play-btn.playing {
-      background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-      box-shadow: 0 0 32px rgba(56, 189, 248, 0.7);
-      animation: audioGlow 0.8s infinite alternate ease-in-out;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: #fff;
+      animation: pulse 1.2s infinite alternate;
     }
 
-    @keyframes audioGlow {
+    @keyframes pulse {
       0% { transform: scale(1); }
-      100% { transform: scale(1.04); }
+      100% { transform: scale(1.03); }
     }
 
     .sub-controls {
       display: flex;
-      gap: 0.8rem;
-      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .sub-btn {
-      padding: 0.55rem 1.2rem;
+      padding: 0.45rem 1rem;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       color: var(--text-main);
+      font-size: 0.85rem;
       font-weight: 700;
-      font-size: 0.95rem;
       cursor: pointer;
       transition: var(--transition);
     }
@@ -263,17 +582,48 @@
       color: var(--accent-cyan);
     }
 
+    /* Solo Mode Note Limiter */
+    .solo-note-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 0.5rem;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .solo-note-btn {
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .solo-note-btn.active {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
     /* Answers Choice Grid */
     .options-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
       width: 100%;
     }
 
     .option-btn {
       min-height: 72px;
-      padding: 1.1rem 1.5rem;
+      padding: 1.1rem 1.4rem;
       border-radius: var(--radius-lg);
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.12);
@@ -285,9 +635,9 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
       transition: var(--transition);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
 
     .option-btn:hover:not(.disabled) {
@@ -324,10 +674,31 @@
       40%, 80% { transform: translateX(6px); }
     }
 
+    /* Steal Opportunity Box */
+    .steal-box {
+      display: none;
+      background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(168, 85, 247, 0.15));
+      border: 2px solid var(--accent-pink);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      animation: pulse 1s infinite alternate;
+    }
+
+    .steal-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--accent-pink);
+      font-family: 'Quicksand', sans-serif;
+    }
+
     /* Fact & Feedback Box */
     .feedback-box {
       display: none;
-      background: rgba(10, 15, 26, 0.9);
+      background: rgba(10, 15, 26, 0.92);
       border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: var(--radius-lg);
       padding: 1.5rem;
@@ -352,12 +723,12 @@
 
     .next-btn {
       align-self: flex-end;
-      min-height: 52px;
+      min-height: 50px;
       padding: 0.8rem 2rem;
       border-radius: 999px;
       background: linear-gradient(135deg, #38bdf8, #0284c7);
-      color: #000;
-      font-size: 1.1rem;
+      color: #030712;
+      font-size: 1.05rem;
       font-weight: 800;
       border: none;
       cursor: pointer;
@@ -370,24 +741,14 @@
       box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
     }
 
-    /* Confetti Canvas */
-    #confettiCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 999;
-    }
-
-    /* Summary Card */
+    /* Final Summary Box */
     .summary-box {
       display: none;
       flex-direction: column;
       gap: 1.8rem;
       align-items: center;
       padding: 2rem 1rem;
+      text-align: center;
     }
 
     .summary-badge {
@@ -412,17 +773,53 @@
       font-weight: 800;
     }
 
+    /* Confetti Canvas */
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
+
     footer {
       text-align: center;
       padding: 2rem 1rem;
       color: var(--text-muted);
       font-size: 0.95rem;
     }
+
+    @media (max-width: 640px) {
+      header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .back-link {
+        justify-content: center;
+      }
+      .mode-switcher {
+        justify-content: center;
+      }
+      .header-stats {
+        justify-content: center;
+      }
+      .two-player-board {
+        justify-content: center;
+      }
+      .game-card {
+        padding: 1.5rem 1.2rem;
+      }
+      .bidding-dialogue {
+        font-size: 1.25rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Confetti Layer -->
+  <!-- Confetti Canvas -->
   <canvas id="confettiCanvas"></canvas>
 
   <header>
@@ -431,7 +828,18 @@
       <span>Laura's Music App</span>
     </a>
 
-    <div class="header-stats">
+    <!-- Mode Selector Tabs -->
+    <div class="mode-switcher">
+      <button class="mode-tab active" id="tabSolo" onclick="switchGameMode('solo')">
+        <span>👤</span> Solo Mode
+      </button>
+      <button class="mode-tab p2-mode" id="tab2P" onclick="switchGameMode('2p')">
+        <span>⚔️</span> 2-Player Showdown
+      </button>
+    </div>
+
+    <!-- Solo Stats -->
+    <div class="header-stats" id="soloStats">
       <div class="stat-pill stat-score">
         <span>🏆 Score:</span>
         <span id="scoreVal">0</span>
@@ -441,61 +849,5397 @@
         <span id="streakVal">0</span>
       </div>
     </div>
+
+    <!-- 2-Player Stats -->
+    <div class="two-player-board" id="twoPlayerStats">
+      <div class="p-pill p1 active" id="p1ScorePill">
+        <span>🔵 Player 1:</span>
+        <span id="p1Score">0 pts</span>
+      </div>
+      <div class="p-pill p2" id="p2ScorePill">
+        <span>🟣 Player 2:</span>
+        <span id="p2Score">0 pts</span>
+      </div>
+    </div>
   </header>
 
   <main>
     <div class="game-card" id="gameCard">
-      <!-- Question Info -->
-      <div class="question-header">
-        <span class="round-indicator" id="roundIndicator">Question 1 / 10</span>
-        <span class="category-badge" id="categoryBadge">Classic Rock & Pop</span>
-      </div>
+      
+      <!-- SCREEN 1: CATEGORY SELECTION (shown before each round) -->
+      <div class="screen-view" id="screenCategorySelect">
+        <div class="category-header">
+          <span class="round-badge" id="catRoundPrompt">ROUND 1 OF 7</span>
+          <h2 class="category-title" id="catChooserTitle">Choose Your Category</h2>
+          <p class="category-subtitle" id="catChooserSubtitle">Select a genre for this round from our library of 70 iconic melodies!</p>
+        </div>
 
-      <!-- Stage & Audio Controls -->
-      <div class="audio-stage">
-        <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
+        <div class="category-grid">
+          <!-- All Categories Shuffle -->
+          <div class="category-card" onclick="selectCategory('All')">
+            <div class="category-icon" style="background:rgba(255,255,255,0.1);">🔀</div>
+            <div class="cat-info">
+              <h3>All Shuffle (Mystery)</h3>
+              <p>70 Iconic Tunes Across All Eras</p>
+            </div>
+          </div>
 
-        <button class="play-btn" id="playBtn" onclick="toggleTunePlay()">
-          <svg style="width:28px;height:28px;fill:currentColor" viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
-          <span id="playBtnText">Listen to Melody</span>
-        </button>
+          <!-- Movies & Cinema -->
+          <div class="category-card" onclick="selectCategory('Movies & Cinema')">
+            <div class="category-icon" style="background:rgba(56,189,248,0.15); color:#38bdf8;">🎬</div>
+            <div class="cat-info">
+              <h3>Movies & Cinema</h3>
+              <p>12 Famous Film Scores & Fanfares</p>
+            </div>
+          </div>
 
-        <div class="sub-controls">
-          <button class="sub-btn active" id="speedNormalBtn" onclick="setSpeed(1.0, this)">1.0x Normal</button>
-          <button class="sub-btn" id="speedSlowBtn" onclick="setSpeed(0.75, this)">0.75x Slower</button>
-          <button class="sub-btn" onclick="replayTune()">Replay</button>
+          <!-- Video Game Classics -->
+          <div class="category-card" onclick="selectCategory('Video Game Classics')">
+            <div class="category-icon" style="background:rgba(16,185,129,0.15); color:#10b981;">🎮</div>
+            <div class="cat-info">
+              <h3>Video Game Classics</h3>
+              <p>12 8-Bit, 16-Bit & Modern Game Themes</p>
+            </div>
+          </div>
+
+          <!-- Classical Masterpieces -->
+          <div class="category-card" onclick="selectCategory('Classical Masterpieces')">
+            <div class="category-icon" style="background:rgba(245,158,11,0.15); color:#f59e0b;">🎻</div>
+            <div class="cat-info">
+              <h3>Classical Masters</h3>
+              <p>12 Timeless Orchestral & Piano Works</p>
+            </div>
+          </div>
+
+          <!-- Pop & Rock Hits -->
+          <div class="category-card" onclick="selectCategory('Pop & Rock Hits')">
+            <div class="category-icon" style="background:rgba(236,72,153,0.15); color:#ec4899;">🎸</div>
+            <div class="cat-info">
+              <h3>Pop & Rock Hits</h3>
+              <p>12 Legendary Anthems & Riffs</p>
+            </div>
+          </div>
+
+          <!-- 80s & 90s Nostalgia -->
+          <div class="category-card" onclick="selectCategory('80s & 90s Nostalgia')">
+            <div class="category-icon" style="background:rgba(168,85,247,0.15); color:#a855f7;">📻</div>
+            <div class="cat-info">
+              <h3>80s & 90s Nostalgia</h3>
+              <p>11 Synth-Pop & Retro Chart-Toppers</p>
+            </div>
+          </div>
+
+          <!-- TV & Cartoons -->
+          <div class="category-card" onclick="selectCategory('TV & Cartoons')">
+            <div class="category-icon" style="background:rgba(249,115,22,0.15); color:#f97316;">📺</div>
+            <div class="cat-info">
+              <h3>TV & Cartoons</h3>
+              <p>11 Unforgettable Theme Songs</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Multiple Choice Options -->
-      <div class="options-grid" id="optionsGrid">
-        <!-- 4 buttons dynamically populated -->
+      <!-- SCREEN 2: ACTIVE QUESTION / BIDDING SCREEN -->
+      <div class="screen-view" id="screenQuestion" style="display:none;">
+        <!-- Round Info Header -->
+        <div class="round-info-bar">
+          <span class="round-badge" id="qRoundBadge">Round 1 / 7</span>
+          <span class="cat-pill-badge badge-movie" id="qCategoryBadge">Movies & Cinema</span>
+        </div>
+
+        <!-- Clue Banner -->
+        <div class="clue-banner" id="clueBanner">
+          <div class="clue-icon">💡</div>
+          <div class="clue-text-box">
+            <h4>Mystery Tune Clue</h4>
+            <p id="clueText">1977 galactic sci-fi space fantasy fanfare opening with a heroic Perfect 5th leap</p>
+          </div>
+        </div>
+
+        <!-- 2-PLAYER BIDDING ARENA (Only shown in 2P mode during bidding) -->
+        <div class="bidding-arena" id="biddingArena" style="display:none;">
+          <div class="bidding-header-turn" id="biddingTurnText">
+            <span>🔵 Player 1's Turn to Bid</span>
+          </div>
+
+          <div class="bidding-dialogue" id="biddingDialogue">
+            <span>"I can name that tune in</span>
+            <span class="bid-note-count" id="currentBidNum">6</span>
+            <span>notes!"</span>
+          </div>
+
+          <div class="bidding-actions">
+            <button class="btn-bid-lower" id="btnBidLower" onclick="handleBidLower()">
+              ⬇️ "I can name it in <span id="lowerBidNum">5</span> notes!"
+            </button>
+            <button class="btn-challenge" id="btnChallenge" onclick="handleChallenge()">
+              🎯 "NAME THAT TUNE!"
+            </button>
+          </div>
+        </div>
+
+        <!-- AUDIO STAGE & VISUALIZER -->
+        <div class="audio-stage" id="audioStage">
+          <canvas id="visualizerCanvas" class="visualizer-canvas"></canvas>
+
+          <!-- Note dots animation indicator -->
+          <div class="note-indicator-row" id="noteIndicatorRow">
+            <!-- Dynamically populated pip dots -->
+          </div>
+
+          <!-- Main Play Button -->
+          <button class="play-btn" id="playBtn" onclick="togglePlayTune()">
+            <svg style="width:28px;height:28px;fill:currentColor" viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
+            <span id="playBtnText">Listen to Melody</span>
+          </button>
+
+          <!-- Sub Controls: Speed, Replay, Solo note challenge -->
+          <div class="sub-controls">
+            <button class="sub-btn active" id="speedNormalBtn" onclick="setSpeed(1.0, this)">1.0x Normal</button>
+            <button class="sub-btn" id="speedSlowBtn" onclick="setSpeed(0.75, this)">0.75x Slower</button>
+            <button class="sub-btn" onclick="replayCurrentNotes()">Replay Notes</button>
+
+            <!-- Solo Note Count Limiter (Only in Solo Mode) -->
+            <div class="solo-note-selector" id="soloNoteSelector">
+              <span style="font-size:0.8rem; color:var(--text-muted); margin-right:4px;">Notes:</span>
+              <button class="solo-note-btn" onclick="setSoloNoteLimit(1, this)">1 Note (5x)</button>
+              <button class="solo-note-btn" onclick="setSoloNoteLimit(3, this)">3 Notes (3x)</button>
+              <button class="solo-note-btn" onclick="setSoloNoteLimit(5, this)">5 Notes (2x)</button>
+              <button class="solo-note-btn active" onclick="setSoloNoteLimit(0, this)">Full Melody</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Player Steal Opportunity Banner -->
+        <div class="steal-box" id="stealBox">
+          <div class="steal-title" id="stealTitle">⚡ STEAL OPPORTUNITY! ⚡</div>
+          <p id="stealPrompt" style="color:#fff; font-size:1.05rem;">Player 2 can steal the round! Listen to +2 bonus notes and guess:</p>
+          <button class="btn-bid-lower" style="border-color:#ec4899; color:#ec4899;" onclick="playStealExtraNotes()">
+            🎵 Hear +2 Bonus Notes
+          </button>
+        </div>
+
+        <!-- 4 Multiple Choice Options -->
+        <div class="options-grid" id="optionsGrid">
+          <!-- 4 option buttons dynamically inserted -->
+        </div>
+
+        <!-- Trivia Feedback & Fact Box -->
+        <div class="feedback-box" id="feedbackBox">
+          <div class="feedback-header" id="feedbackHeader"></div>
+          <p class="feedback-desc" id="feedbackDesc"></p>
+          <button class="next-btn" id="nextBtn" onclick="proceedToNextRound()">Next Round &rarr;</button>
+        </div>
       </div>
 
-      <!-- Fact & Explanation Box -->
-      <div class="feedback-box" id="feedbackBox">
-        <div class="feedback-header" id="feedbackHeader"></div>
-        <p class="feedback-desc" id="feedbackDesc"></p>
-        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question &rarr;</button>
-      </div>
-
-      <!-- Final Summary -->
-      <div class="summary-box" id="summaryBox">
+      <!-- SCREEN 3: GAME OVER / VICTORY PODIUM -->
+      <div class="summary-box" id="screenSummary">
         <div class="summary-badge" id="summaryEmoji">🏆</div>
         <h2 class="summary-title" id="summaryTitle">Master Detective!</h2>
         <div class="summary-score" id="summaryScore">Final Score: 1000 pts</div>
-        <p style="color:var(--text-muted); max-width:500px; line-height:1.6;" id="summaryMsg"></p>
-        <button class="play-btn" onclick="restartGame()">Play Again</button>
+        <p style="color:var(--text-muted); max-width:560px; line-height:1.6;" id="summaryMsg"></p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <button class="play-btn" onclick="restartMatch()">Play Again</button>
+          <button class="sub-btn" style="padding:0.9rem 1.8rem; font-size:1rem;" onclick="switchGameMode(gameMode === 'solo' ? '2p' : 'solo')">
+            Switch Game Mode
+          </button>
+        </div>
       </div>
+
     </div>
   </main>
 
   <footer>
-    <p><strong>Name That Tune</strong> &bull; An interactive ear-training & music recognition experiment in <strong>Laura's Music App</strong>.</p>
+    <p><strong>Name That Tune</strong> &bull; Interactive ear-training & 2-player note bidding in <strong>Laura's Music App</strong>.</p>
   </footer>
 
   <script>
-    // Audio Context
+    // ==========================================
+    // 70 ICONIC TUNES LIBRARY
+    // ==========================================
+    const TUNE_LIBRARY = [
+  {
+    "id": "star-wars",
+    "title": "Star Wars (Main Title)",
+    "subtitle": "Luke Skywalker & Rebel Fanfare",
+    "artist": "John Williams (1977)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "1977 galactic space-opera brass fanfare opening with a heroic Perfect 5th leap",
+    "fact": "John Williams used a bold ascending Perfect 5th interval (D to A) for Luke Skywalker's theme, echoing classic golden-age Hollywood swashbucklers.",
+    "waveform": "triangle",
+    "bpm": 108,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 440,
+        "d": 0.8
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.8
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Star Trek (Theme)",
+        "subtitle": "Alexander Courage"
+      },
+      {
+        "title": "Jurassic Park (Theme)",
+        "subtitle": "John Williams"
+      },
+      {
+        "title": "Indiana Jones March",
+        "subtitle": "John Williams"
+      }
+    ]
+  },
+  {
+    "id": "pink-panther",
+    "title": "The Pink Panther Theme",
+    "subtitle": "Inspector Clouseau Jazz",
+    "artist": "Henry Mancini (1963)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Slinky tenor saxophone chromatic mystery jazz from classic diamond heist comedies",
+    "fact": "Mancini used chromatic minor grace notes and swing blues phrasing to give the animated feline its unmistakable stealthy strut.",
+    "waveform": "sawtooth",
+    "bpm": 110,
+    "notes": [
+      {
+        "f": 311.13,
+        "d": 0.16
+      },
+      {
+        "f": 329.63,
+        "d": 0.42
+      },
+      {
+        "f": 369.99,
+        "d": 0.16
+      },
+      {
+        "f": 392,
+        "d": 0.42
+      },
+      {
+        "f": 311.13,
+        "d": 0.16
+      },
+      {
+        "f": 329.63,
+        "d": 0.26
+      },
+      {
+        "f": 369.99,
+        "d": 0.16
+      },
+      {
+        "f": 392,
+        "d": 0.26
+      },
+      {
+        "f": 523.25,
+        "d": 0.32
+      },
+      {
+        "f": 493.88,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "James Bond 007 Theme",
+        "subtitle": "Monty Norman"
+      },
+      {
+        "title": "Mission: Impossible",
+        "subtitle": "Lalo Schifrin"
+      },
+      {
+        "title": "The Godfather Waltz",
+        "subtitle": "Nino Rota"
+      }
+    ]
+  },
+  {
+    "id": "godfather",
+    "title": "The Godfather Theme",
+    "subtitle": "Speak Softly, Love",
+    "artist": "Nino Rota (1972)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Melancholic Sicilian waltz evoking mafia family dynasty and tragedy",
+    "fact": "Composed in natural minor with expressive chromatic neighbor notes, Nino Rota's waltz captures the bittersweet tragedy of the Corleone family.",
+    "waveform": "triangle",
+    "bpm": 96,
+    "notes": [
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 349.23,
+        "d": 0.4
+      },
+      {
+        "f": 415.3,
+        "d": 0.4
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.4
+      },
+      {
+        "f": 415.3,
+        "d": 0.4
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.3
+      },
+      {
+        "f": 261.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Cinema Paradiso",
+        "subtitle": "Ennio Morricone"
+      },
+      {
+        "title": "Schindler's List",
+        "subtitle": "John Williams"
+      },
+      {
+        "title": "Tarantella Napoletana",
+        "subtitle": "Traditional"
+      }
+    ]
+  },
+  {
+    "id": "jurassic-park",
+    "title": "Jurassic Park (Main Theme)",
+    "subtitle": "Welcome to Jurassic Park",
+    "artist": "John Williams (1993)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Majestic brass and horn hymn that accompanies the first glimpse of gentle cloned dinosaurs",
+    "fact": "Williams wrote this theme as a reverent hymn of awe, expressing human wonder at seeing living Brachiosauruses walking the earth.",
+    "waveform": "triangle",
+    "bpm": 76,
+    "notes": [
+      {
+        "f": 466.16,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.5
+      },
+      {
+        "f": 466.16,
+        "d": 0.8
+      },
+      {
+        "f": 349.23,
+        "d": 0.5
+      },
+      {
+        "f": 311.13,
+        "d": 0.7
+      },
+      {
+        "f": 466.16,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.5
+      },
+      {
+        "f": 466.16,
+        "d": 0.8
+      },
+      {
+        "f": 349.23,
+        "d": 0.5
+      },
+      {
+        "f": 311.13,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "E.T. Flying Theme",
+        "subtitle": "John Williams"
+      },
+      {
+        "title": "Close Encounters",
+        "subtitle": "John Williams"
+      },
+      {
+        "title": "Superman March",
+        "subtitle": "John Williams"
+      }
+    ]
+  },
+  {
+    "id": "indiana-jones",
+    "title": "Indiana Jones (The Raiders March)",
+    "subtitle": "Raiders of the Lost Ark",
+    "artist": "John Williams (1981)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Galloping heroic adventure march of a fedora-wearing archaeologist escaping rolling boulders",
+    "fact": "Williams originally presented Steven Spielberg with two separate theme ideas on the piano; Spielberg loved both so much he asked Williams to combine them into one march!",
+    "waveform": "triangle",
+    "bpm": 126,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.8
+      },
+      {
+        "f": 293.66,
+        "d": 0.2
+      },
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.6
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.4
+      },
+      {
+        "f": 698.46,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Star Wars Fanfare",
+        "subtitle": "John Williams"
+      },
+      {
+        "title": "Back to the Future",
+        "subtitle": "Alan Silvestri"
+      },
+      {
+        "title": "Superman Theme",
+        "subtitle": "John Williams"
+      }
+    ]
+  },
+  {
+    "id": "harry-potter",
+    "title": "Harry Potter (Hedwig's Theme)",
+    "subtitle": "A Mysterious Magical World",
+    "artist": "John Williams (2001)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Mystical waltz on the bell-like celesta introducing wizards, wands, and Hogwarts castle",
+    "fact": "Played on the celesta—the same delicate bell instrument Tchaikovsky introduced in The Nutcracker—to evoke shimmering magic and flying owls.",
+    "waveform": "sine",
+    "bpm": 132,
+    "notes": [
+      {
+        "f": 493.88,
+        "d": 0.35
+      },
+      {
+        "f": 659.25,
+        "d": 0.55
+      },
+      {
+        "f": 783.99,
+        "d": 0.35
+      },
+      {
+        "f": 739.99,
+        "d": 0.35
+      },
+      {
+        "f": 659.25,
+        "d": 0.7
+      },
+      {
+        "f": 987.77,
+        "d": 0.4
+      },
+      {
+        "f": 880,
+        "d": 0.8
+      },
+      {
+        "f": 739.99,
+        "d": 0.75
+      },
+      {
+        "f": 659.25,
+        "d": 0.55
+      },
+      {
+        "f": 783.99,
+        "d": 0.35
+      },
+      {
+        "f": 739.99,
+        "d": 0.35
+      },
+      {
+        "f": 622.25,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Lord of the Rings (Shire)",
+        "subtitle": "Howard Shore"
+      },
+      {
+        "title": "Chronicles of Narnia",
+        "subtitle": "Harry Gregson-Williams"
+      },
+      {
+        "title": "Pan's Labyrinth",
+        "subtitle": "Javier Navarrete"
+      }
+    ]
+  },
+  {
+    "id": "pirates-caribbean",
+    "title": "Pirates of the Caribbean",
+    "subtitle": "He's a Pirate",
+    "artist": "Klaus Badelt & Hans Zimmer (2003)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Pounding 6/8 sea-battle waltz for Captain Jack Sparrow and the Black Pearl",
+    "fact": "Set in a rollicking 6/8 meter in D minor, Zimmer and Badelt composed this swashbuckling suite in a frantic overnight recording session.",
+    "waveform": "triangle",
+    "bpm": 140,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.22
+      },
+      {
+        "f": 293.66,
+        "d": 0.22
+      },
+      {
+        "f": 293.66,
+        "d": 0.22
+      },
+      {
+        "f": 329.63,
+        "d": 0.22
+      },
+      {
+        "f": 349.23,
+        "d": 0.44
+      },
+      {
+        "f": 349.23,
+        "d": 0.44
+      },
+      {
+        "f": 349.23,
+        "d": 0.22
+      },
+      {
+        "f": 392,
+        "d": 0.22
+      },
+      {
+        "f": 329.63,
+        "d": 0.44
+      },
+      {
+        "f": 329.63,
+        "d": 0.44
+      },
+      {
+        "f": 293.66,
+        "d": 0.22
+      },
+      {
+        "f": 261.63,
+        "d": 0.22
+      },
+      {
+        "f": 293.66,
+        "d": 0.55
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Gladiator (Battle)",
+        "subtitle": "Hans Zimmer"
+      },
+      {
+        "title": "The Dark Knight",
+        "subtitle": "Hans Zimmer"
+      },
+      {
+        "title": "Master and Commander",
+        "subtitle": "Iva Davies"
+      }
+    ]
+  },
+  {
+    "id": "mission-impossible",
+    "title": "Mission: Impossible Theme",
+    "subtitle": "Impossible Missions Force",
+    "artist": "Lalo Schifrin (1966)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Espionage theme famous for its intense 5/4 time signature matching Morse code",
+    "fact": "Schifrin built the rhythm in 5/4 time signature to spell 'M.I.' in Morse code: two dashes (dotted quarters) followed by two dots (quarters)!",
+    "waveform": "sawtooth",
+    "bpm": 168,
+    "notes": [
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 233.08,
+        "d": 0.22
+      },
+      {
+        "f": 261.63,
+        "d": 0.22
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 174.61,
+        "d": 0.22
+      },
+      {
+        "f": 185,
+        "d": 0.22
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 233.08,
+        "d": 0.22
+      },
+      {
+        "f": 261.63,
+        "d": 0.22
+      }
+    ],
+    "distractors": [
+      {
+        "title": "James Bond 007 Theme",
+        "subtitle": "Monty Norman"
+      },
+      {
+        "title": "Bourne Identity Theme",
+        "subtitle": "John Powell"
+      },
+      {
+        "title": "Hawaii Five-O Theme",
+        "subtitle": "Morton Stevens"
+      }
+    ]
+  },
+  {
+    "id": "james-bond",
+    "title": "James Bond 007 Theme",
+    "subtitle": "Dr. No & Secret Agent 007",
+    "artist": "Monty Norman (1962)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Twangy surf guitar riff with chromatic shifting chords for MI6's licensed assassin",
+    "fact": "Vic Flick played the signature guitar riff on a 1939 Clifford Essex acoustic guitar wired through a Fender Vibrolux amp for just 6 pounds pay!",
+    "waveform": "sawtooth",
+    "bpm": 136,
+    "notes": [
+      {
+        "f": 246.94,
+        "d": 0.3
+      },
+      {
+        "f": 277.18,
+        "d": 0.15
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 277.18,
+        "d": 0.15
+      },
+      {
+        "f": 277.18,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.15
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 246.94,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Mission: Impossible",
+        "subtitle": "Lalo Schifrin"
+      },
+      {
+        "title": "Peter Gunn Theme",
+        "subtitle": "Henry Mancini"
+      },
+      {
+        "title": "The Saint Theme",
+        "subtitle": "Edwin Astley"
+      }
+    ]
+  },
+  {
+    "id": "titanic",
+    "title": "Titanic (My Heart Will Go On)",
+    "subtitle": "Love Theme from Titanic",
+    "artist": "James Horner & Céline Dion (1997)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Heartbreaking Irish tin-whistle ballad about love surviving the icy Atlantic depths",
+    "fact": "Director James Cameron initially refused to have any vocal pop songs in the movie until Horner secretly recorded Céline Dion in one single take.",
+    "waveform": "sine",
+    "bpm": 99,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.4
+      },
+      {
+        "f": 415.3,
+        "d": 0.7
+      },
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.4
+      },
+      {
+        "f": 493.88,
+        "d": 0.8
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 415.3,
+        "d": 0.6
+      },
+      {
+        "f": 329.63,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Braveheart (Theme)",
+        "subtitle": "James Horner"
+      },
+      {
+        "title": "Avatar (I See You)",
+        "subtitle": "James Horner"
+      },
+      {
+        "title": "Ghost (Unchained Melody)",
+        "subtitle": "Alex North"
+      }
+    ]
+  },
+  {
+    "id": "good-bad-ugly",
+    "title": "The Good, the Bad and the Ugly",
+    "subtitle": "Spaghetti Western Main Theme",
+    "artist": "Ennio Morricone (1966)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Iconic whistling and coyote howl duel motif from Sergio Leone's frontier shootout",
+    "fact": "Morricone used human whistling, acoustic guitars, and soprano ocarinas to imitate the predatory howl of a coyote across desert dunes.",
+    "waveform": "triangle",
+    "bpm": 112,
+    "notes": [
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.9
+      }
+    ],
+    "distractors": [
+      {
+        "title": "A Fistful of Dollars",
+        "subtitle": "Ennio Morricone"
+      },
+      {
+        "title": "Once Upon a Time in the West",
+        "subtitle": "Ennio Morricone"
+      },
+      {
+        "title": "The Magnificent Seven",
+        "subtitle": "Elmer Bernstein"
+      }
+    ]
+  },
+  {
+    "id": "back-to-the-future",
+    "title": "Back to the Future (Theme)",
+    "subtitle": "Outatime & DeLorean Flight",
+    "artist": "Alan Silvestri (1985)",
+    "category": "Movies & Cinema",
+    "categoryClass": "badge-movie",
+    "clue": "Triumphant brass fanfare that plays as the DeLorean hits 88 MPH and time-travels",
+    "fact": "Silvestri composed the energetic score for an expanded 98-piece orchestra, giving Robert Zemeckis's sci-fi comedy huge cinematic scope.",
+    "waveform": "triangle",
+    "bpm": 128,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.7
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 493.88,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      },
+      {
+        "f": 587.33,
+        "d": 0.4
+      },
+      {
+        "f": 659.25,
+        "d": 0.6
+      },
+      {
+        "f": 698.46,
+        "d": 0.3
+      },
+      {
+        "f": 659.25,
+        "d": 0.3
+      },
+      {
+        "f": 587.33,
+        "d": 0.3
+      },
+      {
+        "f": 783.99,
+        "d": 0.9
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Ghostbusters Theme",
+        "subtitle": "Ray Parker Jr."
+      },
+      {
+        "title": "Who Framed Roger Rabbit",
+        "subtitle": "Alan Silvestri"
+      },
+      {
+        "title": "The Goonies Theme",
+        "subtitle": "Dave Grusin"
+      }
+    ]
+  },
+  {
+    "id": "mario-bros",
+    "title": "Super Mario Bros (Overworld)",
+    "subtitle": "Mushroom Kingdom Calypso",
+    "artist": "Koji Kondo (1985)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Iconic 8-bit calypso bounce of a jumping plumber traversing green warp pipes",
+    "fact": "Koji Kondo composed this on the NES 2A03 chip using Latin calypso syncopation to match Mario's running and jumping physics.",
+    "waveform": "square",
+    "bpm": 140,
+    "notes": [
+      {
+        "f": 659.25,
+        "d": 0.18
+      },
+      {
+        "f": 659.25,
+        "d": 0.22
+      },
+      {
+        "f": 0,
+        "d": 0.18
+      },
+      {
+        "f": 659.25,
+        "d": 0.22
+      },
+      {
+        "f": 0,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.22
+      },
+      {
+        "f": 659.25,
+        "d": 0.35
+      },
+      {
+        "f": 783.99,
+        "d": 0.45
+      },
+      {
+        "f": 0,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.45
+      }
+    ],
+    "distractors": [
+      {
+        "title": "The Legend of Zelda",
+        "subtitle": "Koji Kondo"
+      },
+      {
+        "title": "Sonic the Hedgehog",
+        "subtitle": "Masato Nakamura"
+      },
+      {
+        "title": "Pac-Man Theme",
+        "subtitle": "Toshio Kai"
+      }
+    ]
+  },
+  {
+    "id": "tetris",
+    "title": "Tetris (Korobeiniki)",
+    "subtitle": "Type A Theme",
+    "artist": "Russian Folk Song / Hirokazu Tanaka (1989)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Traditional Russian folk tune that accompanied falling geometric blocks on Game Boy",
+    "fact": "Originally a 19th-century poem by Nikolay Nekrasov about a traveling peddler, this melody became synonymous with puzzle gaming worldwide.",
+    "waveform": "square",
+    "bpm": 130,
+    "notes": [
+      {
+        "f": 659.25,
+        "d": 0.35
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.2
+      },
+      {
+        "f": 587.33,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.2
+      },
+      {
+        "f": 659.25,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Dr. Mario (Fever)",
+        "subtitle": "Hirokazu Tanaka"
+      },
+      {
+        "title": "Duck Hunt Theme",
+        "subtitle": "Nintendo"
+      },
+      {
+        "title": "Pong Theme",
+        "subtitle": "Atari"
+      }
+    ]
+  },
+  {
+    "id": "zelda",
+    "title": "The Legend of Zelda (Main Theme)",
+    "subtitle": "Hyrule Overworld March",
+    "artist": "Koji Kondo (1986)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Triumphant heroic march across the grasslands of Hyrule to rescue Princess Zelda",
+    "fact": "Kondo originally planned to use Ravel's Bolero, but after discovering its copyright hadn't expired, he wrote this brand new theme in just one day!",
+    "waveform": "triangle",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 466.16,
+        "d": 0.5
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 622.25,
+        "d": 0.25
+      },
+      {
+        "f": 698.46,
+        "d": 0.7
+      },
+      {
+        "f": 698.46,
+        "d": 0.25
+      },
+      {
+        "f": 698.46,
+        "d": 0.25
+      },
+      {
+        "f": 739.99,
+        "d": 0.25
+      },
+      {
+        "f": 830.61,
+        "d": 0.25
+      },
+      {
+        "f": 932.33,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Zelda: Song of Storms",
+        "subtitle": "Koji Kondo"
+      },
+      {
+        "title": "Final Fantasy (Main Theme)",
+        "subtitle": "Nobuo Uematsu"
+      },
+      {
+        "title": "Dragon Quest (Overture)",
+        "subtitle": "Koichi Sugiyama"
+      }
+    ]
+  },
+  {
+    "id": "pacman",
+    "title": "Pac-Man (Intro Theme)",
+    "subtitle": "Arcade Start Jingle",
+    "artist": "Toshio Kai (1980)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Bright arcade jingle that played before chomping dots and running from ghosts",
+    "fact": "One of the earliest musical hooks programmed into arcade hardware, Toshio Kai used rapid arpeggios that mimic electronic chatter.",
+    "waveform": "square",
+    "bpm": 160,
+    "notes": [
+      {
+        "f": 493.88,
+        "d": 0.15
+      },
+      {
+        "f": 987.77,
+        "d": 0.15
+      },
+      {
+        "f": 739.99,
+        "d": 0.15
+      },
+      {
+        "f": 622.25,
+        "d": 0.15
+      },
+      {
+        "f": 987.77,
+        "d": 0.15
+      },
+      {
+        "f": 739.99,
+        "d": 0.15
+      },
+      {
+        "f": 622.25,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.15
+      },
+      {
+        "f": 1046.5,
+        "d": 0.15
+      },
+      {
+        "f": 783.99,
+        "d": 0.15
+      },
+      {
+        "f": 659.25,
+        "d": 0.15
+      },
+      {
+        "f": 1046.5,
+        "d": 0.15
+      },
+      {
+        "f": 783.99,
+        "d": 0.15
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Galaga (Theme)",
+        "subtitle": "Namco"
+      },
+      {
+        "title": "Space Invaders",
+        "subtitle": "Taito"
+      },
+      {
+        "title": "Dig Dug (Theme)",
+        "subtitle": "Yuriko Keino"
+      }
+    ]
+  },
+  {
+    "id": "pokemon",
+    "title": "Pokémon (Opening Theme)",
+    "subtitle": "Gotta Catch 'Em All!",
+    "artist": "Junichi Masuda (1996)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Game Boy title screen fanfare celebrating young monster trainers heading into tall grass",
+    "fact": "Junichi Masuda programmed all the music and monster cries directly in Z80 assembly code for the original Game Boy cartridge.",
+    "waveform": "square",
+    "bpm": 138,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.4
+      },
+      {
+        "f": 783.99,
+        "d": 0.6
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.35
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      },
+      {
+        "f": 392,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Pokémon Gym Battle",
+        "subtitle": "Junichi Masuda"
+      },
+      {
+        "title": "Pallet Town Theme",
+        "subtitle": "Junichi Masuda"
+      },
+      {
+        "title": "Lavender Town",
+        "subtitle": "Junichi Masuda"
+      }
+    ]
+  },
+  {
+    "id": "sonic",
+    "title": "Sonic the Hedgehog (Green Hill Zone)",
+    "subtitle": "South Island Tropical Speed",
+    "artist": "Masato Nakamura (1991)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Sun-drenched tropical synth pop for a blue hedgehog running through loop-de-loops",
+    "fact": "Composed by Masato Nakamura of the J-pop band Dreams Come True, showing how Sega Genesis used FM synthesis to sound like radio pop.",
+    "waveform": "sawtooth",
+    "bpm": 130,
+    "notes": [
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 587.33,
+        "d": 0.2
+      },
+      {
+        "f": 659.25,
+        "d": 0.4
+      },
+      {
+        "f": 783.99,
+        "d": 0.4
+      },
+      {
+        "f": 698.46,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Chemical Plant Zone",
+        "subtitle": "Masato Nakamura"
+      },
+      {
+        "title": "Marble Zone",
+        "subtitle": "Masato Nakamura"
+      },
+      {
+        "title": "Star Light Zone",
+        "subtitle": "Masato Nakamura"
+      }
+    ]
+  },
+  {
+    "id": "megaman2",
+    "title": "Mega Man 2 (Dr. Wily Castle 1)",
+    "subtitle": "Chiptune Rock Anthem",
+    "artist": "Takashi Tateishi (1988)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Driving 8-bit rock melody for storming the skull fortress of an evil robotic scientist",
+    "fact": "Considered by game composers as one of the greatest chiptune compositions in history, utilizing arpeggiated bass and harmonic counterpoint on 4 sound channels.",
+    "waveform": "square",
+    "bpm": 154,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 587.33,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Castlevania (Vampire Killer)",
+        "subtitle": "Kinuyo Yamashita"
+      },
+      {
+        "title": "Contra (Jungle Theme)",
+        "subtitle": "Hidenori Maezawa"
+      },
+      {
+        "title": "DuckTales (Moon Theme)",
+        "subtitle": "Yoshihiro Sakaguchi"
+      }
+    ]
+  },
+  {
+    "id": "guile-theme",
+    "title": "Street Fighter II (Guile's Theme)",
+    "subtitle": "Goes With Everything!",
+    "artist": "Yoko Shimomura (1991)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "American Air Force base fighting theme famous for an internet meme claiming it fits any scene",
+    "fact": "Yoko Shimomura composed this energetic martial arts theme, blending American hard rock chord changes with synth brass fanfare.",
+    "waveform": "sawtooth",
+    "bpm": 128,
+    "notes": [
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 466.16,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.5
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 466.16,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Ryu's Theme (SFII)",
+        "subtitle": "Yoko Shimomura"
+      },
+      {
+        "title": "Ken's Theme (SFII)",
+        "subtitle": "Yoko Shimomura"
+      },
+      {
+        "title": "Mortal Kombat Theme",
+        "subtitle": "The Immortals"
+      }
+    ]
+  },
+  {
+    "id": "halo-theme",
+    "title": "Halo (Main Theme - Monk Chant)",
+    "subtitle": "Combat Evolved",
+    "artist": "Martin O'Donnell & Michael Salvatori (2001)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Haunting Gregorian monk choir chant introducing Master Chief and the alien ring world",
+    "fact": "Martin O'Donnell sang several of the vocal harmonies himself and recorded local choir singers in an empty church for authentic sacred acoustic reverberation.",
+    "waveform": "sine",
+    "bpm": 72,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.7
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      },
+      {
+        "f": 493.88,
+        "d": 0.9
+      },
+      {
+        "f": 440,
+        "d": 0.5
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 0.8
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 1.2
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Skyrim (Dragonborn)",
+        "subtitle": "Jeremy Soule"
+      },
+      {
+        "title": "World of Warcraft",
+        "subtitle": "Jason Hayes"
+      },
+      {
+        "title": "Destiny (Music of the Spheres)",
+        "subtitle": "Martin O'Donnell"
+      }
+    ]
+  },
+  {
+    "id": "minecraft-sweden",
+    "title": "Minecraft (Sweden)",
+    "subtitle": "Infinite Creative Horizons",
+    "artist": "C418 / Daniel Rosenfeld (2011)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Peaceful, introspective piano ballad echoing across blocky voxel mountains and sunsets",
+    "fact": "C418 deliberately chose ambient, minimalist piano chords rather than dramatic action music, creating an emotional sense of solitude and discovery.",
+    "waveform": "triangle",
+    "bpm": 65,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.6
+      },
+      {
+        "f": 369.99,
+        "d": 0.6
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      },
+      {
+        "f": 587.33,
+        "d": 1
+      },
+      {
+        "f": 493.88,
+        "d": 0.6
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      },
+      {
+        "f": 369.99,
+        "d": 0.6
+      },
+      {
+        "f": 329.63,
+        "d": 0.6
+      },
+      {
+        "f": 293.66,
+        "d": 1.2
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Minecraft: Wet Hands",
+        "subtitle": "C418"
+      },
+      {
+        "title": "Terraria Day Theme",
+        "subtitle": "Scott Lloyd Shelly"
+      },
+      {
+        "title": "Animal Crossing Theme",
+        "subtitle": "Kazumi Totaka"
+      }
+    ]
+  },
+  {
+    "id": "megalovania",
+    "title": "Undertale (Megalovania)",
+    "subtitle": "You're Gonna Have a Bad Time",
+    "artist": "Toby Fox (2015)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Frenetic D-minor boss battle theme featuring rapid syncopated sync-leads against Sans the skeleton",
+    "fact": "Toby Fox originally created Megalovania for an EarthBound Halloween hack in 2008 before revising it for Homestuck and finally Undertale.",
+    "waveform": "square",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.18
+      },
+      {
+        "f": 293.66,
+        "d": 0.18
+      },
+      {
+        "f": 587.33,
+        "d": 0.36
+      },
+      {
+        "f": 440,
+        "d": 0.5
+      },
+      {
+        "f": 415.3,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 349.23,
+        "d": 0.36
+      },
+      {
+        "f": 293.66,
+        "d": 0.18
+      },
+      {
+        "f": 349.23,
+        "d": 0.18
+      },
+      {
+        "f": 392,
+        "d": 0.3
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Hopes and Dreams",
+        "subtitle": "Toby Fox"
+      },
+      {
+        "title": "Bonetrousle",
+        "subtitle": "Toby Fox"
+      },
+      {
+        "title": "Battle Against a True Hero",
+        "subtitle": "Toby Fox"
+      }
+    ]
+  },
+  {
+    "id": "donkey-kong",
+    "title": "Donkey Kong (Jungle Jape / Island Swing)",
+    "subtitle": "Kongo Jungle Groove",
+    "artist": "David Wise (1994)",
+    "category": "Video Game Classics",
+    "categoryClass": "badge-game",
+    "clue": "Bouncy jungle swing featuring syncopated marimba and bongo rhythms for barrel-blasting primates",
+    "fact": "David Wise pushed the Super Nintendo's SPC700 sound chip to its absolute limits by streaming hand-sampled African percussion and synthesized environmental wildlife.",
+    "waveform": "triangle",
+    "bpm": 116,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 554.37,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 466.16,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Aquatic Ambience (DKC)",
+        "subtitle": "David Wise"
+      },
+      {
+        "title": "Crash Bandicoot Theme",
+        "subtitle": "Josh Mancell"
+      },
+      {
+        "title": "Banjo-Kazooie Main Theme",
+        "subtitle": "Grant Kirkhope"
+      }
+    ]
+  },
+  {
+    "id": "beethoven-5",
+    "title": "Beethoven's 5th Symphony",
+    "subtitle": "Fate Knocking at the Door",
+    "artist": "Ludwig van Beethoven (1808)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "The legendary short-short-short-long symphonic motif of destiny knocking on the portal",
+    "fact": "The opening 4-note motif (three Gs and an E-flat) has been analyzed for two centuries as one of the most powerful thematic seeds in Western musical architecture.",
+    "waveform": "sawtooth",
+    "bpm": 108,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.22
+      },
+      {
+        "f": 392,
+        "d": 0.22
+      },
+      {
+        "f": 392,
+        "d": 0.22
+      },
+      {
+        "f": 311.13,
+        "d": 0.9
+      },
+      {
+        "f": 0,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.22
+      },
+      {
+        "f": 349.23,
+        "d": 0.22
+      },
+      {
+        "f": 349.23,
+        "d": 0.22
+      },
+      {
+        "f": 293.66,
+        "d": 1.1
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Mozart: Symphony No. 40",
+        "subtitle": "W.A. Mozart"
+      },
+      {
+        "title": "Tchaikovsky: 1812 Overture",
+        "subtitle": "P.I. Tchaikovsky"
+      },
+      {
+        "title": "Brahms: Symphony No. 1",
+        "subtitle": "Johannes Brahms"
+      }
+    ]
+  },
+  {
+    "id": "fur-elise",
+    "title": "Für Elise",
+    "subtitle": "Bagatelle in A Minor, WoO 59",
+    "artist": "Ludwig van Beethoven (1810)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Intimate piano piece rapidly alternating between E and D-sharp before cascading downwards",
+    "fact": "The piece was discovered 40 years after Beethoven's death; musicologists believe the dedication 'Elise' was a transcription error for Therese Malfatti, a woman he proposed to.",
+    "waveform": "triangle",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 622.25,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 622.25,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Chopin: Nocturne Op. 9 No. 2",
+        "subtitle": "Frédéric Chopin"
+      },
+      {
+        "title": "Debussy: Clair de Lune",
+        "subtitle": "Claude Debussy"
+      },
+      {
+        "title": "Moonlight Sonata",
+        "subtitle": "Ludwig van Beethoven"
+      }
+    ]
+  },
+  {
+    "id": "ode-to-joy",
+    "title": "Ode to Joy (9th Symphony)",
+    "subtitle": "An die Freude",
+    "artist": "Ludwig van Beethoven (1824)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Universal anthem of brotherhood and peace in D Major, now the official Anthem of Europe",
+    "fact": "Beethoven was completely deaf when he conducted the premiere; contralto Caroline Unger had to gently turn him around so he could see the roaring standing ovation.",
+    "waveform": "triangle",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.5
+      },
+      {
+        "f": 293.66,
+        "d": 0.2
+      },
+      {
+        "f": 293.66,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Handel: Hallelujah Chorus",
+        "subtitle": "G.F. Handel"
+      },
+      {
+        "title": "Haydn: Surprise Symphony",
+        "subtitle": "Joseph Haydn"
+      },
+      {
+        "title": "Schubert: Ave Maria",
+        "subtitle": "Franz Schubert"
+      }
+    ]
+  },
+  {
+    "id": "vivaldi-spring",
+    "title": "Vivaldi: Spring (Four Seasons)",
+    "subtitle": "La Primavera, Op. 8 No. 1",
+    "artist": "Antonio Vivaldi (1725)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Sparkling Baroque violin concerto heralding singing songbirds, flowing streams, and gentle breezes",
+    "fact": "Vivaldi published sonnets alongside each concerto describing the music: bird chirps are simulated by rapid violin trills and high repeating staccato thirds.",
+    "waveform": "triangle",
+    "bpm": 110,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.2
+      },
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.6
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.2
+      },
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Vivaldi: Summer (Storm)",
+        "subtitle": "Antonio Vivaldi"
+      },
+      {
+        "title": "Vivaldi: Winter",
+        "subtitle": "Antonio Vivaldi"
+      },
+      {
+        "title": "Bach: Brandenburg No. 3",
+        "subtitle": "J.S. Bach"
+      }
+    ]
+  },
+  {
+    "id": "mozart-nachtmusik",
+    "title": "Mozart: Eine kleine Nachtmusik",
+    "subtitle": "Serenade No. 13 in G Major, K. 525",
+    "artist": "W.A. Mozart (1787)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Serenade in G Major opening with bright leaping triad arpeggios: G-D-G-D-G-B-D",
+    "fact": "The title simply means 'A Little Serenade' in German. Mozart entered it into his personal work catalog while working on the second act of Don Giovanni.",
+    "waveform": "sawtooth",
+    "bpm": 132,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.18
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.18
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 587.33,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.2
+      },
+      {
+        "f": 369.99,
+        "d": 0.2
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Mozart: Rondo alla Turca",
+        "subtitle": "W.A. Mozart"
+      },
+      {
+        "title": "Mozart: Symphony No. 40",
+        "subtitle": "W.A. Mozart"
+      },
+      {
+        "title": "Haydn: Clock Symphony",
+        "subtitle": "Joseph Haydn"
+      }
+    ]
+  },
+  {
+    "id": "sugar-plum",
+    "title": "Tchaikovsky: Dance of the Sugar Plum Fairy",
+    "subtitle": "The Nutcracker, Op. 71",
+    "artist": "P.I. Tchaikovsky (1892)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Delicate staccato drops from a magical bell-piano in the Land of Sweets",
+    "fact": "Tchaikovsky smuggled the newly invented French celesta into Russia in total secrecy so rival composers wouldn't steal its magical bell sound before the ballet premiered.",
+    "waveform": "sine",
+    "bpm": 124,
+    "notes": [
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Tchaikovsky: Swan Lake",
+        "subtitle": "P.I. Tchaikovsky"
+      },
+      {
+        "title": "Grieg: Morning Mood",
+        "subtitle": "Edvard Grieg"
+      },
+      {
+        "title": "Saint-Saëns: The Swan",
+        "subtitle": "Camille Saint-Saëns"
+      }
+    ]
+  },
+  {
+    "id": "bach-toccata",
+    "title": "Bach: Toccata and Fugue in D Minor",
+    "subtitle": "BWV 565 Organ Flourish",
+    "artist": "J.S. Bach (1704)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Thunderous pipe organ flourish often associated with gothic castles and phantom villains",
+    "fact": "Features a dramatic descending upper mordent in D minor followed by a diminished seventh chord and deep pedal point that tests a pipe organ's lowest acoustic registers.",
+    "waveform": "sawtooth",
+    "bpm": 90,
+    "notes": [
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.12
+      },
+      {
+        "f": 440,
+        "d": 0.5
+      },
+      {
+        "f": 392,
+        "d": 0.15
+      },
+      {
+        "f": 349.23,
+        "d": 0.15
+      },
+      {
+        "f": 329.63,
+        "d": 0.15
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Bach: Air on the G String",
+        "subtitle": "J.S. Bach"
+      },
+      {
+        "title": "Bach: Cello Suite No. 1",
+        "subtitle": "J.S. Bach"
+      },
+      {
+        "title": "Purcell: Rondeau",
+        "subtitle": "Henry Purcell"
+      }
+    ]
+  },
+  {
+    "id": "william-tell",
+    "title": "Rossini: William Tell Overture (Finale)",
+    "subtitle": "March of the Swiss Soldiers",
+    "artist": "Gioachino Rossini (1829)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Galloping cavalry trumpet fanfare, legendary as the theme of The Lone Ranger",
+    "fact": "Written as the climax to Rossini's final opera, the syncopated 'galop' rhythm (da-da-dum da-da-dum da-da-dum-dum-dum) mimics racing horseback hooves.",
+    "waveform": "sawtooth",
+    "bpm": 152,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.18
+      },
+      {
+        "f": 659.25,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.18
+      },
+      {
+        "f": 659.25,
+        "d": 0.18
+      },
+      {
+        "f": 783.99,
+        "d": 0.36
+      },
+      {
+        "f": 659.25,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.18
+      },
+      {
+        "f": 392,
+        "d": 0.18
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Suppé: Light Cavalry",
+        "subtitle": "Franz von Suppé"
+      },
+      {
+        "title": "Rossini: Barber of Seville",
+        "subtitle": "Gioachino Rossini"
+      },
+      {
+        "title": "Offenbach: Can-Can",
+        "subtitle": "Jacques Offenbach"
+      }
+    ]
+  },
+  {
+    "id": "brahms-lullaby",
+    "title": "Brahms: Lullaby (Wiegenlied)",
+    "subtitle": "Guten Abend, gut' Nacht, Op. 49 No. 4",
+    "artist": "Johannes Brahms (1868)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "The most famous bedtime song in the world, sung to soothe infants to sleep",
+    "fact": "Brahms dedicated this tender melody to Bertha Faber on the birth of her second son; he embedded a secret Viennese waltz Bertha had sung to him years earlier.",
+    "waveform": "sine",
+    "bpm": 88,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 392,
+        "d": 0.7
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 392,
+        "d": 0.7
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.6
+      },
+      {
+        "f": 493.88,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Schumann: Träumerei",
+        "subtitle": "Robert Schumann"
+      },
+      {
+        "title": "Mendelssohn: Spring Song",
+        "subtitle": "Felix Mendelssohn"
+      },
+      {
+        "title": "Dvořák: Songs My Mother Taught Me",
+        "subtitle": "Antonín Dvořák"
+      }
+    ]
+  },
+  {
+    "id": "habanera",
+    "title": "Bizet: Habanera (Carmen)",
+    "subtitle": "L'amour est un oiseau rebelle",
+    "artist": "Georges Bizet (1875)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Seductive descending chromatic tango aria: 'Love is a rebellious bird that no one can tame'",
+    "fact": "Bizet mistakenly thought this Cuban habanera rhythm was an anonymous folk song until discovering it was written by Spanish composer Sebastián Iradier.",
+    "waveform": "triangle",
+    "bpm": 104,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 246.94,
+        "d": 0.25
+      },
+      {
+        "f": 233.08,
+        "d": 0.25
+      },
+      {
+        "f": 220,
+        "d": 0.25
+      },
+      {
+        "f": 207.65,
+        "d": 0.25
+      },
+      {
+        "f": 220,
+        "d": 0.35
+      },
+      {
+        "f": 246.94,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Bizet: Toreador Song",
+        "subtitle": "Georges Bizet"
+      },
+      {
+        "title": "Verdi: La donna è mobile",
+        "subtitle": "Giuseppe Verdi"
+      },
+      {
+        "title": "Puccini: Nessun dorma",
+        "subtitle": "Giacomo Puccini"
+      }
+    ]
+  },
+  {
+    "id": "blue-danube",
+    "title": "Strauss: The Blue Danube",
+    "subtitle": "An der schönen blauen Donau, Op. 314",
+    "artist": "Johann Strauss II (1866)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Viennese 3/4 ballroom waltz opening with rising brass horn arpeggios along the Austrian river",
+    "fact": "Made immortal in modern cinema by Stanley Kubrick in 2001: A Space Odyssey to depict a spacecraft docking in weightless orbital flight.",
+    "waveform": "triangle",
+    "bpm": 128,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 440,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Strauss: Radetzky March",
+        "subtitle": "Johann Strauss I"
+      },
+      {
+        "title": "Tchaikovsky: Waltz of the Flowers",
+        "subtitle": "P.I. Tchaikovsky"
+      },
+      {
+        "title": "Waldteufel: The Skater's Waltz",
+        "subtitle": "Émile Waldteufel"
+      }
+    ]
+  },
+  {
+    "id": "pachelbel-canon",
+    "title": "Pachelbel: Canon in D",
+    "subtitle": "Canon and Gigue for 3 Violins and Basso Continuo",
+    "artist": "Johann Pachelbel (1680)",
+    "category": "Classical Masterpieces",
+    "categoryClass": "badge-classic",
+    "clue": "Repeating 8-chord Baroque progression that became the foundation for countless wedding marches and modern pop hits",
+    "fact": "The famous chord sequence (I - V - vi - iii - IV - I - IV - V) has been used in songs from Maroon 5's 'Memories' to Green Day's 'Basket Case'.",
+    "waveform": "triangle",
+    "bpm": 72,
+    "notes": [
+      {
+        "f": 369.99,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 0.5
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      },
+      {
+        "f": 277.18,
+        "d": 0.5
+      },
+      {
+        "f": 246.94,
+        "d": 0.5
+      },
+      {
+        "f": 220,
+        "d": 0.5
+      },
+      {
+        "f": 246.94,
+        "d": 0.5
+      },
+      {
+        "f": 277.18,
+        "d": 0.5
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 0.5
+      },
+      {
+        "f": 369.99,
+        "d": 0.5
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 440,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Handel: Water Music",
+        "subtitle": "G.F. Handel"
+      },
+      {
+        "title": "Vivaldi: Gloria in Excelsis",
+        "subtitle": "Antonio Vivaldi"
+      },
+      {
+        "title": "Corelli: Christmas Concerto",
+        "subtitle": "Arcangelo Corelli"
+      }
+    ]
+  },
+  {
+    "id": "bohemian-rhapsody",
+    "title": "Bohemian Rhapsody",
+    "subtitle": "Mama, Just Killed a Man",
+    "artist": "Queen / Freddie Mercury (1975)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "6-minute operatic rock suite opening its ballad section: 'Mama, just killed a man...'",
+    "fact": "Freddie Mercury and Queen used up to 180 separate vocal tape overdubs, wearing the analog tape so thin that light could be seen through it in the studio!",
+    "waveform": "triangle",
+    "bpm": 72,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.5
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Don't Stop Me Now",
+        "subtitle": "Queen"
+      },
+      {
+        "title": "We Are the Champions",
+        "subtitle": "Queen"
+      },
+      {
+        "title": "Somebody to Love",
+        "subtitle": "Queen"
+      }
+    ]
+  },
+  {
+    "id": "we-will-rock-you",
+    "title": "We Will Rock You",
+    "subtitle": "Stomp, Stomp, Clap!",
+    "artist": "Queen / Brian May (1977)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Stadium anthem driven by foot stomps and hand claps: 'Buddy, you're a boy, make a big noise'",
+    "fact": "Brian May recorded the stomps by having the band stomp on wooden floorboards at different distances with varying delays to sound like a crowd of thousands.",
+    "waveform": "square",
+    "bpm": 82,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.3
+      },
+      {
+        "f": 293.66,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.3
+      },
+      {
+        "f": 246.94,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Another One Bites the Dust",
+        "subtitle": "Queen"
+      },
+      {
+        "title": "Radio Ga Ga",
+        "subtitle": "Queen"
+      },
+      {
+        "title": "I Love Rock 'n' Roll",
+        "subtitle": "Joan Jett"
+      }
+    ]
+  },
+  {
+    "id": "hey-jude",
+    "title": "Hey Jude",
+    "subtitle": "Take a Sad Song and Make It Better",
+    "artist": "The Beatles / Paul McCartney (1968)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Heartwarming piano ballad written to comfort young Julian Lennon during his parents' divorce",
+    "fact": "Originally titled 'Hey Jules', Paul McCartney composed it in his car while driving to visit John Lennon's son Julian; its 4-minute 'Na-na-na' outro made history.",
+    "waveform": "triangle",
+    "bpm": 74,
+    "notes": [
+      {
+        "f": 523.25,
+        "d": 0.45
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.65
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.35
+      },
+      {
+        "f": 698.46,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Let It Be",
+        "subtitle": "The Beatles"
+      },
+      {
+        "title": "Yesterday",
+        "subtitle": "The Beatles"
+      },
+      {
+        "title": "Imagine",
+        "subtitle": "John Lennon"
+      }
+    ]
+  },
+  {
+    "id": "yesterday",
+    "title": "Yesterday",
+    "subtitle": "All My Troubles Seemed So Far Away",
+    "artist": "The Beatles / Paul McCartney (1965)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Acoustic string quartet ballad that McCartney dreamed complete with the working title 'Scrambled Eggs'",
+    "fact": "The most covered pop song in recorded history with over 2,200 recorded versions, performed by McCartney alone with acoustic guitar and string quartet.",
+    "waveform": "sine",
+    "bpm": 96,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.7
+      },
+      {
+        "f": 440,
+        "d": 0.3
+      },
+      {
+        "f": 493.88,
+        "d": 0.3
+      },
+      {
+        "f": 554.37,
+        "d": 0.3
+      },
+      {
+        "f": 587.33,
+        "d": 0.3
+      },
+      {
+        "f": 659.25,
+        "d": 0.3
+      },
+      {
+        "f": 698.46,
+        "d": 0.35
+      },
+      {
+        "f": 659.25,
+        "d": 0.3
+      },
+      {
+        "f": 587.33,
+        "d": 0.3
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Blackbird",
+        "subtitle": "The Beatles"
+      },
+      {
+        "title": "Something",
+        "subtitle": "The Beatles"
+      },
+      {
+        "title": "Here Comes the Sun",
+        "subtitle": "The Beatles"
+      }
+    ]
+  },
+  {
+    "id": "billie-jean",
+    "title": "Billie Jean",
+    "subtitle": "She Says I Am the One",
+    "artist": "Michael Jackson (1982)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Sleek bass-driven dance track where Michael Jackson first unveiled the iconic Moonwalk",
+    "fact": "Producer Quincy Jones wanted to cut the long intro, but Jackson insisted on keeping it because 'it makes me want to dance'.",
+    "waveform": "sawtooth",
+    "bpm": 117,
+    "notes": [
+      {
+        "f": 185,
+        "d": 0.25
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 246.94,
+        "d": 0.25
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Beat It",
+        "subtitle": "Michael Jackson"
+      },
+      {
+        "title": "Thriller",
+        "subtitle": "Michael Jackson"
+      },
+      {
+        "title": "Bad",
+        "subtitle": "Michael Jackson"
+      }
+    ]
+  },
+  {
+    "id": "stayin-alive",
+    "title": "Stayin' Alive",
+    "subtitle": "Saturday Night Fever Disco Strut",
+    "artist": "Bee Gees (1977)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Disco strut featuring falsetto vocals and a 104 BPM tempo used worldwide for CPR training",
+    "fact": "Because the drummer had to return home for family reasons, the Bee Gees looped two bars of a previously recorded drum track, creating one of disco's first drum loops!",
+    "waveform": "sawtooth",
+    "bpm": 104,
+    "notes": [
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.3
+      },
+      {
+        "f": 349.23,
+        "d": 0.4
+      },
+      {
+        "f": 293.66,
+        "d": 0.55
+      },
+      {
+        "f": 261.63,
+        "d": 0.3
+      },
+      {
+        "f": 293.66,
+        "d": 0.65
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Night Fever",
+        "subtitle": "Bee Gees"
+      },
+      {
+        "title": "Disco Inferno",
+        "subtitle": "The Trammps"
+      },
+      {
+        "title": "I Will Survive",
+        "subtitle": "Gloria Gaynor"
+      }
+    ]
+  },
+  {
+    "id": "smoke-on-the-water",
+    "title": "Smoke on the Water",
+    "subtitle": "0-3-5 Guitar Riff",
+    "artist": "Deep Purple / Ritchie Blackmore (1972)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "The quintessential 4-note blues power-chord riff taught to every beginning electric guitar player",
+    "fact": "Written about the true event where the Montreux Casino burned to the ground during a Frank Zappa concert after someone fired a flare gun into the ceiling.",
+    "waveform": "sawtooth",
+    "bpm": 114,
+    "notes": [
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 233.08,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.5
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 233.08,
+        "d": 0.35
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.6
+      },
+      {
+        "f": 196,
+        "d": 0.35
+      },
+      {
+        "f": 233.08,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.5
+      },
+      {
+        "f": 233.08,
+        "d": 0.35
+      },
+      {
+        "f": 196,
+        "d": 0.8
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Iron Man",
+        "subtitle": "Black Sabbath"
+      },
+      {
+        "title": "Sunshine of Your Love",
+        "subtitle": "Cream"
+      },
+      {
+        "title": "Whole Lotta Love",
+        "subtitle": "Led Zeppelin"
+      }
+    ]
+  },
+  {
+    "id": "eye-of-the-tiger",
+    "title": "Eye of the Tiger",
+    "subtitle": "Rocky III Training Anthem",
+    "artist": "Survivor (1982)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Staccato guitar punches that pump up boxers running up city hall stairs: 'Rising up, back on the street...'",
+    "fact": "Sylvester Stallone commissioned the song after Queen denied permission to use 'Another One Bites the Dust' in Rocky III.",
+    "waveform": "sawtooth",
+    "bpm": 109,
+    "notes": [
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 261.63,
+        "d": 0.2
+      },
+      {
+        "f": 233.08,
+        "d": 0.2
+      },
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 261.63,
+        "d": 0.2
+      },
+      {
+        "f": 233.08,
+        "d": 0.2
+      },
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 261.63,
+        "d": 0.2
+      },
+      {
+        "f": 207.65,
+        "d": 0.25
+      },
+      {
+        "f": 233.08,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Gonna Fly Now (Rocky)",
+        "subtitle": "Bill Conti"
+      },
+      {
+        "title": "Burning Heart",
+        "subtitle": "Survivor"
+      },
+      {
+        "title": "Danger Zone",
+        "subtitle": "Kenny Loggins"
+      }
+    ]
+  },
+  {
+    "id": "dont-stop-believin",
+    "title": "Don't Stop Believin'",
+    "subtitle": "Midnight Train Goin' Anywhere",
+    "artist": "Journey (1981)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Driving piano ostinato telling the story of a small-town girl and a city boy born in South Detroit",
+    "fact": "Steve Perry later admitted there is actually no such geographic place as 'South Detroit' (directly south of Detroit is Windsor, Canada), but he chose it because it sounded poetic!",
+    "waveform": "triangle",
+    "bpm": 119,
+    "notes": [
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 246.94,
+        "d": 0.25
+      },
+      {
+        "f": 207.65,
+        "d": 0.25
+      },
+      {
+        "f": 246.94,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 277.18,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 277.18,
+        "d": 0.35
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Open Arms",
+        "subtitle": "Journey"
+      },
+      {
+        "title": "Faithfully",
+        "subtitle": "Journey"
+      },
+      {
+        "title": "Livin' on a Prayer",
+        "subtitle": "Bon Jovi"
+      }
+    ]
+  },
+  {
+    "id": "smells-like-teen-spirit",
+    "title": "Smells Like Teen Spirit",
+    "subtitle": "Nevermind Grunge Revolution",
+    "artist": "Nirvana / Kurt Cobain (1991)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Explosive 4-chord grunge anthem that knocked Michael Jackson from #1 and defined 90s alternative rock",
+    "fact": "Cobain got the title after friend Kathleen Hanna spray-painted 'Kurt smells like Teen Spirit' on his bedroom wall, referring to a popular deodorant brand Cobain had never heard of.",
+    "waveform": "sawtooth",
+    "bpm": 117,
+    "notes": [
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 415.3,
+        "d": 0.3
+      },
+      {
+        "f": 415.3,
+        "d": 0.3
+      },
+      {
+        "f": 554.37,
+        "d": 0.3
+      },
+      {
+        "f": 554.37,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Come as You Are",
+        "subtitle": "Nirvana"
+      },
+      {
+        "title": "Lithium",
+        "subtitle": "Nirvana"
+      },
+      {
+        "title": "Black Hole Sun",
+        "subtitle": "Soundgarden"
+      }
+    ]
+  },
+  {
+    "id": "viva-la-vida",
+    "title": "Viva La Vida",
+    "subtitle": "I Used to Rule the World",
+    "artist": "Coldplay (2008)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Sweeping string ostinato about fallen royalty: 'I hear Jerusalem bells a-ringin', Roman cavalry choirs are singin''",
+    "fact": "Built around a syncopated 4-chord string quartet loop, the title was inspired by a still-life painting of watermelons by Mexican artist Frida Kahlo.",
+    "waveform": "triangle",
+    "bpm": 138,
+    "notes": [
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 415.3,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Clocks",
+        "subtitle": "Coldplay"
+      },
+      {
+        "title": "Yellow",
+        "subtitle": "Coldplay"
+      },
+      {
+        "title": "The Scientist",
+        "subtitle": "Coldplay"
+      }
+    ]
+  },
+  {
+    "id": "dancing-queen",
+    "title": "Dancing Queen",
+    "subtitle": "Young and Sweet, Only Seventeen",
+    "artist": "ABBA (1976)",
+    "category": "Pop & Rock Hits",
+    "categoryClass": "badge-pop",
+    "clue": "Euro-pop piano glissando hook celebrating Friday night disco euphoria under the neon lights",
+    "fact": "ABBA member Anni-Frid Lyngstad cried tears of joy when she first heard the backing track in the studio, declaring it would become an instant worldwide classic.",
+    "waveform": "sawtooth",
+    "bpm": 101,
+    "notes": [
+      {
+        "f": 554.37,
+        "d": 0.3
+      },
+      {
+        "f": 493.88,
+        "d": 0.2
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 554.37,
+        "d": 0.35
+      },
+      {
+        "f": 659.25,
+        "d": 0.35
+      },
+      {
+        "f": 739.99,
+        "d": 0.4
+      },
+      {
+        "f": 659.25,
+        "d": 0.4
+      },
+      {
+        "f": 554.37,
+        "d": 0.3
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Mamma Mia",
+        "subtitle": "ABBA"
+      },
+      {
+        "title": "Waterloo",
+        "subtitle": "ABBA"
+      },
+      {
+        "title": "Take a Chance on Me",
+        "subtitle": "ABBA"
+      }
+    ]
+  },
+  {
+    "id": "never-gonna-give-you-up",
+    "title": "Never Gonna Give You Up",
+    "subtitle": "The Legendary Rickroll",
+    "artist": "Rick Astley (1987)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Upbeat dance-pop synth hook that became the most celebrated bait-and-switch internet prank",
+    "fact": "Written by the powerhouse UK production trio Stock Aitken Waterman, the song hit #1 in 25 countries before its historic 21st-century rebirth as the 'Rickroll'.",
+    "waveform": "square",
+    "bpm": 113,
+    "notes": [
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 587.33,
+        "d": 0.4
+      },
+      {
+        "f": 587.33,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.7
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Together Forever",
+        "subtitle": "Rick Astley"
+      },
+      {
+        "title": "You Spin Me Round",
+        "subtitle": "Dead or Alive"
+      },
+      {
+        "title": "Never Can Say Goodbye",
+        "subtitle": "The Communards"
+      }
+    ]
+  },
+  {
+    "id": "axel-f",
+    "title": "Axel F (Beverly Hills Cop)",
+    "subtitle": "Synthesizer Comedy Riff",
+    "artist": "Harold Faltermeyer (1984)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Synclavier and Roland Jupiter-8 synth instrumental for Eddie Murphy's streetwise Detroit detective",
+    "fact": "Harold Faltermeyer programmed the riff using three analog synthesizers: a Roland Jupiter-8 for the lead brass, a Moog for bass, and a Yamaha DX7 for bell accents.",
+    "waveform": "square",
+    "bpm": 118,
+    "notes": [
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.15
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 311.13,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 523.25,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.15
+      },
+      {
+        "f": 554.37,
+        "d": 0.25
+      },
+      {
+        "f": 523.25,
+        "d": 0.2
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Miami Vice Theme",
+        "subtitle": "Jan Hammer"
+      },
+      {
+        "title": "Crockett's Theme",
+        "subtitle": "Jan Hammer"
+      },
+      {
+        "title": "Knight Rider Theme",
+        "subtitle": "Stu Phillips"
+      }
+    ]
+  },
+  {
+    "id": "take-on-me",
+    "title": "Take On Me",
+    "subtitle": "Pencil-Sketch Rotoscoped Classic",
+    "artist": "a-ha (1985)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Roland Juno-60 synth riff and Morten Harket's soaring 2.5-octave falsetto leap",
+    "fact": "The groundbreaking hand-drawn rotoscope animation music video took 16 weeks to illustrate over 3,000 live-action film frames.",
+    "waveform": "sawtooth",
+    "bpm": 168,
+    "notes": [
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "The Sun Always Shines on T.V.",
+        "subtitle": "a-ha"
+      },
+      {
+        "title": "Blue Monday",
+        "subtitle": "New Order"
+      },
+      {
+        "title": "Tainted Love",
+        "subtitle": "Soft Cell"
+      }
+    ]
+  },
+  {
+    "id": "girls-just-want-to-have-fun",
+    "title": "Girls Just Want to Have Fun",
+    "subtitle": "80s New Wave Pop Anthem",
+    "artist": "Cyndi Lauper (1983)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Irreverent, bouncy new wave synth guitar hook celebrating youthful freedom and rebellion",
+    "fact": "Originally written from a male perspective by Robert Hazard, Cyndi Lauper substantially modified the lyrics to transform it into a feminist celebration of joy.",
+    "waveform": "sawtooth",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.35
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Time After Time",
+        "subtitle": "Cyndi Lauper"
+      },
+      {
+        "title": "Material Girl",
+        "subtitle": "Madonna"
+      },
+      {
+        "title": "Walking on Sunshine",
+        "subtitle": "Katrina and the Waves"
+      }
+    ]
+  },
+  {
+    "id": "final-countdown",
+    "title": "The Final Countdown",
+    "subtitle": "We're Leaving Together",
+    "artist": "Europe (1986)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Epic synthesizer trumpet fanfare played on a Roland JX-8P before rocketing off to Venus",
+    "fact": "Vocalist Joey Tempest borrowed a Korg Polysix synthesizer from a college classmate back in 1981 to compose the fanfare, keeping it tucked away in a drawer for five years.",
+    "waveform": "sawtooth",
+    "bpm": 118,
+    "notes": [
+      {
+        "f": 739.99,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 739.99,
+        "d": 0.4
+      },
+      {
+        "f": 493.88,
+        "d": 0.7
+      },
+      {
+        "f": 783.99,
+        "d": 0.25
+      },
+      {
+        "f": 739.99,
+        "d": 0.25
+      },
+      {
+        "f": 783.99,
+        "d": 0.35
+      },
+      {
+        "f": 739.99,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Jump",
+        "subtitle": "Van Halen"
+      },
+      {
+        "title": "Here I Go Again",
+        "subtitle": "Whitesnake"
+      },
+      {
+        "title": "Separate Ways",
+        "subtitle": "Journey"
+      }
+    ]
+  },
+  {
+    "id": "careless-whisper",
+    "title": "Careless Whisper",
+    "subtitle": "Guilty Feet Have Got No Rhythm",
+    "artist": "George Michael / Wham! (1984)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "The most famous sultry alto saxophone hook in pop history, written on a London bus",
+    "fact": "George Michael rejected 10 different professional saxophone studio takes before session player Steve Gregory finally nailed the perfect melancholy breath tone.",
+    "waveform": "sawtooth",
+    "bpm": 76,
+    "notes": [
+      {
+        "f": 587.33,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Baker Street",
+        "subtitle": "Gerry Rafferty"
+      },
+      {
+        "title": "Smooth Operator",
+        "subtitle": "Sade"
+      },
+      {
+        "title": "One More Night",
+        "subtitle": "Phil Collins"
+      }
+    ]
+  },
+  {
+    "id": "sweet-dreams",
+    "title": "Sweet Dreams (Are Made of This)",
+    "subtitle": "Who Am I to Disagree?",
+    "artist": "Eurythmics (1983)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Hypnotic Movement Systems synthesizer loop and Annie Lennox's striking orange-buzzcut vocals",
+    "fact": "Dave Stewart discovered the bass riff accidentally when reversing an audio track on an 8-track tape recorder in their makeshift attic studio.",
+    "waveform": "square",
+    "bpm": 125,
+    "notes": [
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Here Comes the Rain Again",
+        "subtitle": "Eurythmics"
+      },
+      {
+        "title": "Blue Monday",
+        "subtitle": "New Order"
+      },
+      {
+        "title": "Don't You Want Me",
+        "subtitle": "The Human League"
+      }
+    ]
+  },
+  {
+    "id": "all-star",
+    "title": "All Star",
+    "subtitle": "Somebody Once Told Me",
+    "artist": "Smash Mouth (1999)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Catchy 90s ska-pop tune forever engraved into pop culture as the green ogre Shrek's morning routine",
+    "fact": "Songwriter Greg Camp wrote the lyrics to empower kids who were being bullied, encouraging them to find their inner shine and ignore cynics.",
+    "waveform": "triangle",
+    "bpm": 104,
+    "notes": [
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 554.37,
+        "d": 0.4
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.35
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Walkin' on the Sun",
+        "subtitle": "Smash Mouth"
+      },
+      {
+        "title": "Fly",
+        "subtitle": "Sugar Ray"
+      },
+      {
+        "title": "Semi-Charmed Life",
+        "subtitle": "Third Eye Blind"
+      }
+    ]
+  },
+  {
+    "id": "i-want-it-that-way",
+    "title": "I Want It That Way",
+    "subtitle": "Tell Me Why!",
+    "artist": "Backstreet Boys (1999)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Acoustic arpeggio 90s boyband anthem: 'Tell me why! Ain't nothin' but a heartache...'",
+    "fact": "Produced by Swedish mastermind Max Martin, who admitted his English wasn't fluent at the time, leading to abstract lyrics that fans still debate.",
+    "waveform": "sine",
+    "bpm": 99,
+    "notes": [
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.35
+      },
+      {
+        "f": 554.37,
+        "d": 0.6
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 369.99,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Bye Bye Bye",
+        "subtitle": "*NSYNC"
+      },
+      {
+        "title": "Everybody (Backstreet's Back)",
+        "subtitle": "Backstreet Boys"
+      },
+      {
+        "title": "As Long as You Love Me",
+        "subtitle": "Backstreet Boys"
+      }
+    ]
+  },
+  {
+    "id": "blue-da-ba-dee",
+    "title": "Blue (Da Ba Dee)",
+    "subtitle": "I'm Blue Da Ba Dee Da Ba Daa",
+    "artist": "Eiffel 65 (1998)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Eurodance autotune synth anthem about an alien living in a blue world with blue Corvette",
+    "fact": "One of the earliest global hit singles to prominently use pitch-correction software as an artistic robotic vocal effect.",
+    "waveform": "sawtooth",
+    "bpm": 128,
+    "notes": [
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 587.33,
+        "d": 0.3
+      },
+      {
+        "f": 466.16,
+        "d": 0.2
+      },
+      {
+        "f": 523.25,
+        "d": 0.3
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.3
+      },
+      {
+        "f": 440,
+        "d": 0.2
+      },
+      {
+        "f": 466.16,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.2
+      },
+      {
+        "f": 293.66,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Better Off Alone",
+        "subtitle": "Alice Deejay"
+      },
+      {
+        "title": "Sandstorm",
+        "subtitle": "Darude"
+      },
+      {
+        "title": "The Rhythm of the Night",
+        "subtitle": "Corona"
+      }
+    ]
+  },
+  {
+    "id": "u-cant-touch-this",
+    "title": "U Can't Touch This",
+    "subtitle": "Stop! Hammer Time!",
+    "artist": "MC Hammer (1990)",
+    "category": "80s & 90s Nostalgia",
+    "categoryClass": "badge-nostalgia",
+    "clue": "Parachute-pants dance anthem famously built on Rick James's funky 'Super Freak' bass riff",
+    "fact": "Became the first rap song ever nominated for the Grammy Award for Record of the Year and won Best R&B Song.",
+    "waveform": "sawtooth",
+    "bpm": 133,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.2
+      },
+      {
+        "f": 233.08,
+        "d": 0.2
+      },
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 220,
+        "d": 0.3
+      },
+      {
+        "f": 261.63,
+        "d": 0.3
+      },
+      {
+        "f": 293.66,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Ice Ice Baby",
+        "subtitle": "Vanilla Ice"
+      },
+      {
+        "title": "Super Freak",
+        "subtitle": "Rick James"
+      },
+      {
+        "title": "Gonna Make You Sweat",
+        "subtitle": "C+C Music Factory"
+      }
+    ]
+  },
+  {
+    "id": "simpsons-theme",
+    "title": "The Simpsons (Main Theme)",
+    "subtitle": "Danny Elfman Animated Opener",
+    "artist": "Danny Elfman (1989)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "Lydian mode theme opening with clouds parting and angels singing the cartoon family's surname",
+    "fact": "Danny Elfman wrote the entire orchestral theme in his car on the drive home after receiving a rough sketch from creator Matt Groening.",
+    "waveform": "sawtooth",
+    "bpm": 140,
+    "notes": [
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 369.99,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 220,
+        "d": 0.35
+      },
+      {
+        "f": 185,
+        "d": 0.15
+      },
+      {
+        "f": 185,
+        "d": 0.15
+      },
+      {
+        "f": 185,
+        "d": 0.15
+      },
+      {
+        "f": 196,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Futurama Theme",
+        "subtitle": "Christopher Tyng"
+      },
+      {
+        "title": "Family Guy Theme",
+        "subtitle": "Walter Murphy"
+      },
+      {
+        "title": "King of the Hill Theme",
+        "subtitle": "The Refreshments"
+      }
+    ]
+  },
+  {
+    "id": "flintstones",
+    "title": "The Flintstones Theme",
+    "subtitle": "Meet the Flintstones!",
+    "artist": "Hoyt Curtin (1960)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "'Flintstones, meet the Flintstones, they're the modern Stone Age family!'",
+    "fact": "Recorded with a 22-piece big band jazz orchestra and the Randy Van Horne Singers; the rhythm is inspired by Beethoven's Piano Sonata No. 17.",
+    "waveform": "triangle",
+    "bpm": 144,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 261.63,
+        "d": 0.3
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      },
+      {
+        "f": 440,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 261.63,
+        "d": 0.3
+      },
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 329.63,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.3
+      },
+      {
+        "f": 261.63,
+        "d": 0.3
+      },
+      {
+        "f": 293.66,
+        "d": 0.3
+      },
+      {
+        "f": 329.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "The Jetsons Theme",
+        "subtitle": "Hoyt Curtin"
+      },
+      {
+        "title": "Yogi Bear Theme",
+        "subtitle": "Hoyt Curtin"
+      },
+      {
+        "title": "Top Cat Theme",
+        "subtitle": "Hoyt Curtin"
+      }
+    ]
+  },
+  {
+    "id": "scooby-doo",
+    "title": "Scooby-Doo, Where Are You?",
+    "subtitle": "Mystery Machine Sleuths",
+    "artist": "David Mook & Ben Raleigh (1969)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "Bubblegum pop mystery jingle calling for a cowardly Great Dane to unmask ghostly villains",
+    "fact": "Written in the popular late-1960s bubblegum rock style made famous by The Monkees and The Archies.",
+    "waveform": "sawtooth",
+    "bpm": 124,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Josie and the Pussycats",
+        "subtitle": "Hoyt Curtin"
+      },
+      {
+        "title": "The Addams Family Theme",
+        "subtitle": "Vic Mizzy"
+      },
+      {
+        "title": "The Munsters Theme",
+        "subtitle": "Jack Marshall"
+      }
+    ]
+  },
+  {
+    "id": "spongebob",
+    "title": "SpongeBob SquarePants (Theme)",
+    "subtitle": "Who Lives in a Pineapple Under the Sea?",
+    "artist": "Mark Harrison & Blaise Smith (1999)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "Pirate sea shanty asking who lives in a yellow aquatic fruit beneath the Pacific waves",
+    "fact": "The famous opening melody is adapted from the 19th-century traditional sea chantey 'Blow the Man Down', sung by Painty the Pirate.",
+    "waveform": "triangle",
+    "bpm": 132,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.4
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "The Fairly OddParents",
+        "subtitle": "Ron Jones"
+      },
+      {
+        "title": "Phineas and Ferb",
+        "subtitle": "Bowling for Soup"
+      },
+      {
+        "title": "Rugrats (Main Title)",
+        "subtitle": "Mark Mothersbaugh"
+      }
+    ]
+  },
+  {
+    "id": "friends-theme",
+    "title": "Friends Theme (I'll Be There for You)",
+    "subtitle": "The Rembrandts Central Perk Opener",
+    "artist": "The Rembrandts (1994)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "90s jangle-pop theme famous for four fast rhythmic claps around a fountain sofa",
+    "fact": "Co-written by Friends creators Marta Kauffman and David Crane, radio DJs looped the 45-second TV snippet so many times the band was forced to record a full single.",
+    "waveform": "sawtooth",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 369.99,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 493.88,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Seinfeld Theme",
+        "subtitle": "Jonathan Wolff"
+      },
+      {
+        "title": "Full House Theme",
+        "subtitle": "Jesse Frederick"
+      },
+      {
+        "title": "Cheers Theme (Where Everybody Knows Your Name)",
+        "subtitle": "Gary Portnoy"
+      }
+    ]
+  },
+  {
+    "id": "game-of-thrones",
+    "title": "Game of Thrones (Main Title)",
+    "subtitle": "Ramin Djawadi Cello Ostinato",
+    "artist": "Ramin Djawadi (2011)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "Driving 3/4 cello minor arpeggios that accompany the mechanical map of Westeros",
+    "fact": "The producers explicitly forbade woodwinds or romantic violins because they felt it was too stereotypical of fantasy; Djawadi chose the dark resonance of the solo cello.",
+    "waveform": "triangle",
+    "bpm": 88,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 311.13,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 261.63,
+        "d": 0.4
+      },
+      {
+        "f": 311.13,
+        "d": 0.2
+      },
+      {
+        "f": 349.23,
+        "d": 0.2
+      },
+      {
+        "f": 293.66,
+        "d": 0.7
+      },
+      {
+        "f": 196,
+        "d": 0.4
+      },
+      {
+        "f": 233.08,
+        "d": 0.2
+      },
+      {
+        "f": 261.63,
+        "d": 0.2
+      },
+      {
+        "f": 293.66,
+        "d": 0.4
+      },
+      {
+        "f": 196,
+        "d": 0.4
+      },
+      {
+        "f": 233.08,
+        "d": 0.2
+      },
+      {
+        "f": 261.63,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Westworld Theme",
+        "subtitle": "Ramin Djawadi"
+      },
+      {
+        "title": "The Witcher (Toss a Coin)",
+        "subtitle": "Sonya Belousova"
+      },
+      {
+        "title": "Vikings Theme",
+        "subtitle": "Fever Ray"
+      }
+    ]
+  },
+  {
+    "id": "fresh-prince",
+    "title": "The Fresh Prince of Bel-Air",
+    "subtitle": "In West Philadelphia Born and Raised",
+    "artist": "DJ Jazzy Jeff & The Fresh Prince (1990)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "'Now this is a story all about how my life got flipped turned upside down...'",
+    "fact": "Will Smith wrote the lyrics in about 15 minutes during an impromptu jam session with Quincy Jones, who arranged the sitcom deal.",
+    "waveform": "sawtooth",
+    "bpm": 101,
+    "notes": [
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Family Matters Theme",
+        "subtitle": "Jesse Frederick"
+      },
+      {
+        "title": "Saved by the Bell",
+        "subtitle": "Scott Gale"
+      },
+      {
+        "title": "Boy Meets World",
+        "subtitle": "Ray Colcord"
+      }
+    ]
+  },
+  {
+    "id": "inspector-gadget",
+    "title": "Inspector Gadget Theme",
+    "subtitle": "Go-Go-Gadget Theme!",
+    "artist": "Shuki Levy & Haim Saban (1983)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "Minor-key animated theme inspired by Grieg's 'In the Hall of the Mountain King'",
+    "fact": "Shuki Levy based the driving chromatic melody directly on Edvard Grieg's Peer Gynt suite, matching the clumsy cyborg detective's secret agent mishaps.",
+    "waveform": "sawtooth",
+    "bpm": 140,
+    "notes": [
+      {
+        "f": 261.63,
+        "d": 0.25
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.4
+      },
+      {
+        "f": 415.3,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.35
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 311.13,
+        "d": 0.25
+      },
+      {
+        "f": 261.63,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Darkwing Duck Theme",
+        "subtitle": "Philip Giffin"
+      },
+      {
+        "title": "Teenage Mutant Ninja Turtles",
+        "subtitle": "Chuck Lorre"
+      },
+      {
+        "title": "Danger Mouse Theme",
+        "subtitle": "Mike Harding"
+      }
+    ]
+  },
+  {
+    "id": "jeopardy",
+    "title": "Jeopardy! (Think Music)",
+    "subtitle": "Final Jeopardy Countdown",
+    "artist": "Merv Griffin (1963)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "30-second ticking piano melody played while contestants write their Final Jeopardy answers",
+    "fact": "Merv Griffin originally wrote this melody as a lullaby for his son Tony, titled 'A Time for Tony'; Griffin earned over $80 million in royalties from it!",
+    "waveform": "sine",
+    "bpm": 120,
+    "notes": [
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 698.46,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 698.46,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.6
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 698.46,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 880,
+        "d": 0.4
+      },
+      {
+        "f": 783.99,
+        "d": 0.25
+      },
+      {
+        "f": 698.46,
+        "d": 0.25
+      },
+      {
+        "f": 659.25,
+        "d": 0.25
+      },
+      {
+        "f": 587.33,
+        "d": 0.5
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Wheel of Fortune Theme",
+        "subtitle": "Merv Griffin"
+      },
+      {
+        "title": "The Price Is Right Theme",
+        "subtitle": "Edd Kalehoff"
+      },
+      {
+        "title": "Who Wants to Be a Millionaire",
+        "subtitle": "Keith Strachan"
+      }
+    ]
+  },
+  {
+    "id": "ducktales",
+    "title": "DuckTales Theme",
+    "subtitle": "Life is Like a Hurricane in Duckburg",
+    "artist": "Mark Mueller (1987)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "'Life is like a hurricane here in Duckburg... Race cars, lasers, aeroplanes, it's a duck-blur! Woo-oo!'",
+    "fact": "Mark Mueller also composed the Chip 'n Dale: Rescue Rangers theme; the irresistible pop hook has been praised by musicologists as an infectious earworm.",
+    "waveform": "triangle",
+    "bpm": 136,
+    "notes": [
+      {
+        "f": 349.23,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.35
+      },
+      {
+        "f": 466.16,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.25
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.25
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 523.25,
+        "d": 0.6
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Chip 'n Dale Rescue Rangers",
+        "subtitle": "Mark Mueller"
+      },
+      {
+        "title": "Darkwing Duck Theme",
+        "subtitle": "Philip Giffin"
+      },
+      {
+        "title": "TaleSpin Theme",
+        "subtitle": "Michael Silversher"
+      }
+    ]
+  },
+  {
+    "id": "mister-rogers",
+    "title": "Mister Rogers' Neighborhood",
+    "subtitle": "Won't You Be My Neighbor?",
+    "artist": "Fred Rogers (1967)",
+    "category": "TV & Cartoons",
+    "categoryClass": "badge-tv",
+    "clue": "'It's a beautiful day in this neighborhood, a beautiful day for a neighbor...'",
+    "fact": "Fred Rogers holds a degree in music composition from Rollins College and wrote over 200 songs for the television program, accompanied by jazz pianist Johnny Costa.",
+    "waveform": "sine",
+    "bpm": 110,
+    "notes": [
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.45
+      },
+      {
+        "f": 293.66,
+        "d": 0.25
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 349.23,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.5
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.45
+      },
+      {
+        "f": 440,
+        "d": 0.35
+      },
+      {
+        "f": 392,
+        "d": 0.35
+      },
+      {
+        "f": 329.63,
+        "d": 0.35
+      },
+      {
+        "f": 261.63,
+        "d": 0.7
+      }
+    ],
+    "distractors": [
+      {
+        "title": "Sesame Street (Sunny Day)",
+        "subtitle": "Joe Raposo"
+      },
+      {
+        "title": "Reading Rainbow Theme",
+        "subtitle": "Steve Horelick"
+      },
+      {
+        "title": "The Muppet Show Theme",
+        "subtitle": "Sam Pottle"
+      }
+    ]
+  }
+];
+
+    // ==========================================
+    // WEB AUDIO SYNTHESIS & SOUND EFFECTS ENGINE
+    // ==========================================
     let audioCtx = null;
     let masterCompressor = null;
 
@@ -505,6 +6249,11 @@
         if (AC) {
           audioCtx = new AC();
           masterCompressor = audioCtx.createDynamicsCompressor();
+          masterCompressor.threshold.setValueAtTime(-18, audioCtx.currentTime);
+          masterCompressor.knee.setValueAtTime(30, audioCtx.currentTime);
+          masterCompressor.ratio.setValueAtTime(8, audioCtx.currentTime);
+          masterCompressor.attack.setValueAtTime(0.005, audioCtx.currentTime);
+          masterCompressor.release.setValueAtTime(0.1, audioCtx.currentTime);
           masterCompressor.connect(audioCtx.destination);
         }
       }
@@ -514,533 +6263,11 @@
       return audioCtx;
     }
 
-    // Comprehensive Melody Library (20 Famous Tunes)
-    const TUNE_LIBRARY = [
-      {
-        title: "Star Wars (Main Title)",
-        artist: "John Williams (1977)",
-        category: "Movie & TV Themes",
-        fact: "Famous for its triumphant brass fanfare, opening with a bold Perfect 5th interval leap (D to A) that instantly evokes heroic grandeur.",
-        bpm: 108,
-        notes: [
-          { f: 293.66, d: 0.4 }, // D4
-          { f: 440.00, d: 0.8 }, // A4
-          { f: 392.00, d: 0.25 }, // G4
-          { f: 369.99, d: 0.25 }, // F#4
-          { f: 329.63, d: 0.25 }, // E4
-          { f: 587.33, d: 0.8 }, // D5
-          { f: 440.00, d: 0.4 }  // A4
-        ],
-        distractors: [
-          { title: "Star Trek Theme", subtitle: "Alexander Courage" },
-          { title: "Jurassic Park Theme", subtitle: "John Williams" },
-          { title: "Indiana Jones March", subtitle: "John Williams" }
-        ]
-      },
-      {
-        title: "Super Mario Bros (Theme)",
-        artist: "Koji Kondo (1985)",
-        category: "Video Game Classics",
-        fact: "Composed on the NES 2A03 chip using calypso-inspired swing rhythms. It is recognized by over 90% of gamers worldwide.",
-        bpm: 140,
-        notes: [
-          { f: 659.25, d: 0.18 }, // E5
-          { f: 659.25, d: 0.22 }, // E5
-          { f: 0, d: 0.18 },
-          { f: 659.25, d: 0.22 }, // E5
-          { f: 0, d: 0.18 },
-          { f: 523.25, d: 0.22 }, // C5
-          { f: 659.25, d: 0.35 }, // E5
-          { f: 783.99, d: 0.45 }, // G5
-          { f: 0, d: 0.35 },
-          { f: 392.00, d: 0.45 }  // G4
-        ],
-        distractors: [
-          { title: "The Legend of Zelda", subtitle: "Koji Kondo" },
-          { title: "Sonic the Hedgehog", subtitle: "Masato Nakamura" },
-          { title: "Pac-Man Theme", subtitle: "Toshio Kai" }
-        ]
-      },
-      {
-        title: "Beethoven's 5th Symphony",
-        artist: "Ludwig van Beethoven (1808)",
-        category: "Classical Masterpieces",
-        fact: "The legendary 'short-short-short-long' motif is described by historians as 'Fate knocking at the door'.",
-        bpm: 108,
-        notes: [
-          { f: 392.00, d: 0.22 }, // G4
-          { f: 392.00, d: 0.22 }, // G4
-          { f: 392.00, d: 0.22 }, // G4
-          { f: 311.13, d: 0.9 },  // Eb4
-          { f: 0, d: 0.4 },
-          { f: 349.23, d: 0.22 }, // F4
-          { f: 349.23, d: 0.22 }, // F4
-          { f: 349.23, d: 0.22 }, // F4
-          { f: 293.66, d: 1.1 }   // D4
-        ],
-        distractors: [
-          { title: "Mozart's Symphony No. 40", subtitle: "W.A. Mozart" },
-          { title: "Ode to Joy (9th Symphony)", subtitle: "Beethoven" },
-          { title: "Tchaikovsky's 1812 Overture", subtitle: "P.I. Tchaikovsky" }
-        ]
-      },
-      {
-        title: "Tetris (Korobeiniki)",
-        artist: "Russian Folk Song / Hirokazu Tanaka (1989)",
-        category: "Video Game Classics",
-        fact: "Derived from a 19th-century Russian poem, this energetic minor tune became the definitive soundtrack of Game Boy gaming.",
-        bpm: 130,
-        notes: [
-          { f: 659.25, d: 0.35 }, // E5
-          { f: 493.88, d: 0.2 },  // B4
-          { f: 523.25, d: 0.2 },  // C5
-          { f: 587.33, d: 0.35 }, // D5
-          { f: 523.25, d: 0.2 },  // C5
-          { f: 493.88, d: 0.2 },  // B4
-          { f: 440.00, d: 0.4 },  // A4
-          { f: 440.00, d: 0.2 },  // A4
-          { f: 523.25, d: 0.2 },  // C5
-          { f: 659.25, d: 0.4 }   // E5
-        ],
-        distractors: [
-          { title: "Duck Hunt Theme", subtitle: "Nintendo" },
-          { title: "Pokemon Battle Theme", subtitle: "Junichi Masuda" },
-          { title: "Space Invaders", subtitle: "Taito" }
-        ]
-      },
-      {
-        title: "The Pink Panther Theme",
-        artist: "Henry Mancini (1963)",
-        category: "Movie & TV Themes",
-        fact: "Known for its slinky chromatic grace notes and minor blues mystery played on tenor saxophone.",
-        bpm: 110,
-        notes: [
-          { f: 311.13, d: 0.15 }, // D#4
-          { f: 329.63, d: 0.4 },  // E4
-          { f: 369.99, d: 0.15 }, // F#4
-          { f: 392.00, d: 0.4 },  // G4
-          { f: 311.13, d: 0.15 }, // D#4
-          { f: 329.63, d: 0.25 }, // E4
-          { f: 369.99, d: 0.15 }, // F#4
-          { f: 392.00, d: 0.25 }, // G4
-          { f: 523.25, d: 0.3 },  // C5
-          { f: 493.88, d: 0.5 }   // B4
-        ],
-        distractors: [
-          { title: "James Bond 007 Theme", subtitle: "Monty Norman" },
-          { title: "Mission: Impossible", subtitle: "Lalo Schifrin" },
-          { title: "The Godfather Waltz", subtitle: "Nino Rota" }
-        ]
-      },
-      {
-        title: "Für Elise",
-        artist: "Ludwig van Beethoven (1810)",
-        category: "Classical Masterpieces",
-        fact: "Beethoven's famous Bagatelle in A Minor switches rapidly between E and D-sharp (a half-step neighbor tone) before cascading down.",
-        bpm: 120,
-        notes: [
-          { f: 659.25, d: 0.25 }, // E5
-          { f: 622.25, d: 0.25 }, // D#5
-          { f: 659.25, d: 0.25 }, // E5
-          { f: 622.25, d: 0.25 }, // D#5
-          { f: 659.25, d: 0.25 }, // E5
-          { f: 493.88, d: 0.25 }, // B4
-          { f: 587.33, d: 0.25 }, // D5
-          { f: 523.25, d: 0.25 }, // C5
-          { f: 440.00, d: 0.6 }   // A4
-        ],
-        distractors: [
-          { title: "Moonlight Sonata", subtitle: "Beethoven" },
-          { title: "Clair de Lune", subtitle: "Claude Debussy" },
-          { title: "Chopin's Nocturne Op. 9", subtitle: "Frédéric Chopin" }
-        ]
-      },
-      {
-        title: "The Simpsons Theme",
-        artist: "Danny Elfman (1989)",
-        category: "Movie & TV Themes",
-        fact: "Famously composed in the rare Lydian Dominant scale, featuring an eerie raised 4th (Tritone C to F#) on the word 'The Simp-sons!'.",
-        bpm: 130,
-        notes: [
-          { f: 261.63, d: 0.4 }, // C4
-          { f: 329.63, d: 0.3 }, // E4
-          { f: 369.99, d: 0.3 }, // F#4
-          { f: 440.00, d: 0.4 }, // A4
-          { f: 392.00, d: 0.5 }, // G4
-          { f: 329.63, d: 0.3 }, // E4
-          { f: 261.63, d: 0.4 }  // C4
-        ],
-        distractors: [
-          { title: "Family Guy Theme", subtitle: "Walter Murphy" },
-          { title: "The Flintstones", subtitle: "Hoyt Curtin" },
-          { title: "Futurama Theme", subtitle: "Christopher Tyng" }
-        ]
-      },
-      {
-        title: "Billie Jean",
-        artist: "Michael Jackson (1982)",
-        category: "Classic Rock & Pop",
-        fact: "Features one of the most famous baseline grooves in pop history in F# Dorian mode, produced by Quincy Jones.",
-        bpm: 117,
-        notes: [
-          { f: 185.00, d: 0.25 }, // F#3
-          { f: 277.18, d: 0.25 }, // C#4
-          { f: 329.63, d: 0.25 }, // E4
-          { f: 369.99, d: 0.25 }, // F#4
-          { f: 329.63, d: 0.25 }, // E4
-          { f: 277.18, d: 0.25 }, // C#4
-          { f: 246.94, d: 0.25 }, // B3
-          { f: 277.18, d: 0.25 }  // C#4
-        ],
-        distractors: [
-          { title: "Smooth Criminal", subtitle: "Michael Jackson" },
-          { title: "Superstition", subtitle: "Stevie Wonder" },
-          { title: "Stayin' Alive", subtitle: "Bee Gees" }
-        ]
-      },
-      {
-        title: "Hedwig's Theme (Harry Potter)",
-        artist: "John Williams (2001)",
-        category: "Movie & TV Themes",
-        fact: "Played on the magical celesta (a bell piano) in E minor, setting the enchanting tone for the entire Wizarding World.",
-        bpm: 120,
-        notes: [
-          { f: 493.88, d: 0.35 }, // B4
-          { f: 659.25, d: 0.55 }, // E5
-          { f: 783.99, d: 0.3 },  // G5
-          { f: 739.99, d: 0.3 },  // F#5
-          { f: 659.25, d: 0.6 },  // E5
-          { f: 987.77, d: 0.4 },  // B5
-          { f: 880.00, d: 0.8 }   // A5
-        ],
-        distractors: [
-          { title: "Lord of the Rings Shire Theme", subtitle: "Howard Shore" },
-          { title: "Pirates of the Caribbean", subtitle: "Klaus Badelt" },
-          { title: "Chronicles of Narnia", subtitle: "Harry Gregson-Williams" }
-        ]
-      },
-      {
-        title: "Take On Me",
-        artist: "A-ha (1985)",
-        category: "Classic Rock & Pop",
-        fact: "Famous for its sparkling Roland Juno-60 synth riff and Morten Harket's soaring 2.5-octave vocal range.",
-        bpm: 169,
-        notes: [
-          { f: 369.99, d: 0.18 }, // F#4
-          { f: 369.99, d: 0.18 }, // F#4
-          { f: 293.66, d: 0.18 }, // D4
-          { f: 246.94, d: 0.18 }, // B3
-          { f: 329.63, d: 0.22 }, // E4
-          { f: 329.63, d: 0.22 }, // E4
-          { f: 415.30, d: 0.22 }, // G#4
-          { f: 415.30, d: 0.22 }, // G#4
-          { f: 440.00, d: 0.35 }  // A4
-        ],
-        distractors: [
-          { title: "Sweet Dreams", subtitle: "Eurythmics" },
-          { title: "Blue (Da Ba Dee)", subtitle: "Eiffel 65" },
-          { title: "Don't You Want Me", subtitle: "The Human League" }
-        ]
-      },
-      // 11. The Imperial March (Darth Vader's Theme)
-      {
-        id: "imperial-march",
-        title: "The Imperial March",
-        subtitle: "Darth Vader's Theme",
-        artist: "John Williams (1980)",
-        category: "Movies & Cinema",
-        categoryClass: "badge-movie",
-        fact: "The Imperial March in G minor uses heavy brass orchestration and dotted rhythmic march figures to personify galactic tyranny and power.",
-        waveform: "sawtooth",
-        notes: [
-          { f: 392.00, d: 0.45 }, // G4
-          { f: 392.00, d: 0.45 }, // G4
-          { f: 392.00, d: 0.45 }, // G4
-          { f: 311.13, d: 0.32 }, // Eb4
-          { f: 466.16, d: 0.14 }, // Bb4
-          { f: 392.00, d: 0.45 }, // G4
-          { f: 311.13, d: 0.32 }, // Eb4
-          { f: 466.16, d: 0.14 }, // Bb4
-          { f: 392.00, d: 0.75 }  // G4
-        ],
-        distractors: [
-          { title: "Duel of the Fates", subtitle: "John Williams" },
-          { title: "The Raiders March (Indiana Jones)", subtitle: "John Williams" },
-          { title: "Superman Theme", subtitle: "John Williams" }
-        ]
-      },
-      // 12. Seven Nation Army
-      {
-        id: "seven-nation-army",
-        title: "Seven Nation Army",
-        subtitle: "The Iconic Riff",
-        artist: "The White Stripes (2003)",
-        category: "Pop & Rock Hits",
-        categoryClass: "badge-pop",
-        fact: "Jack White created the legendary bassline not on a bass, but by running an acoustic hollowbody semi-acoustic guitar through a DigiTech Whammy pedal pitched one octave down.",
-        waveform: "triangle",
-        notes: [
-          { f: 329.63, d: 0.45 }, // E4
-          { f: 329.63, d: 0.22 }, // E4
-          { f: 392.00, d: 0.32 }, // G4
-          { f: 329.63, d: 0.32 }, // E4
-          { f: 293.66, d: 0.25 }, // D4
-          { f: 261.63, d: 0.55 }, // C4
-          { f: 246.94, d: 0.65 }  // B3
-        ],
-        distractors: [
-          { title: "Feel Good Inc.", subtitle: "Gorillaz" },
-          { title: "Another One Bites the Dust", subtitle: "Queen" },
-          { title: "Sweet Child O' Mine", subtitle: "Guns N' Roses" }
-        ]
-      },
-      // 13. Ode to Joy
-      {
-        id: "ode-to-joy",
-        title: "Ode to Joy",
-        subtitle: "Symphony No. 9 in D minor",
-        artist: "Ludwig van Beethoven (1824)",
-        category: "Classical Masterworks",
-        categoryClass: "badge-classic",
-        fact: "Beethoven was completely deaf when he composed the 9th Symphony. The famous theme is almost entirely stepwise diatonic motion, making it universally recognizable.",
-        waveform: "sine",
-        notes: [
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 392.00, d: 0.35 }, // G4
-          { f: 392.00, d: 0.35 }, // G4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 261.63, d: 0.35 }, // C4
-          { f: 261.63, d: 0.35 }, // C4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 329.63, d: 0.45 }, // E4
-          { f: 293.66, d: 0.20 }, // D4
-          { f: 293.66, d: 0.70 }  // D4
-        ],
-        distractors: [
-          { title: "Moonlight Sonata", subtitle: "Beethoven" },
-          { title: "Eine kleine Nachtmusik", subtitle: "Mozart" },
-          { title: "Spring (The Four Seasons)", subtitle: "Vivaldi" }
-        ]
-      },
-      // 14. Smoke on the Water
-      {
-        id: "smoke-on-the-water",
-        title: "Smoke on the Water",
-        subtitle: "The 0-3-5 Riff",
-        artist: "Deep Purple (1972)",
-        category: "Pop & Rock Hits",
-        categoryClass: "badge-pop",
-        fact: "Ritchie Blackmore played this famous riff using fourths (power dyads) plucked with bare fingers rather than a pick, inspired by parallel fifths in medieval modal harmony.",
-        waveform: "sawtooth",
-        notes: [
-          { f: 196.00, d: 0.35 }, // G3
-          { f: 233.08, d: 0.35 }, // Bb3
-          { f: 261.63, d: 0.45 }, // C4
-          { f: 196.00, d: 0.35 }, // G3
-          { f: 233.08, d: 0.35 }, // Bb3
-          { f: 277.18, d: 0.20 }, // Db4
-          { f: 261.63, d: 0.55 }, // C4
-          { f: 196.00, d: 0.35 }, // G3
-          { f: 233.08, d: 0.35 }, // Bb3
-          { f: 261.63, d: 0.45 }, // C4
-          { f: 233.08, d: 0.35 }, // Bb3
-          { f: 196.00, d: 0.70 }  // G3
-        ],
-        distractors: [
-          { title: "Iron Man", subtitle: "Black Sabbath" },
-          { title: "Back in Black", subtitle: "AC/DC" },
-          { title: "Whole Lotta Love", subtitle: "Led Zeppelin" }
-        ]
-      },
-      // 15. The Legend of Zelda (Main Theme)
-      {
-        id: "zelda-theme",
-        title: "The Legend of Zelda",
-        subtitle: "Overworld Main Theme",
-        artist: "Koji Kondo (1986)",
-        category: "Video Games",
-        categoryClass: "badge-game",
-        fact: "Koji Kondo wrote the iconic Overworld Theme overnight after learning that Ravel's Bolero (his original planned theme) had not yet entered the public domain in Japan!",
-        waveform: "square",
-        notes: [
-          { f: 233.08, d: 0.40 }, // Bb3
-          { f: 349.23, d: 0.40 }, // F4
-          { f: 349.23, d: 0.15 }, // F4
-          { f: 349.23, d: 0.15 }, // F4
-          { f: 392.00, d: 0.15 }, // G4
-          { f: 440.00, d: 0.15 }, // A4
-          { f: 466.16, d: 0.65 }, // Bb4
-          { f: 466.16, d: 0.15 }, // Bb4
-          { f: 466.16, d: 0.15 }, // Bb4
-          { f: 523.25, d: 0.15 }, // C5
-          { f: 587.33, d: 0.15 }, // D5
-          { f: 622.25, d: 0.65 }  // Eb5
-        ],
-        distractors: [
-          { title: "Song of Storms", subtitle: "Koji Kondo" },
-          { title: "Lost Woods Theme", subtitle: "Koji Kondo" },
-          { title: "Pokemon Theme", subtitle: "Junichi Masuda" }
-        ]
-      },
-      // 16. Mission: Impossible Theme
-      {
-        id: "mission-impossible",
-        title: "Mission: Impossible Theme",
-        subtitle: "The 5/4 Spy Cadence",
-        artist: "Lalo Schifrin (1966)",
-        category: "Movies & Cinema",
-        categoryClass: "badge-movie",
-        fact: "The rhythm of Mission: Impossible is written in 5/4 time signature (3+2), which spells out 'M-I' in Morse code: two dashes (--) followed by two dots (..).",
-        waveform: "sawtooth",
-        notes: [
-          { f: 196.00, d: 0.40 }, // G3
-          { f: 196.00, d: 0.40 }, // G3
-          { f: 233.08, d: 0.22 }, // Bb3
-          { f: 261.63, d: 0.22 }, // C4
-          { f: 196.00, d: 0.40 }, // G3
-          { f: 196.00, d: 0.40 }, // G3
-          { f: 185.00, d: 0.22 }, // F3
-          { f: 196.00, d: 0.22 }  // F#3
-        ],
-        distractors: [
-          { title: "James Bond 007 Theme", subtitle: "Monty Norman" },
-          { title: "Pink Panther Theme", subtitle: "Henry Mancini" },
-          { title: "Axel F (Beverly Hills Cop)", subtitle: "Harold Faltermeyer" }
-        ]
-      },
-      // 17. Twinkle, Twinkle Little Star
-      {
-        id: "twinkle-twinkle",
-        title: "Twinkle, Twinkle Little Star",
-        subtitle: "Ah! vous dirai-je, maman",
-        artist: "Traditional / W.A. Mozart (1781)",
-        category: "Classical Masterworks",
-        categoryClass: "badge-classic",
-        fact: "While popular as a nursery lullaby, Mozart composed 12 brilliant classical piano variations on this French 18th-century melody (K. 265).",
-        waveform: "sine",
-        notes: [
-          { f: 261.63, d: 0.35 }, // C4
-          { f: 261.63, d: 0.35 }, // C4
-          { f: 392.00, d: 0.35 }, // G4
-          { f: 392.00, d: 0.35 }, // G4
-          { f: 440.00, d: 0.35 }, // A4
-          { f: 440.00, d: 0.35 }, // A4
-          { f: 392.00, d: 0.70 }, // G4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 329.63, d: 0.35 }, // E4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 261.63, d: 0.70 }  // C4
-        ],
-        distractors: [
-          { title: "Baa Baa Black Sheep", subtitle: "Traditional" },
-          { title: "The Alphabet Song", subtitle: "Traditional" },
-          { title: "Mary Had a Little Lamb", subtitle: "Lowell Mason" }
-        ]
-      },
-      // 18. The Godfather Theme
-      {
-        id: "godfather",
-        title: "The Godfather Theme",
-        subtitle: "Speak Softly, Love",
-        artist: "Nino Rota (1972)",
-        category: "Movies & Cinema",
-        categoryClass: "badge-movie",
-        fact: "Nino Rota's melancholic Italian waltz uses a natural minor scale with chromatic neighboring tones to evoke Sicilian tragedy and family legacy.",
-        waveform: "triangle",
-        notes: [
-          { f: 261.63, d: 0.40 }, // C4
-          { f: 349.23, d: 0.40 }, // F4
-          { f: 415.30, d: 0.40 }, // Ab4
-          { f: 392.00, d: 0.25 }, // G4
-          { f: 349.23, d: 0.40 }, // F4
-          { f: 415.30, d: 0.40 }, // Ab4
-          { f: 349.23, d: 0.30 }, // F4
-          { f: 329.63, d: 0.25 }, // E4
-          { f: 293.66, d: 0.30 }, // D4
-          { f: 261.63, d: 0.60 }  // C4
-        ],
-        distractors: [
-          { title: "Cinema Paradiso", subtitle: "Ennio Morricone" },
-          { title: "Schindler's List", subtitle: "John Williams" },
-          { title: "Tarantella Napoletana", subtitle: "Traditional" }
-        ]
-      },
-      // 19. Bohemian Rhapsody
-      {
-        id: "bohemian-rhapsody",
-        title: "Bohemian Rhapsody",
-        subtitle: "Mama, just killed a man...",
-        artist: "Queen / Freddie Mercury (1975)",
-        category: "Pop & Rock Hits",
-        categoryClass: "badge-pop",
-        fact: "Freddie Mercury composed this operatic rock suite with 180 separate vocal overdubs using analog tape. The ballad section melody opens with a gentle descending sixth.",
-        waveform: "triangle",
-        notes: [
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 392.00, d: 0.50 }, // G4
-          { f: 349.23, d: 0.35 }, // F4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 261.63, d: 0.50 }, // C4
-          { f: 293.66, d: 0.35 }, // D4
-          { f: 349.23, d: 0.70 }  // F4
-        ],
-        distractors: [
-          { title: "Don't Stop Me Now", subtitle: "Queen" },
-          { title: "We Are the Champions", subtitle: "Queen" },
-          { title: "Hey Jude", subtitle: "The Beatles" }
-        ]
-      },
-      // 20. Stayin' Alive
-      {
-        id: "stayin-alive",
-        title: "Stayin' Alive",
-        subtitle: "Saturday Night Fever Groove",
-        artist: "Bee Gees (1977)",
-        category: "Pop & Rock Hits",
-        categoryClass: "badge-pop",
-        fact: "The tempo of Stayin' Alive (104 BPM) matches the ideal rate of 100-120 compressions per minute recommended by the American Heart Association for CPR!",
-        waveform: "sawtooth",
-        notes: [
-          { f: 349.23, d: 0.30 }, // F4
-          { f: 349.23, d: 0.30 }, // F4
-          { f: 349.23, d: 0.30 }, // F4
-          { f: 329.63, d: 0.30 }, // E4
-          { f: 349.23, d: 0.40 }, // F4
-          { f: 293.66, d: 0.55 }, // D4
-          { f: 261.63, d: 0.30 }, // C4
-          { f: 293.66, d: 0.65 }  // D4
-        ],
-        distractors: [
-          { title: "Night Fever", subtitle: "Bee Gees" },
-          { title: "Disco Inferno", subtitle: "The Trammps" },
-          { title: "I Will Survive", subtitle: "Gloria Gaynor" }
-        ]
-      }
-    ];
-
-    let currentScore = 0;
-    let currentStreak = 0;
-    let currentRound = 0;
-    let totalRounds = 10;
-    let currentTune = null;
-    let playSpeed = 1.0;
-    let isTunePlaying = false;
-    let melodyTimeouts = [];
-
-    // Visualizer Canvas
+    // Visualizer Bars
     const canvas = document.getElementById('visualizerCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
-    canvas.height = 140;
+    canvas.height = 100;
     let visualBars = new Array(36).fill(0);
 
     function renderVisualizer() {
@@ -1050,17 +6277,17 @@
       const barW = w / visualBars.length;
 
       for (let i = 0; i < visualBars.length; i++) {
-        const barH = visualBars[i] * (h * 0.8);
-        ctx.fillStyle = `hsl(${180 + i * 4}, 90%, ${isTunePlaying ? 65 : 45}%)`;
-        ctx.fillRect(i * barW + 2, h - barH - 10, barW - 4, barH + 2);
-        visualBars[i] *= 0.92; // Decay
+        const barH = visualBars[i] * (h * 0.85);
+        ctx.fillStyle = `hsl(${175 + i * 4}, 90%, ${isTunePlaying ? 65 : 40}%)`;
+        ctx.fillRect(i * barW + 2, h - barH - 8, barW - 4, barH + 2);
+        visualBars[i] *= 0.91; // decay
       }
       requestAnimationFrame(renderVisualizer);
     }
     requestAnimationFrame(renderVisualizer);
 
-    function playSynthNote(freq, duration) {
-      if (freq === 0) return;
+    function playSynthNote(freq, duration, waveform = 'triangle') {
+      if (!freq || freq <= 0) return;
       const actx = getCtx();
       if (!actx) return;
       const now = actx.currentTime;
@@ -1068,7 +6295,7 @@
       const osc = actx.createOscillator();
       const gain = actx.createGain();
 
-      osc.type = 'triangle';
+      osc.type = waveform;
       osc.frequency.setValueAtTime(freq, now);
 
       gain.gain.setValueAtTime(0.001, now);
@@ -1088,27 +6315,298 @@
       if (visualBars[barIdx + 1]) visualBars[barIdx + 1] = 0.6;
     }
 
+    // Sound Effects
+    function playSfxSuccess() {
+      const actx = getCtx();
+      if (!actx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playSynthNote(freq, 0.25, 'triangle'), idx * 80);
+      });
+    }
+
+    function playSfxWrong() {
+      const actx = getCtx();
+      if (!actx) return;
+      playSynthNote(164.81, 0.35, 'sawtooth'); // E3
+      setTimeout(() => playSynthNote(123.47, 0.45, 'sawtooth'), 150); // B2
+    }
+
+    function playSfxChallenge() {
+      const actx = getCtx();
+      if (!actx) return;
+      const notes = [440, 554.37, 659.25, 880];
+      notes.forEach((freq, idx) => {
+        setTimeout(() => playSynthNote(freq, 0.18, 'square'), idx * 60);
+      });
+    }
+
+    // ==========================================
+    // GAME STATE & CONFIGURATION
+    // ==========================================
+    let gameMode = 'solo'; // 'solo' or '2p'
+    let currentRound = 0;
+    const totalRounds = 7;
+    let selectedCategory = 'All';
+    let currentTune = null;
+    let playSpeed = 1.0;
+    let isTunePlaying = false;
+    let melodyTimeouts = [];
+
+    // Solo Mode State
+    let soloScore = 0;
+    let soloStreak = 0;
+    let soloNoteLimit = 0; // 0 = full melody
+
+    // 2-Player Showdown State
+    let p1Score = 0;
+    let p2Score = 0;
+    let activeChooser = 1; // 1 or 2
+    let activeBidder = 1;  // 1 or 2
+    let currentBid = 6;    // notes
+    let challenger = 2;
+    let challengedPlayer = 1;
+    let isBiddingPhase = true;
+    let isStealPhase = false;
+
+    // Filter tunes by category
+    function getTunesForCategory(cat) {
+      if (cat === 'All') return [...TUNE_LIBRARY];
+      return TUNE_LIBRARY.filter(t => t.category === cat);
+    }
+
+    // Switch Game Mode
+    function switchGameMode(mode) {
+      gameMode = mode;
+      stopMelodyPlayback();
+      document.getElementById('tabSolo').classList.toggle('active', mode === 'solo');
+      document.getElementById('tab2P').classList.toggle('active', mode === '2p');
+      document.getElementById('soloStats').style.display = mode === 'solo' ? 'flex' : 'none';
+      document.getElementById('twoPlayerStats').style.display = mode === '2p' ? 'flex' : 'none';
+      document.getElementById('soloNoteSelector').style.display = mode === 'solo' ? 'flex' : 'none';
+
+      restartMatch();
+    }
+
+    function restartMatch() {
+      currentRound = 0;
+      soloScore = 0;
+      soloStreak = 0;
+      p1Score = 0;
+      p2Score = 0;
+      activeChooser = 1;
+      updateHeaderScores();
+      showCategorySelectScreen();
+    }
+
+    function updateHeaderScores() {
+      document.getElementById('scoreVal').textContent = soloScore;
+      document.getElementById('streakVal').textContent = soloStreak;
+      document.getElementById('p1Score').textContent = `${p1Score} pts`;
+      document.getElementById('p2Score').textContent = `${p2Score} pts`;
+
+      const p1Pill = document.getElementById('p1ScorePill');
+      const p2Pill = document.getElementById('p2ScorePill');
+      if (gameMode === '2p') {
+        p1Pill.classList.toggle('active', activeBidder === 1 || (isBiddingPhase && activeChooser === 1));
+        p2Pill.classList.toggle('active', activeBidder === 2 || (isBiddingPhase && activeChooser === 2));
+      }
+    }
+
+    // ==========================================
+    // SCREEN 1: CATEGORY SELECTION
+    // ==========================================
+    function showCategorySelectScreen() {
+      stopMelodyPlayback();
+      document.getElementById('screenCategorySelect').style.display = 'flex';
+      document.getElementById('screenQuestion').style.display = 'none';
+      document.getElementById('screenSummary').style.display = 'none';
+
+      document.getElementById('catRoundPrompt').textContent = `ROUND ${currentRound + 1} OF ${totalRounds}`;
+
+      if (gameMode === '2p') {
+        const chooserName = activeChooser === 1 ? '🔵 Player 1' : '🟣 Player 2';
+        document.getElementById('catChooserTitle').textContent = `${chooserName}, Choose The Category!`;
+        document.getElementById('catChooserSubtitle').textContent = 'Pick a category to challenge your opponent in the note bidding war!';
+      } else {
+        document.getElementById('catChooserTitle').textContent = 'Choose Your Category';
+        document.getElementById('catChooserSubtitle').textContent = 'Select a genre for this round or shuffle from all 70 melodies!';
+      }
+    }
+
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      loadQuestionForRound();
+    }
+
+    // ==========================================
+    // SCREEN 2: QUESTION & BIDDING WAR
+    // ==========================================
+    function loadQuestionForRound() {
+      stopMelodyPlayback();
+      document.getElementById('screenCategorySelect').style.display = 'none';
+      document.getElementById('screenQuestion').style.display = 'flex';
+      document.getElementById('screenSummary').style.display = 'none';
+      document.getElementById('feedbackBox').style.display = 'none';
+      document.getElementById('stealBox').style.display = 'none';
+
+      // Pick a random tune from the selected category
+      const pool = getTunesForCategory(selectedCategory);
+      currentTune = pool[Math.floor(Math.random() * pool.length)] || TUNE_LIBRARY[0];
+
+      // Update Badges
+      document.getElementById('qRoundBadge').textContent = `Round ${currentRound + 1} / ${totalRounds}`;
+      const catBadge = document.getElementById('qCategoryBadge');
+      catBadge.textContent = currentTune.category;
+      catBadge.className = `cat-pill-badge ${currentTune.categoryClass || 'badge-movie'}`;
+
+      // Update Clue
+      document.getElementById('clueText').textContent = currentTune.clue;
+
+      if (gameMode === '2p') {
+        // Start 2-Player Bidding War
+        setup2PlayerBidding();
+      } else {
+        // Solo Mode Direct Play
+        document.getElementById('biddingArena').style.display = 'none';
+        setupChoicesGrid(true);
+        renderNotePips(soloNoteLimit > 0 ? soloNoteLimit : currentTune.notes.length);
+        document.getElementById('playBtnText').textContent = 'Listen to Melody';
+        // Auto play small teaser after 400ms
+        setTimeout(() => playTuneNotes(soloNoteLimit > 0 ? soloNoteLimit : currentTune.notes.length), 400);
+      }
+    }
+
+    // ==========================================
+    // 2-PLAYER BIDDING ENGINE
+    // ==========================================
+    function setup2PlayerBidding() {
+      isBiddingPhase = true;
+      isStealPhase = false;
+      currentBid = 6;
+      activeBidder = activeChooser; // The player who chose category opens the bid
+      challenger = activeBidder === 1 ? 2 : 1;
+
+      document.getElementById('biddingArena').style.display = 'flex';
+      document.getElementById('optionsGrid').style.display = 'none';
+      document.getElementById('audioStage').style.opacity = '0.4';
+      document.getElementById('audioStage').style.pointerEvents = 'none';
+
+      updateBiddingUI();
+    }
+
+    function updateBiddingUI() {
+      const bidderName = activeBidder === 1 ? '🔵 Player 1' : '🟣 Player 2';
+      const bidderColor = activeBidder === 1 ? 'var(--p1-color)' : 'var(--p2-color)';
+
+      const turnEl = document.getElementById('biddingTurnText');
+      turnEl.innerHTML = `<span style="color:${bidderColor};">${bidderName}'s Turn to Bid</span>`;
+
+      document.getElementById('currentBidNum').textContent = currentBid;
+
+      const lowerBtn = document.getElementById('btnBidLower');
+      const challengeBtn = document.getElementById('btnChallenge');
+
+      if (currentBid <= 1) {
+        // Can't bid lower than 1 note!
+        lowerBtn.style.display = 'none';
+        challengeBtn.innerHTML = `🎯 "NAME THAT TUNE IN 1 NOTE!"`;
+      } else {
+        lowerBtn.style.display = 'inline-flex';
+        document.getElementById('lowerBidNum').textContent = currentBid - 1;
+        challengeBtn.innerHTML = `🎯 "NAME THAT TUNE!"`;
+      }
+
+      updateHeaderScores();
+    }
+
+    function handleBidLower() {
+      playSynthNote(440, 0.15, 'triangle');
+      currentBid--;
+      // Turn switches to opponent
+      activeBidder = activeBidder === 1 ? 2 : 1;
+      challenger = activeBidder === 1 ? 2 : 1;
+      updateBiddingUI();
+    }
+
+    function handleChallenge() {
+      playSfxChallenge();
+      isBiddingPhase = false;
+      // The challenged player is the last one who made the bid (i.e. the other player!)
+      // If active player clicks Challenge, the opponent must name that tune!
+      challengedPlayer = activeBidder === 1 ? 2 : 1;
+      challenger = activeBidder;
+
+      const playerName = challengedPlayer === 1 ? '🔵 Player 1' : '🟣 Player 2';
+
+      // Hide bidding arena and show audio stage & options
+      document.getElementById('biddingArena').style.display = 'none';
+      const audioStage = document.getElementById('audioStage');
+      audioStage.style.opacity = '1';
+      audioStage.style.pointerEvents = 'auto';
+
+      document.getElementById('playBtnText').textContent = `${playerName}: Listen to ${currentBid} Notes`;
+      renderNotePips(currentBid);
+      setupChoicesGrid(true, challengedPlayer);
+
+      // Play the exact bid number of notes
+      setTimeout(() => playTuneNotes(currentBid), 500);
+    }
+
+    // ==========================================
+    // NOTE PIPS & PLAYBACK ENGINE
+    // ==========================================
+    function renderNotePips(count) {
+      const container = document.getElementById('noteIndicatorRow');
+      container.innerHTML = '';
+      const total = Math.min(count, currentTune.notes.length);
+      for (let i = 0; i < total; i++) {
+        const pip = document.createElement('div');
+        pip.className = 'note-pip';
+        pip.id = `pip-${i}`;
+        container.appendChild(pip);
+      }
+      const label = document.createElement('span');
+      label.style.marginLeft = '8px';
+      label.id = 'pipCounterLabel';
+      label.textContent = `${total} note${total > 1 ? 's' : ''} to play`;
+      container.appendChild(label);
+    }
+
     function stopMelodyPlayback() {
       melodyTimeouts.forEach(t => clearTimeout(t));
       melodyTimeouts = [];
       isTunePlaying = false;
-      document.getElementById('playBtn').classList.remove('playing');
-      document.getElementById('playBtnText').textContent = 'Replay Melody';
+      const playBtn = document.getElementById('playBtn');
+      if (playBtn) {
+        playBtn.classList.remove('playing');
+      }
     }
 
-    function playMelody(tune) {
+    function playTuneNotes(maxNotes) {
       stopMelodyPlayback();
       getCtx();
       isTunePlaying = true;
       const playBtn = document.getElementById('playBtn');
       playBtn.classList.add('playing');
-      document.getElementById('playBtnText').textContent = 'Playing Melody...';
 
+      const notesToPlay = currentTune.notes.slice(0, maxNotes);
       let currentTime = 0;
-      tune.notes.forEach((n, idx) => {
+
+      // Reset pips
+      notesToPlay.forEach((_, idx) => {
+        const p = document.getElementById(`pip-${idx}`);
+        if (p) p.classList.remove('played');
+      });
+
+      notesToPlay.forEach((n, idx) => {
         const dur = (n.d / playSpeed);
         const t = setTimeout(() => {
-          playSynthNote(n.f, dur * 0.9);
+          playSynthNote(n.f, dur * 0.9, currentTune.waveform || 'triangle');
+          const p = document.getElementById(`pip-${idx}`);
+          if (p) p.classList.add('played');
+          const lbl = document.getElementById('pipCounterLabel');
+          if (lbl) lbl.textContent = `Note ${idx + 1} of ${notesToPlay.length}`;
         }, currentTime * 1000);
         melodyTimeouts.push(t);
         currentTime += dur;
@@ -1117,47 +6615,56 @@
       const endTimeout = setTimeout(() => {
         isTunePlaying = false;
         playBtn.classList.remove('playing');
-        document.getElementById('playBtnText').textContent = 'Replay Melody';
+        const lbl = document.getElementById('pipCounterLabel');
+        if (lbl) lbl.textContent = `Done! (${notesToPlay.length} notes played)`;
       }, currentTime * 1000 + 100);
       melodyTimeouts.push(endTimeout);
     }
 
-    function toggleTunePlay() {
+    function togglePlayTune() {
       if (isTunePlaying) {
         stopMelodyPlayback();
-      } else if (currentTune) {
-        playMelody(currentTune);
+        document.getElementById('playBtnText').textContent = 'Replay Melody';
+      } else {
+        const limit = gameMode === '2p' ? (isStealPhase ? currentBid + 2 : currentBid) : (soloNoteLimit > 0 ? soloNoteLimit : currentTune.notes.length);
+        playTuneNotes(limit);
       }
     }
 
-    function replayTune() {
-      if (currentTune) playMelody(currentTune);
+    function replayCurrentNotes() {
+      const limit = gameMode === '2p' ? (isStealPhase ? currentBid + 2 : currentBid) : (soloNoteLimit > 0 ? soloNoteLimit : currentTune.notes.length);
+      playTuneNotes(limit);
     }
 
     function setSpeed(speed, btn) {
       playSpeed = speed;
       document.querySelectorAll('#speedNormalBtn, #speedSlowBtn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      if (currentTune) playMelody(currentTune);
+      replayCurrentNotes();
     }
 
-    // Question Flow
-    function loadQuestion(roundIdx) {
-      stopMelodyPlayback();
-      currentTune = TUNE_LIBRARY[roundIdx % TUNE_LIBRARY.length];
-      document.getElementById('roundIndicator').textContent = `Question ${roundIdx + 1} / ${totalRounds}`;
-      document.getElementById('categoryBadge').textContent = currentTune.category;
-      document.getElementById('feedbackBox').style.display = 'none';
+    function setSoloNoteLimit(limit, btn) {
+      soloNoteLimit = limit;
+      document.querySelectorAll('.solo-note-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderNotePips(limit > 0 ? limit : currentTune.notes.length);
+      replayCurrentNotes();
+    }
 
-      // Assemble 4 choices (1 correct + 3 distractors) shuffled
+    // ==========================================
+    // MULTIPLE CHOICE OPTIONS & RESOLUTION
+    // ==========================================
+    function setupChoicesGrid(show = true, answeringPlayer = null) {
+      const grid = document.getElementById('optionsGrid');
+      grid.style.display = show ? 'grid' : 'none';
+      grid.innerHTML = '';
+
       const choices = [
         { title: currentTune.title, subtitle: currentTune.artist, correct: true },
         ...currentTune.distractors.map(d => ({ title: d.title, subtitle: d.subtitle, correct: false }))
       ];
       choices.sort(() => Math.random() - 0.5);
 
-      const grid = document.getElementById('optionsGrid');
-      grid.innerHTML = '';
       choices.forEach(c => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
@@ -1165,15 +6672,12 @@
           <span>${c.title}</span>
           <span class="option-subtitle">${c.subtitle}</span>
         `;
-        btn.onclick = () => selectAnswer(btn, c.correct);
+        btn.onclick = () => selectAnswer(btn, c.correct, answeringPlayer);
         grid.appendChild(btn);
       });
-
-      // Auto-play tune after small delay
-      setTimeout(() => playMelody(currentTune), 400);
     }
 
-    function selectAnswer(button, isCorrect) {
+    function selectAnswer(button, isCorrect, player) {
       stopMelodyPlayback();
       const allButtons = document.querySelectorAll('.option-btn');
       allButtons.forEach(b => b.classList.add('disabled'));
@@ -1181,84 +6685,186 @@
       const feedbackBox = document.getElementById('feedbackBox');
       const header = document.getElementById('feedbackHeader');
       const desc = document.getElementById('feedbackDesc');
-      feedbackBox.style.display = 'flex';
+      const stealBox = document.getElementById('stealBox');
 
-      if (isCorrect) {
-        button.classList.add('correct');
-        currentScore += 100 + (currentStreak * 25);
-        currentStreak++;
-        document.getElementById('scoreVal').textContent = currentScore;
-        document.getElementById('streakVal').textContent = currentStreak;
+      if (gameMode === 'solo') {
+        // Solo Mode Scoring
+        feedbackBox.style.display = 'flex';
+        if (isCorrect) {
+          button.classList.add('correct');
+          playSfxSuccess();
+          launchConfetti();
 
-        header.innerHTML = `<span style="color:#10b981;">✓ Correct! You Named That Tune!</span>`;
-        desc.innerHTML = `<strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
-        launchConfetti();
+          let multiplier = 1;
+          if (soloNoteLimit === 1) multiplier = 5;
+          else if (soloNoteLimit === 3) multiplier = 3;
+          else if (soloNoteLimit === 5) multiplier = 2;
+
+          const pts = (100 + (soloStreak * 25)) * multiplier;
+          soloScore += pts;
+          soloStreak++;
+          updateHeaderScores();
+
+          header.innerHTML = `<span style="color:#10b981;">✓ Correct! +${pts} Points (${multiplier}x Multiplier!)</span>`;
+          desc.innerHTML = `<strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+        } else {
+          button.classList.add('wrong');
+          playSfxWrong();
+          soloStreak = 0;
+          updateHeaderScores();
+
+          // Highlight correct
+          allButtons.forEach(b => {
+            if (b.innerText.includes(currentTune.title)) b.classList.add('correct');
+          });
+
+          header.innerHTML = `<span style="color:#ef4444;">✗ Not Quite!</span>`;
+          desc.innerHTML = `The correct song was <strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+        }
       } else {
-        button.classList.add('wrong');
-        currentStreak = 0;
-        document.getElementById('streakVal').textContent = currentStreak;
+        // 2-Player Showdown Mode Scoring
+        if (!isStealPhase) {
+          // First attempt by challengedPlayer
+          if (isCorrect) {
+            button.classList.add('correct');
+            playSfxSuccess();
+            launchConfetti();
 
-        // Highlight correct button
-        allButtons.forEach(b => {
-          if (b.innerText.includes(currentTune.title)) {
-            b.classList.add('correct');
+            // Points reward for fewer notes bid!
+            const notePointsMap = { 1: 500, 2: 400, 3: 300, 4: 200, 5: 150, 6: 100 };
+            const pts = notePointsMap[currentBid] || 100;
+
+            if (challengedPlayer === 1) p1Score += pts;
+            else p2Score += pts;
+            updateHeaderScores();
+
+            feedbackBox.style.display = 'flex';
+            const winnerName = challengedPlayer === 1 ? '🔵 Player 1' : '🟣 Player 2';
+            header.innerHTML = `<span style="color:#10b981;">✓ ${winnerName} Named That Tune in ${currentBid} Notes! (+${pts} pts)</span>`;
+            desc.innerHTML = `<strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+          } else {
+            // Wrong answer! Challenger gets a steal chance!
+            button.classList.add('wrong');
+            button.style.pointerEvents = 'none';
+            playSfxWrong();
+
+            isStealPhase = true;
+            const stealPlayerName = challenger === 1 ? '🔵 Player 1' : '🟣 Player 2';
+            stealBox.style.display = 'flex';
+            document.getElementById('stealTitle').textContent = `⚡ STEAL OPPORTUNITY FOR ${stealPlayerName}! ⚡`;
+            document.getElementById('stealPrompt').textContent = `The bid failed! ${stealPlayerName}, can you name that tune? Listen to +2 bonus notes and guess:`;
+
+            // Enable remaining buttons for challenger
+            allButtons.forEach(b => {
+              if (!b.classList.contains('wrong')) b.classList.remove('disabled');
+            });
           }
-        });
+        } else {
+          // Steal attempt by challenger
+          stealBox.style.display = 'none';
+          feedbackBox.style.display = 'flex';
 
-        header.innerHTML = `<span style="color:#ef4444;">✗ Not Quite!</span>`;
-        desc.innerHTML = `The correct song was <strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+          if (isCorrect) {
+            button.classList.add('correct');
+            playSfxSuccess();
+            launchConfetti();
+
+            const pts = 200; // Steal points
+            if (challenger === 1) p1Score += pts;
+            else p2Score += pts;
+            updateHeaderScores();
+
+            const stealerName = challenger === 1 ? '🔵 Player 1' : '🟣 Player 2';
+            header.innerHTML = `<span style="color:#ec4899;">⚡ ${stealerName} STOLE THE ROUND! (+${pts} pts)</span>`;
+            desc.innerHTML = `<strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+          } else {
+            button.classList.add('wrong');
+            playSfxWrong();
+
+            // Reveal correct
+            allButtons.forEach(b => {
+              if (b.innerText.includes(currentTune.title)) b.classList.add('correct');
+            });
+
+            header.innerHTML = `<span style="color:#ef4444;">✗ Both Players Missed!</span>`;
+            desc.innerHTML = `The correct song was <strong>${currentTune.title}</strong> by ${currentTune.artist}.<br>${currentTune.fact}`;
+          }
+        }
       }
     }
 
-    function nextQuestion() {
+    function playStealExtraNotes() {
+      const notesToPlay = Math.min(currentBid + 2, currentTune.notes.length);
+      renderNotePips(notesToPlay);
+      playTuneNotes(notesToPlay);
+    }
+
+    function proceedToNextRound() {
       currentRound++;
       if (currentRound >= totalRounds) {
         showGameOver();
       } else {
-        loadQuestion(currentRound);
+        // Switch category chooser in 2-player mode
+        activeChooser = activeChooser === 1 ? 2 : 1;
+        showCategorySelectScreen();
       }
     }
 
+    // ==========================================
+    // SCREEN 3: GAME OVER & SUMMARY
+    // ==========================================
     function showGameOver() {
       stopMelodyPlayback();
-      document.getElementById('optionsGrid').style.display = 'none';
-      document.getElementById('feedbackBox').style.display = 'none';
-      document.getElementById('roundIndicator').textContent = 'Game Complete!';
-
-      const summaryBox = document.getElementById('summaryBox');
+      document.getElementById('screenCategorySelect').style.display = 'none';
+      document.getElementById('screenQuestion').style.display = 'none';
+      const summaryBox = document.getElementById('screenSummary');
       summaryBox.style.display = 'flex';
-      document.getElementById('summaryScore').textContent = `Final Score: ${currentScore} points`;
 
-      let rankEmoji = '🏆';
-      let rankTitle = 'Mozart Maestro!';
-      let rankMsg = 'Incredible ear! You identified nearly every melody with exceptional musical intuition.';
+      const emojiEl = document.getElementById('summaryEmoji');
+      const titleEl = document.getElementById('summaryTitle');
+      const scoreEl = document.getElementById('summaryScore');
+      const msgEl = document.getElementById('summaryMsg');
 
-      if (currentScore >= 1200) {
-        rankEmoji = '👑'; rankTitle = 'Platinum Ear Virtuoso!';
-      } else if (currentScore >= 700) {
-        rankEmoji = '🎧'; rankTitle = 'Tune Detective!'; rankMsg = 'Great job recognizing so many diverse musical themes and genres!';
+      if (gameMode === 'solo') {
+        scoreEl.textContent = `Final Score: ${soloScore} points`;
+        if (soloScore >= 1200) {
+          emojiEl.textContent = '👑';
+          titleEl.textContent = 'Virtuoso Music Master!';
+          msgEl.textContent = 'Remarkable ear! You identified melodies with surgical precision and conquered the note limits!';
+        } else if (soloScore >= 600) {
+          emojiEl.textContent = '🎧';
+          titleEl.textContent = 'Tune Detective!';
+          msgEl.textContent = 'Great job recognizing across movie scores, retro games, pop anthems, and classical works.';
+        } else {
+          emojiEl.textContent = '🎵';
+          titleEl.textContent = 'Music Explorer!';
+          msgEl.textContent = 'Every round sharpens your musical memory. Try fewer notes next time for huge bonus multipliers!';
+        }
       } else {
-        rankEmoji = '🎵'; rankTitle = 'Music Explorer!'; rankMsg = 'Keep listening and exploring! Musical recognition gets sharper with every round.';
+        // 2-Player Winner
+        if (p1Score > p2Score) {
+          emojiEl.textContent = '🏆';
+          titleEl.textContent = '🔵 Player 1 Wins The Showdown!';
+          scoreEl.textContent = `Player 1: ${p1Score} pts  —  Player 2: ${p2Score} pts`;
+          msgEl.textContent = 'Incredible bidding tactics and sharp musical recognition! Player 1 takes the crown!';
+        } else if (p2Score > p1Score) {
+          emojiEl.textContent = '🏆';
+          titleEl.textContent = '🟣 Player 2 Wins The Showdown!';
+          scoreEl.textContent = `Player 2: ${p2Score} pts  —  Player 1: ${p1Score} pts`;
+          msgEl.textContent = 'Masterful note bidding and clutch steals! Player 2 is the Name That Tune champion!';
+        } else {
+          emojiEl.textContent = '🤝';
+          titleEl.textContent = "It's an Epic Tie!";
+          scoreEl.textContent = `Both Players: ${p1Score} pts`;
+          msgEl.textContent = 'Unbelievable battle of musical minds! You matched each other note for note!';
+        }
       }
-
-      document.getElementById('summaryEmoji').textContent = rankEmoji;
-      document.getElementById('summaryTitle').textContent = rankTitle;
-      document.getElementById('summaryMsg').textContent = rankMsg;
+      launchConfetti();
     }
 
-    function restartGame() {
-      currentScore = 0;
-      currentStreak = 0;
-      currentRound = 0;
-      document.getElementById('scoreVal').textContent = '0';
-      document.getElementById('streakVal').textContent = '0';
-      document.getElementById('optionsGrid').style.display = 'grid';
-      document.getElementById('summaryBox').style.display = 'none';
-      TUNE_LIBRARY.sort(() => Math.random() - 0.5);
-      loadQuestion(0);
-    }
-
-    // Confetti Animation
+    // ==========================================
+    // CONFETTI ANIMATION
+    // ==========================================
     const cCanvas = document.getElementById('confettiCanvas');
     const cCtx = cCanvas.getContext('2d');
     let particles = [];
@@ -1273,12 +6879,12 @@
     function launchConfetti() {
       particles = [];
       const colors = ['#38bdf8', '#ec4899', '#f59e0b', '#10b981', '#a855f7'];
-      for (let i = 0; i < 60; i++) {
+      for (let i = 0; i < 70; i++) {
         particles.push({
           x: cCanvas.width / 2,
           y: cCanvas.height * 0.4,
-          vx: (Math.random() - 0.5) * 16,
-          vy: (Math.random() - 0.8) * 16,
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.8) * 18,
           size: Math.random() * 8 + 4,
           color: colors[Math.floor(Math.random() * colors.length)],
           alpha: 1.0
@@ -1291,7 +6897,7 @@
       particles.forEach((p, idx) => {
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.4; // gravity
+        p.vy += 0.4;
         p.alpha -= 0.015;
         if (p.alpha <= 0) {
           particles.splice(idx, 1);
@@ -1309,8 +6915,7 @@
     requestAnimationFrame(renderConfetti);
 
     // Initial Start
-    TUNE_LIBRARY.sort(() => Math.random() - 0.5);
-    loadQuestion(0);
+    showCategorySelectScreen();
   </script>
 </body>
 </html>
